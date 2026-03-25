@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Message } from "@/types/chat";
-import Button from "../../Button";
 import ChatHeader from "./Header";
+import DetailsModal from "./DetailsModal";
 
 interface ChatViewProps {
   messages: Message[];
@@ -19,13 +19,6 @@ export default function ChatView({ messages }: ChatViewProps) {
   return (
     <div className="flex-1 overflow-y-auto bg-white rounded-lg p-6 shadow-sm flex flex-col gap-4 min-h-0 chat-scrollbar">
       <ChatHeader isChatStarted={isChatStarted} />
-
-      {!isChatStarted && (
-        <p className="text-slate-500 font-medium leading-relaxed">
-          Aqui, você pode analisar os indicadores ambientais de qualquer imóvel rural do estado de
-          São Paulo em segundos.
-        </p>
-      )}
 
       {messages.map((msg) => (
         <div
@@ -47,21 +40,14 @@ export default function ChatView({ messages }: ChatViewProps) {
               ) : (
                 <>
                   {msg.thinkingTime && (
-                    <div className="text-xs text-slate-400 mb-1">
+                    <div className="text-xs text-slate-400 mb-1 animate-pop-in-up">
                       Pensou por {(msg.thinkingTime / 1000).toFixed(2)}s
                     </div>
                   )}
                   <p>{msg.content}</p>
+
                   {msg.status === "done" && (
-                    <div className="mt-2">
-                      <Button
-                        variant="tertiary"
-                        size="sm"
-                        className="text-primary"
-                      >
-                        Mais informações
-                      </Button>
-                    </div>
+                    <DetailsModal source={msg.source} year={msg.year} intention={msg.intention} />
                   )}
                 </>
               )}

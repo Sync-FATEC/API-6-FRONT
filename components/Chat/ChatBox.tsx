@@ -6,13 +6,23 @@ import Icon from "../Icon";
 
 interface Props {
   message: string;
+  hasMessages: boolean;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   onInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onSend: () => void;
+  onNewChat: () => void;
 }
 
-export default function ChatBox({ message, textareaRef, onInput, onKeyDown, onSend }: Props) {
+export default function ChatBox({
+  message,
+  hasMessages,
+  textareaRef,
+  onInput,
+  onKeyDown,
+  onSend,
+  onNewChat,
+}: Props) {
   const hasText = message.trim().length > 0;
 
   return (
@@ -32,20 +42,28 @@ export default function ChatBox({ message, textareaRef, onInput, onKeyDown, onSe
           Ajuda
         </Button>
 
-        <Button variant="ghost" className="text-slate-500 me-2" square onClick={onSend}>
-          <div className="relative w-6 h-6 flex items-center justify-center">
-            <div
-              className={`absolute transition-all duration-300 ${hasText ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
-            >
-              <Icon name="send" size={24} />
+        <div className="flex gap-1">
+          {hasMessages && (
+            <Button variant="ghost" className="text-slate-400 animate-pop-in" onClick={onNewChat}>
+              Novo Chat
+            </Button>
+          )}
+
+          <Button variant="ghost" className="text-slate-500 me-2" square onClick={onSend}>
+            <div className="relative w-6 h-6 flex items-center justify-center">
+              <div
+                className={`absolute transition-all duration-300 ${hasText ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
+              >
+                <Icon name="send" size={24} />
+              </div>
+              <div
+                className={`absolute transition-all duration-300 ${!hasText ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
+              >
+                <Icon name="mic" size={24} />
+              </div>
             </div>
-            <div
-              className={`absolute transition-all duration-300 ${!hasText ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
-            >
-              <Icon name="mic" size={24} />
-            </div>
-          </div>
-        </Button>
+          </Button>
+        </div>
       </div>
     </div>
   );

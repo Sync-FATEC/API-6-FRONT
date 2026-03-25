@@ -11,10 +11,10 @@ export interface UserMessage extends BaseMessage {
 
 export interface BotMessage extends BaseMessage {
   role: "bot";
-  source?: string;
-  year?: number;
+  source: string;
+  year: number;
   status: BotStatus;
-  intention?: string;
+  intention: string;
   thinkingTime?: number;
 }
 

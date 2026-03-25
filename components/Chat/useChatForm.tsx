@@ -6,6 +6,15 @@ export function useChatForm() {
   const [messages, setMessages] = useState<Message[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const handleNewChat = () => {
+    setMessages([]);
+    setMessage("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "48px";
+      textareaRef.current.style.overflowY = "hidden";
+    }
+  };
+
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const target = e.target;
     setMessage(target.value);
@@ -50,6 +59,9 @@ export function useChatForm() {
       role: "bot",
       content: "",
       status: "thinking",
+      source: "INPE",
+      year: 2024,
+      intention: "analise_desmatamento (92%)"
     };
 
     setMessages((prev) => [...prev, userMessage, thinkingMessage]);
@@ -114,6 +126,7 @@ export function useChatForm() {
       handleSend();
     }
   };
+  
 
   return {
     message,
@@ -122,5 +135,6 @@ export function useChatForm() {
     handleInput,
     handleSend,
     handleKeyDown,
+    handleNewChat,
   };
 }
