@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
-import { Message } from "@/types/chat";
 import ChatHeader from "./Header";
 import DetailsModal from "./DetailsModal";
+import { ChatMessage } from "@/interfaces/components/chat";
 
-interface ChatViewProps {
-  messages: Message[];
+interface Props {
+  messages: ChatMessage[];
 }
 
-export default function ChatView({ messages }: ChatViewProps) {
+export default function ChatView({ messages }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -2,11 +2,11 @@
 
 import ChatView from "./ChatView";
 import ChatBox from "./ChatBox";
-import { Message } from "@/types/chat";
+import { ChatMessage } from "@/interfaces/components/chat";
 
 type ChatProps = {
   message: string;
-  messages: Message[];
+  messages: ChatMessage[];
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   handleInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSend: () => void;

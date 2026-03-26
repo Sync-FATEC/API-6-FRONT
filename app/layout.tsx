@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Providers from "@/components/Providers";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body className="h-screen max-h-screen flex flex-col font-sans p-3 overflow-hidden">
         <Navbar />
 
-        <main className="flex-1 flex flex-col min-h-0">{children}</main>
+        <main className="flex-1 flex flex-col min-h-0">
+          <Providers>{children}</Providers>
+        </main>
       </body>
     </html>
   );
