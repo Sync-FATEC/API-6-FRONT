@@ -2,11 +2,27 @@
 
 import ChatView from "./ChatView";
 import ChatBox from "./ChatBox";
-import { useChatForm } from "./useChatForm";
+import { Message } from "@/types/chat";
 
-export default function Chat() {
-  const { message, messages, textareaRef, handleInput, handleSend, handleKeyDown, handleNewChat } = useChatForm();
+type ChatProps = {
+  message: string;
+  messages: Message[];
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
+  handleInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSend: () => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  handleNewChat: () => void;
+};
 
+export default function Chat({
+  message,
+  messages,
+  textareaRef,
+  handleInput,
+  handleSend,
+  handleKeyDown,
+  handleNewChat,
+}: ChatProps) {
   return (
     <div className="flex flex-col gap-3 h-full min-h-0">
       <ChatView messages={messages} />

@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} h-full antialiased bg-slate-50`}>
+    <html lang="pt-BR" className={`${geist.className} h-full antialiased bg-slate-50`}>
       <body className="h-screen max-h-screen flex flex-col font-sans p-3 overflow-hidden">
         <Navbar />
 

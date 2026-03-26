@@ -2,7 +2,6 @@
 
 @theme {
   --color-primary: #ed6b1b;
-
   --animate-pop-in: pop-in 0.2s ease-in-out forwards;
   --animate-pop-in-up: pop-in-up 0.5s ease-in-out forwards;
 }

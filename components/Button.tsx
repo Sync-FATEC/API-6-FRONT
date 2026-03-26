@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "tertiary" | "ghost";
   size?: "sm" | "md" | "lg";
   square?: boolean;
@@ -14,7 +14,7 @@ export default function Button({
   className = "",
   children,
   ...props
-}: ButtonProps) {
+}: Props) {
   const baseStyles =
     "inline-flex items-center justify-center gap-2 rounded-lg transition-colors focus:outline-none disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 

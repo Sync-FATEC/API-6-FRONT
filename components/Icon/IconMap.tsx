@@ -1,4 +1,5 @@
 import {
+  IconArrowRight,
   IconHelpHexagonFilled,
   IconMicrophoneFilled,
   IconSend2,
@@ -9,5 +10,6 @@ import { IconName } from "./IconName";
 export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   help: IconHelpHexagonFilled,
   mic: IconMicrophoneFilled,
-  send: IconSend2
+  send: IconSend2,
+  "arrow-right": IconArrowRight
 };

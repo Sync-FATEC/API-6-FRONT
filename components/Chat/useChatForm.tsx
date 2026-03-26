@@ -61,7 +61,7 @@ export function useChatForm() {
       status: "thinking",
       source: "INPE",
       year: 2024,
-      intention: "analise_desmatamento (92%)"
+      intention: "analise_desmatamento (92%)",
     };
 
     setMessages((prev) => [...prev, userMessage, thinkingMessage]);
@@ -72,7 +72,7 @@ export function useChatForm() {
       textareaRef.current.style.overflowY = "hidden";
     }
 
-    const delay = 1200
+    const delay = 1200;
 
     setTimeout(() => {
       const fullText = "Esta é uma resposta simulada do VISIONA GeoQuery!";
@@ -126,7 +126,10 @@ export function useChatForm() {
       handleSend();
     }
   };
-  
+
+  const handleSuggestion = (text: string) => {
+    setMessage(text);
+  };
 
   return {
     message,
@@ -136,5 +139,6 @@ export function useChatForm() {
     handleSend,
     handleKeyDown,
     handleNewChat,
+    handleSuggestion
   };
 }
