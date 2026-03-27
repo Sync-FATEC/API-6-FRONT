@@ -8,12 +8,14 @@ export function useChatForm() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [activeGeoJSON, setActiveGeoJSON] = useState<GeoJSONFeatureCollection | null>(null);
+  const [activeIntention, setActiveIntention] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleNewChat = () => {
     setMessages([]);
     setMessage("");
     setActiveGeoJSON(null);
+    setActiveIntention(null);
     if (textareaRef.current) {
       textareaRef.current.style.height = "48px";
       textareaRef.current.style.overflowY = "hidden";
@@ -75,6 +77,10 @@ export function useChatForm() {
 
         if (data.geojson?.features?.length > 0) {
           setActiveGeoJSON(data.geojson);
+        }
+
+        if (data.intencao_detectada) {
+          setActiveIntention(data.intencao_detectada);
         }
 
         setMessages((prev) =>
@@ -147,6 +153,7 @@ export function useChatForm() {
     message,
     messages,
     activeGeoJSON,
+    activeIntention,
     textareaRef,
     handleInput,
     handleSend,

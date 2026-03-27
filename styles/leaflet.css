@@ -1,0 +1,14 @@
+.leaflet-container .leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-container .leaflet-popup-content {
+  margin: 0 !important; 
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important;
+}
