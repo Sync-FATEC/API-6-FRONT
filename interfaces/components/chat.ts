@@ -1,4 +1,4 @@
-import { GeoJSONFeatureCollection } from "../geojson";
+import { IGeoJSONFeatureCollection } from "../geojson";
 
 export interface ChatMessage {
   id: string;
@@ -9,5 +9,5 @@ export interface ChatMessage {
   source?: string;
   year?: number;
   intention?: string;
-  geojson?: GeoJSONFeatureCollection;
+  geojson?: IGeoJSONFeatureCollection;
 }

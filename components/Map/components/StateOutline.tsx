@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { GeoJSON } from "react-leaflet";
-import { GeoJSONFeatureCollection } from "@/interfaces/geojson";
+import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 import * as MapConfig from "@/constants/map";
 
 interface StateOutlineProps {
@@ -10,12 +10,12 @@ interface StateOutlineProps {
 }
 
 export default function StateOutline({ mapType }: StateOutlineProps) {
-  const [outline, setOutline] = useState<GeoJSONFeatureCollection | null>(null);
+  const [outline, setOutline] = useState<IGeoJSONFeatureCollection | null>(null);
 
   useEffect(() => {
     fetch("/data/estado-sp.json")
       .then((response) => response.json())
-      .then((data) => setOutline(data as GeoJSONFeatureCollection))
+      .then((data) => setOutline(data as IGeoJSONFeatureCollection))
       .catch((error) => console.error("Erro ao carregar perímetro de SP:", error));
   }, []);
 

@@ -3,20 +3,20 @@
 
 import dynamic from "next/dynamic";
 import Icon from "../Icon";
-import { GeoJSONFeatureCollection } from "@/interfaces/geojson";
+import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 
 const LeafletMap = dynamic(() => import("./LeafletMap"), { ssr: false });
 
 interface Props {
   onSuggestionClick: (text: string) => void;
-  geoJsonData?: GeoJSONFeatureCollection | null;
+  geoJsonData?: IGeoJSONFeatureCollection | null;
   intention?: string | null;
 }
 
 export default function Map({ onSuggestionClick, geoJsonData, intention }: Props) {
   const suggestions = [
-    "Qual a situação ambiental de Guarulhos?",
-    "Quais terras indígenas existem em Ubatuba?",
+    "Qual a situação ambiental de Ubatuba?",
+    "Quais terras indígenas existem em Guarulhos?",
     "Unidades de conservação em São Paulo",
     "Comunidades quilombolas em Eldorado",
   ];

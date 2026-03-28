@@ -1,6 +1,6 @@
 import { JsonObject } from "./json";
 
-export interface GeoJSONGeometry {
+export interface IGeoJSONGeometry {
   type: "Point" | "MultiPoint" | "LineString" | "MultiLineString" | "Polygon" | "MultiPolygon" | "GeometryCollection";
   coordinates: number[] | number[][] | number[][][] | number[][][][];
   crs?: {
@@ -9,13 +9,13 @@ export interface GeoJSONGeometry {
   };
 }
 
-export interface GeoJSONFeature {
+export interface IGeoJSONFeature<P = JsonObject> {
   type: "Feature";
-  geometry: GeoJSONGeometry;
-  properties: JsonObject; 
+  geometry: IGeoJSONGeometry | null;
+  properties: P;
 }
 
-export interface GeoJSONFeatureCollection {
+export interface IGeoJSONFeatureCollection<P = JsonObject> {
   type: "FeatureCollection";
-  features: GeoJSONFeature[];
+  features: IGeoJSONFeature<P>[];
 }

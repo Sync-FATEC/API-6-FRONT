@@ -1,10 +1,36 @@
-export const COLORS: Record<string, { color: string; nome: string }> = {
-  queimadas: { color: "#ff4444", nome: "Queimadas" },
-  deter: { color: "#ff8c00", nome: "Desmatamento (DETER)" },
-  funai: { color: "#4488ff", nome: "Terras Indígenas" },
-  icmbio: { color: "#22cc66", nome: "Unidades de Conservação" },
-  palmares: { color: "#7A360F", nome: "Quilombolas" },              // amber-900
-  prodes: { color: "#cc6600", nome: "Desmatamento (PRODES)" },
+import { MapSourceConfig } from "@/interfaces/components/map";
+
+export const MAP_SOURCES: Record<string, MapSourceConfig> = {
+  queimadas: {
+    color: "#ff4444", // Vermelho
+    label: "Queimada",
+    icon: "flame",
+  },
+  deter: {
+    color: "#ffffff", // Branco (back ainda não manda DETER)
+    label: "Área Desmatada",
+    icon: "axe",
+  },
+  prodes: {
+    color: "#f77f00", // Laranja
+    label: "Área Desmatada",
+    icon: "axe",
+  },
+  funai: {
+    color: "#55a630", // Verde
+    label: "Terra Indígena",
+    icon: "leaf",
+  },
+  icmbio: {
+    color: "#9d4edd", // Roxo
+    label: "Unidade de Conservação",
+    icon: "shield",
+  },
+  palmares: {
+    color: "#7A360F", // Marrom
+    label: "Quilombo",
+    icon: "fist",
+  },
 };
 
 export const DEFAULT_COLOR = "#fff";
@@ -28,7 +54,8 @@ export const MAP_PROVIDERS = {
   },
   street: {
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
 } as const;
 

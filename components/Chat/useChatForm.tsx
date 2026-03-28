@@ -2,12 +2,12 @@ import { useRef, useState, ChangeEvent, KeyboardEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { QueryService } from "@/services/QueryService";
 import { ChatMessage } from "@/interfaces/components/chat";
-import { GeoJSONFeatureCollection } from "@/interfaces/geojson";
+import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 
 export function useChatForm() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [activeGeoJSON, setActiveGeoJSON] = useState<GeoJSONFeatureCollection | null>(null);
+  const [activeGeoJSON, setActiveGeoJSON] = useState<IGeoJSONFeatureCollection | null>(null);
   const [activeIntention, setActiveIntention] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -127,7 +127,7 @@ export function useChatForm() {
       onError: (error) => {
         setMessages((prev) =>
           prev.map((msg) =>
-            msg.id === botId ? { ...msg, status: "done", content: `Erro: ${error.message}` } : msg
+            msg.id === botId ? { ...msg, status: "done", content: `${error.message}` } : msg
           )
         );
       },

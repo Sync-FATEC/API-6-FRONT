@@ -1,1 +1,12 @@
-export type IconName = "help" | "mic" | "send" | "arrow-right" | "satellite" | "gps" | "fist" | "leaf";
+export type IconName =
+  | "help"
+  | "mic"
+  | "send"
+  | "arrow-right"
+  | "satellite"
+  | "gps"
+  | "fist"
+  | "leaf"
+  | "shield"
+  | "flame"
+  | "axe";
