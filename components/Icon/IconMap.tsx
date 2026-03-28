@@ -11,7 +11,7 @@ import {
   IconFlameFilled,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
-import { IconAxe, IconFist } from "./CustomIcons";
+import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
 
 export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   help: IconHelpHexagonFilled,
@@ -24,5 +24,6 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   leaf: IconLeafFilled,
   shield: IconShieldFilled,
   flame: IconFlameFilled,
-  axe: IconAxe
+  axe: IconAxe,
+  github: IconGithub
 };

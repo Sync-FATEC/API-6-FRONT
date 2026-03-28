@@ -9,4 +9,5 @@ export type IconName =
   | "leaf"
   | "shield"
   | "flame"
-  | "axe";
+  | "axe"
+  | "github";
