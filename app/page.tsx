@@ -5,7 +5,7 @@ import Map from "@/components/Map";
 import { useChatForm } from "@/components/Chat/useChatForm";
 
 export default function Home() {
-  const chat = useChatForm();
+  const { activeGeoJSON, activeIntention, ...chat } = useChatForm();
 
   return (
     <div className="flex gap-3 flex-1 min-h-0">
@@ -14,7 +14,11 @@ export default function Home() {
       </div>
 
       <div className="w-[75%] flex flex-col min-h-0">
-        <Map onSuggestionClick={chat.handleSuggestion} />
+        <Map 
+          onSuggestionClick={chat.handleSuggestion} 
+          geoJsonData={activeGeoJSON} 
+          intention={activeIntention}
+        />
       </div>
     </div>
   );

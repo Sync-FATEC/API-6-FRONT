@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-interface ChatHeaderProps {
+interface Props {
   isChatStarted: boolean;
 }
 
-export default function ChatHeader({ isChatStarted }: ChatHeaderProps) {
+export default function ChatHeader({ isChatStarted }: Props) {
   const [headerText, setHeaderText] = useState("Bem vindo ao VISIONA GeoQuery");
   const [startTime, setStartTime] = useState<string>("");
   const [showStartTime, setShowStartTime] = useState(false);

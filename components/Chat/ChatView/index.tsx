@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
-import { Message } from "@/types/chat";
 import ChatHeader from "./Header";
 import DetailsModal from "./DetailsModal";
+import { ChatMessage } from "@/interfaces/components/chat";
 
-interface ChatViewProps {
-  messages: Message[];
+interface Props {
+  messages: ChatMessage[];
 }
 
-export default function ChatView({ messages }: ChatViewProps) {
+export default function ChatView({ messages }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function ChatView({ messages }: ChatViewProps) {
               ) : (
                 <>
                   {msg.thinkingTime && (
-                    <div className="text-xs text-slate-400 mb-1 animate-pop-in-up">
+                    <div className="text-sm font-medium text-slate-400 mb-1 animate-pop-in-up">
                       Pensou por {(msg.thinkingTime / 1000).toFixed(2)}s
                     </div>
                   )}

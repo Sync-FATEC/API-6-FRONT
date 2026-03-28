@@ -2,11 +2,11 @@
 
 import ChatView from "./ChatView";
 import ChatBox from "./ChatBox";
-import { Message } from "@/types/chat";
+import { ChatMessage } from "@/interfaces/components/chat";
 
-type ChatProps = {
+type Props = {
   message: string;
-  messages: Message[];
+  messages: ChatMessage[];
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   handleInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSend: () => void;
@@ -22,7 +22,7 @@ export default function Chat({
   handleSend,
   handleKeyDown,
   handleNewChat,
-}: ChatProps) {
+}: Props) {
   return (
     <div className="flex flex-col gap-3 h-full min-h-0">
       <ChatView messages={messages} />

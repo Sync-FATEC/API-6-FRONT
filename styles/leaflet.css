@@ -1,0 +1,13 @@
+.leaflet-container .leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.leaflet-container .leaflet-popup-content {
+  margin: 0 !important;
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important;
+}
