@@ -12,6 +12,7 @@ type Props = {
   handleSend: () => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   handleNewChat: () => void;
+  handleVoiceInput: (text: string) => void;
 };
 
 export default function Chat({
@@ -22,6 +23,7 @@ export default function Chat({
   handleSend,
   handleKeyDown,
   handleNewChat,
+  handleVoiceInput,
 }: Props) {
   return (
     <div className="flex flex-col gap-3 h-full min-h-0">
@@ -34,6 +36,7 @@ export default function Chat({
         onKeyDown={handleKeyDown}
         onSend={handleSend}
         onNewChat={handleNewChat}
+        onVoiceInput={handleVoiceInput}
       />
     </div>
   );

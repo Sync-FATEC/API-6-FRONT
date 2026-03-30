@@ -149,6 +149,10 @@ export function useChatForm() {
     }
   };
 
+  const handleVoiceInput = (text: string) => {
+    setMessage((prev) => prev + text);
+  };
+
   return {
     message,
     messages,
@@ -160,6 +164,7 @@ export function useChatForm() {
     handleKeyDown,
     handleNewChat,
     handleSuggestion,
+    handleVoiceInput,
     isPending: chatMutation.isPending,
   };
 }

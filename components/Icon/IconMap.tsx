@@ -9,6 +9,7 @@ import {
   IconSend2,
   IconProps as TablerIconProps,
   IconFlameFilled,
+  IconPlayerPause,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -25,5 +26,6 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   shield: IconShieldFilled,
   flame: IconFlameFilled,
   axe: IconAxe,
-  github: IconGithub
+  github: IconGithub,
+  pause: IconPlayerPause,
 };

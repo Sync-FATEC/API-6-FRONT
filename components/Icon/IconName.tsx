@@ -10,4 +10,5 @@ export type IconName =
   | "shield"
   | "flame"
   | "axe"
-  | "github";
+  | "github"
+  | "pause";
