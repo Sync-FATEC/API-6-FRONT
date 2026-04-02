@@ -11,4 +11,10 @@ export type IconName =
   | "flame"
   | "axe"
   | "github"
-  | "pause";
+  | "pause"
+  | "data-plus"
+  | "close"
+  | "play"
+  | "clock"
+  | "calendar"
+  | "chevron-down"

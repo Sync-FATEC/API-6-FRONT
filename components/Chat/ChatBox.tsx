@@ -73,8 +73,7 @@ export default function ChatBox({
   const initializeRecognition = () => {
     if (recognitionRef.current) return;
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       alert("Reconhecimento de voz não é suportado neste navegador");
@@ -150,20 +149,14 @@ export default function ChatBox({
 
         <div className="flex gap-1">
           {hasMessages && (
-            <Button
-              variant="ghost"
-              className="text-slate-400 animate-pop-in"
-              onClick={onNewChat}
-            >
+            <Button variant="ghost" className="text-slate-400 animate-pop-in" onClick={onNewChat}>
               Novo Chat
             </Button>
           )}
 
           <Button
             variant="ghost"
-            className={`text-slate-500 me-2 transition-colors ${
-              isListening ? "text-red-500" : ""
-            }`}
+            className={`text-slate-500 me-2 transition-colors ${isListening ? "text-red-500" : ""}`}
             square
             onClick={() => {
               if (hasText) {
@@ -192,9 +185,7 @@ export default function ChatBox({
 
               <div
                 className={`absolute transition-all duration-300 ${
-                  !isListening && !hasText
-                    ? "scale-100 opacity-100"
-                    : "scale-0 opacity-0"
+                  !isListening && !hasText ? "scale-100 opacity-100" : "scale-0 opacity-0"
                 }`}
               >
                 <Icon name="mic" size={24} />

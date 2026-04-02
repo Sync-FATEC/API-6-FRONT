@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import "@/styles/globals.css";
+import "@/styles/global.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import Footer from "@/components/Footer";
@@ -22,12 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${geist.variable} h-full antialiased bg-slate-50`}>
-      <body className="h-screen max-h-screen flex flex-col font-sans p-3 overflow-hidden">
-        <Navbar />
-        <main className="flex-1 flex flex-col min-h-0">
-          <Providers>{children}</Providers>
-        </main>
-        <Footer />
+      <body className="h-screen max-h-screen font-sans overflow-hidden">
+        <Providers>
+          <div className="flex flex-col h-full w-full p-3">
+            <Navbar />
+            <main className="flex-1 flex flex-col min-h-0">{children}</main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );

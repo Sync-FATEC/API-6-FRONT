@@ -6,6 +6,7 @@
 
 @theme {
   --color-primary: #ed6b1b;
+  --color-primary-600: color-mix(in srgb, var(--color-primary), black 5%);
   --font-sans: var(--font-geist);
 }
 

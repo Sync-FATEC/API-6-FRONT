@@ -25,10 +25,10 @@ export default function Button({
   };
 
   const variants = {
-    primary: "bg-primary text-white hover:opacity-90",
-    secondary: "bg-primary/10 text-primary hover:bg-primary/20",
+    primary: "bg-primary text-white hover:bg-primary-600",
+    secondary: "bg-primary/5 text-primary hover:bg-primary/10",
     tertiary: "bg-slate-50 hover:bg-slate-100 text-slate-500",
-    ghost: "bg-transparent hover:bg-slate-50",
+    ghost: "text-primary bg-transparent hover:bg-slate-50",
   };
 
   const shapeStyles = square ? "aspect-square" : "";

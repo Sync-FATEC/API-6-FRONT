@@ -10,6 +10,12 @@ import {
   IconProps as TablerIconProps,
   IconFlameFilled,
   IconPlayerPause,
+  IconXFilled,
+  IconPlayerPlayFilled,
+  IconDatabasePlus,
+  IconClock,
+  IconCalendarPlus,
+  IconChevronDown,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -28,4 +34,10 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   axe: IconAxe,
   github: IconGithub,
   pause: IconPlayerPause,
+  "data-plus": IconDatabasePlus,
+  close: IconXFilled,
+  play: IconPlayerPlayFilled,
+  clock: IconClock,
+  calendar: IconCalendarPlus,
+  "chevron-down": IconChevronDown
 };
