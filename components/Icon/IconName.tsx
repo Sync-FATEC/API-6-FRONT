@@ -11,4 +11,8 @@ export type IconName =
   | "flame"
   | "axe"
   | "github"
-  | "pause";
+  | "pause"
+  | "calendar"
+  | "x"
+  | "check"
+  | "database-refresh";
