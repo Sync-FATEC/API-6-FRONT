@@ -7,6 +7,8 @@ interface DetailsModalProps {
 }
 
 export default function DetailsModal({ source, year, intention }: DetailsModalProps) {
+  if (intention?.includes("fora_do_escopo")) return null;
+
   const details = [
     { label: "Fonte", value: source },
     { label: "Ano", value: year },
