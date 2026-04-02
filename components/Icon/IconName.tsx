@@ -18,3 +18,7 @@ export type IconName =
   | "clock"
   | "calendar"
   | "chevron-down"
+  | "calendar"
+  | "x"
+  | "check"
+  | "database-refresh";

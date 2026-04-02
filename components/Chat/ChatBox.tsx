@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import Button from "../Button";
 import Icon from "../Icon";
+import HelpModal from "./HelpModal";
 
 interface Props {
   message: string;
@@ -68,6 +69,7 @@ export default function ChatBox({
 }: Props) {
   const hasText = message.trim().length > 0;
   const [isListening, setIsListening] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
 
   const initializeRecognition = () => {
@@ -131,6 +133,7 @@ export default function ChatBox({
   };
 
   return (
+    <>
     <div className="bg-white rounded-lg p-2 pe-0 shadow-sm flex flex-col justify-between">
       <textarea
         ref={textareaRef}
@@ -142,10 +145,11 @@ export default function ChatBox({
       />
 
       <div className="flex justify-between items-end mt-2">
-        <Button variant="ghost" className="text-primary">
+        <Button variant="ghost" className="text-primary" onClick={() => setHelpOpen(true)}>
           <Icon name="help" size={20} />
           Ajuda
         </Button>
+    
 
         <div className="flex gap-1">
           {hasMessages && (
@@ -195,5 +199,7 @@ export default function ChatBox({
         </div>
       </div>
     </div>
+    {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
+    </>
   );
 }

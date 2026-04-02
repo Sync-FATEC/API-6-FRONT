@@ -16,6 +16,10 @@ import {
   IconClock,
   IconCalendarPlus,
   IconChevronDown,
+  IconCalendarClock,
+  IconX,
+  IconCheck,
+  IconDatabaseImport,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -39,5 +43,9 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   play: IconPlayerPlayFilled,
   clock: IconClock,
   calendar: IconCalendarPlus,
-  "chevron-down": IconChevronDown
+  "chevron-down": IconChevronDown,
+  calendar: IconCalendarClock,
+  x: IconX,
+  check: IconCheck,
+  "database-refresh": IconDatabaseImport,
 };
