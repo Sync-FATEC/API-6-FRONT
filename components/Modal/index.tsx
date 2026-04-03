@@ -48,7 +48,7 @@ export default function Modal({
             </Dialog.Close>
           </div>
 
-          <div className="px-6 pb-4">{children}</div>
+          <div className="px-6">{children}</div>
 
           {footer && (
             <div className="flex items-center justify-end gap-3 p-5 pt-12 rounded-b-xl">
