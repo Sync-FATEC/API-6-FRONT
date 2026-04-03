@@ -17,7 +17,7 @@ export default function ChatView({ messages }: Props) {
   const isChatStarted = messages.length > 0;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-white rounded-lg p-6 shadow-sm flex flex-col gap-4 min-h-0 chat-scrollbar">
+    <div className="flex-1 overflow-y-auto bg-white rounded-lg p-6 shadow-sm flex flex-col gap-4 min-h-0 scrollbar-mini">
       <ChatHeader isChatStarted={isChatStarted} />
 
       {messages.map((msg) => (

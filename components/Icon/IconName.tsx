@@ -17,8 +17,7 @@ export type IconName =
   | "play"
   | "clock"
   | "calendar"
+  | "calendar-plus"
   | "chevron-down"
-  | "calendar"
-  | "x"
   | "check"
-  | "database-refresh";
+  | "arrow-left"

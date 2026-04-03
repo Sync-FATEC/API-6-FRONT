@@ -9,7 +9,7 @@ interface Props {
 
 export default function HistoryBody({ isLoading, data }: Props) {
   return (
-    <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-2">
+    <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-5 scrollbar-mini">
       {isLoading ? (
         <p className=" text-slate-500 py-4">Carregando histórico...</p>
       ) : !data || data.execucoes.length === 0 ? (
@@ -20,16 +20,13 @@ export default function HistoryBody({ isLoading, data }: Props) {
             const startDate = formatDate(execution.inicio);
 
             return (
-              <li
-                key={index}
-                className="rounded-lg p-3 text-sm flex flex-col gap-2 bg-slate-50"
-              >
+              <li key={index} className="rounded-lg p-3 text-sm flex flex-col gap-2 bg-slate-50">
                 <div className="flex justify-between items-center font-semibold">
                   <span className="text-slate-700">{execution.pipeline}</span>
                   <span
                     className={cn(
-                      "px-2 py-0.5 rounded-full text-xs",
-                      execution.sucesso ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                      "px-2 py-0.5 rounded-sm text-xs",
+                      execution.sucesso ? "bg-success-50 text-success" : "bg-danger-50 text-danger"
                     )}
                   >
                     {execution.sucesso ? "Sucesso" : "Falha"}

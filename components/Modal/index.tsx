@@ -48,10 +48,10 @@ export default function Modal({
             </Dialog.Close>
           </div>
 
-          <div className="px-6 py-4">{children}</div>
+          <div className="px-6 pb-4">{children}</div>
 
           {footer && (
-            <div className="flex items-center justify-end gap-3 ps-6 pe-4 pb-4 pt-12 rounded-b-xl">
+            <div className="flex items-center justify-end gap-3 p-5 pt-12 rounded-b-xl">
               {footer}
             </div>
           )}

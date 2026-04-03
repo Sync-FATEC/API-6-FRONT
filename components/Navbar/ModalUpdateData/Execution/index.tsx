@@ -15,10 +15,10 @@ export default function ExecutionBody({ error, data }: Props) {
       </p>
 
       {data?.status === "iniciado" && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-md text-green-700 text-sm">
+        <div className="p-4 bg-success/5 rounded-md text-green-700">
           <strong>Pipeline iniciado com sucesso!</strong>
           <br />
-          Processo PID: {data.pid} | Etapa: {data.etapa}
+          Processo PID: {data.pid}
         </div>
       )}
 
