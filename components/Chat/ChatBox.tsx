@@ -145,20 +145,31 @@ export default function ChatBox({
         />
 
         <div className="flex justify-between items-end mt-2">
-          <Button variant="ghost" className="text-primary" onClick={() => setHelpOpen(true)}>
+          <Button
+            variant="ghost"
+            size="md"
+            className="text-primary"
+            onClick={() => setHelpOpen(true)}
+          >
             <Icon name="help" size={20} />
             Ajuda
           </Button>
 
           <div className="flex gap-1">
             {hasMessages && (
-              <Button variant="ghost" className="text-slate-400 animate-pop-in" onClick={onNewChat}>
+              <Button
+                variant="ghost"
+                size="md"
+                className="text-slate-400 animate-pop-in"
+                onClick={onNewChat}
+              >
                 Novo Chat
               </Button>
             )}
 
             <Button
               variant="ghost"
+              size="md"
               className={`text-slate-500 me-2 transition-colors ${isListening ? "text-red-500" : ""}`}
               square
               onClick={() => {
@@ -198,7 +209,7 @@ export default function ChatBox({
           </div>
         </div>
       </div>
-      {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
+      <HelpModal open={helpOpen} onOpenChange={setHelpOpen} />
     </>
   );
 }

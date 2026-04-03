@@ -7,8 +7,8 @@ export const MAP_SOURCES: Record<string, MapSourceConfig> = {
     icon: "flame",
   },
   deter: {
-    color: "#ffffff", // Branco (back ainda não manda DETER)
-    label: "Área Desmatada",
+    color: "#f06400", // Laranja Escuro
+    label: "Alerta Desmatamento",
     icon: "axe",
   },
   prodes: {

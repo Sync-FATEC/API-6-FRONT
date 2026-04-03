@@ -10,7 +10,7 @@ export default function HistoryFooter({ goToExecution }: Props) {
   return (
     <ModalFooter
       right={
-        <Button variant="primary" size="lg" onClick={goToExecution}>
+        <Button variant="primary" onClick={goToExecution}>
           <Icon name="arrow-left" />
           Voltar
         </Button>

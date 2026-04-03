@@ -21,7 +21,7 @@ export default function ExecutionFooter({
   return (
     <ModalFooter
       left={
-        <Button variant="secondary" size="lg" onClick={goToHistory}>
+        <Button variant="secondary" onClick={goToHistory}>
           <Icon name="clock" />
           Ver histórico
         </Button>

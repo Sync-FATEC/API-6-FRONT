@@ -20,7 +20,7 @@ export default function ExecutePopover({
     <Popover
       align="end"
       trigger={
-        <Button variant="primary" size="lg">
+        <Button variant="primary">
           <Icon name="play" size={20} />
           Executar Pipeline
           <div className="w-0.5 h-6 bg-white/20 mx-2" />

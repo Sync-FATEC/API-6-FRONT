@@ -13,7 +13,7 @@ export default function ScheduleFooter({ goToExecution, isScheduling, isSchedule
     <ModalFooter
       right={
         <>
-          <Button variant="secondary" size="lg" onClick={goToExecution}>
+          <Button variant="secondary" onClick={goToExecution}>
             <Icon name="arrow-left" />
             Voltar
           </Button>
@@ -22,7 +22,6 @@ export default function ScheduleFooter({ goToExecution, isScheduling, isSchedule
               form="schedule-form"
               type="submit"
               variant="primary"
-              size="lg"
               disabled={isScheduling}
             >
               Agendar

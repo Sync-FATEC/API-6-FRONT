@@ -9,7 +9,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export default function Button({
   variant = "primary",
-  size = "md",
+  size = "lg",
   square = false,
   className = "",
   children,

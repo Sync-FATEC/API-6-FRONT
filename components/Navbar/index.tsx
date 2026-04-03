@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-full">
           <img src="/visiona_logo.svg" alt="VISIONA GeoQuery Logo" className="w-auto h-full" />
 
-          <Button variant="primary" className="me-1" onClick={() => setIsModalOpen(true)}>
+          <Button variant="primary" size="md" className="me-1" onClick={() => setIsModalOpen(true)}>
             <Icon name="data-plus" size={20} />
             Atualizar dados
           </Button>
