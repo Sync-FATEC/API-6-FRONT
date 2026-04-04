@@ -14,11 +14,15 @@ export default function ScheduleUpdateModal({ onClose }: Props) {
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [interval, setInterval] = useState(1);
+  const [unit, setUnit] = useState<"minuto" | "hora" | "dia" | "semana" | "mes">("semana");
   const [isPending, setIsPending] = useState(false);
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const canSubmit = date && time && !isPending && !success;
+  const canSubmit = date && time && interval >= 1 && !isPending && !success;
+  const unitLabel = unit === "mes" ? "mês" : unit;
+  const unitLabelPlural = unit === "mes" ? "meses" : `${unit}s`;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,7 +30,12 @@ export default function ScheduleUpdateModal({ onClose }: Props) {
     setIsPending(true);
     setIsError(false);
     try {
-      await ScheduleService.scheduleUpdate({ data: date, hora: time });
+      await ScheduleService.scheduleUpdate({
+        data_inicio: date,
+        horario: time,
+        intervalo: interval,
+        unidade: unit,
+      });
       setSuccess(true);
     } catch {
       setIsError(true);
@@ -79,7 +88,11 @@ export default function ScheduleUpdateModal({ onClose }: Props) {
                 Atualização agendada com sucesso!
               </p>
               <p className="text-xs text-slate-400">
-                A base de dados será atualizada em{" "}
+                Agendamento configurado para executar{" "}
+                <span className="font-medium text-slate-600">
+                  a cada {interval} {interval === 1 ? unitLabel : unitLabelPlural}
+                </span>{" "}
+                a partir de{" "}
                 <span className="font-medium text-slate-600">
                   {new Date(`${date}T${time}`).toLocaleString("pt-BR", {
                     day: "2-digit",
@@ -98,11 +111,44 @@ export default function ScheduleUpdateModal({ onClose }: Props) {
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <p className="text-sm text-slate-500">
-                Selecione a data e o horário para a próxima atualização da base de
-                dados geoespacial.
+                Defina a data, o horário e a recorrência das atualizações da base
+                geoespacial.
               </p>
 
               <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                      Intervalo
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      value={interval}
+                      onChange={(e) => setInterval(Number(e.target.value) || 1)}
+                      required
+                      className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                      Unidade
+                    </label>
+                    <select
+                      value={unit}
+                      onChange={(e) => setUnit(e.target.value as "minuto" | "hora" | "dia" | "semana" | "mes")}
+                      className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all"
+                    >
+                      <option value="minuto">Minuto</option>
+                      <option value="hora">Hora</option>
+                      <option value="dia">Dia</option>
+                      <option value="semana">Semana</option>
+                      <option value="mes">Mês</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
                     Data
