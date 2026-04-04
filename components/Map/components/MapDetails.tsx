@@ -49,7 +49,7 @@ const discoverSource = (p: PopupPayload, data: unknown): string => {
   if (isFunaiFlat(data)) return "funai";
   if (isIcmbioFlat(data)) return "icmbio";
   if (isQuilomboFlat(data)) return "palmares";
-  return "desconhecido";
+  return "desconhecida";
 };
 
 export const PopupContent = ({ p }: { p: PopupPayload }) => {
@@ -58,7 +58,7 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
   const isDataObj = typeof data === "object" && data !== null;
 
   const fonte = discoverSource(p, data);
-  const config = MAP_SOURCES[fonte];
+  const config = MAP_SOURCES[fonte] ?? MAP_SOURCES.desconhecida;
   const bgColor = config.color;
 
   const municipio = isPObj && "municipio" in p && p.municipio ? String(p.municipio) : undefined;
