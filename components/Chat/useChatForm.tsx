@@ -90,8 +90,7 @@ export function useChatForm() {
                   ...msg,
                   status: "typing",
                   thinkingTime: endTime - startTime,
-                  source: data.fontes?.[0]?.nome || "Múltiplas",
-                  intention: `${data.intencao_detectada} (${(data.confianca * 100).toFixed(0)}%)`,
+                  queryData: data,
                 }
               : msg
           )

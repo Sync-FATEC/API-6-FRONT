@@ -3,6 +3,7 @@
 import Icon from "../../Icon";
 import { IconName } from "../../Icon/IconName";
 import * as MapConfig from "@/constants/map";
+import Tooltip from "@/components/Tooltip";
 
 interface Props {
   activeType: MapConfig.TMapProvider;
@@ -14,10 +15,12 @@ export default function MapViewToggle({ activeType, onChange }: Props) {
     {
       id: "street" as const,
       icon: "gps" as IconName,
+      tooltip: "Mapa padrão",
     },
     {
       id: "satellite" as const,
       icon: "satellite" as IconName,
+      tooltip: "Imagem de satélite",
     },
   ];
 
@@ -27,7 +30,7 @@ export default function MapViewToggle({ activeType, onChange }: Props) {
   return (
     <div className="absolute top-4 right-4 z-1000 bg-black/50 p-1 rounded-[20px] backdrop-blur-sm flex items-center shadow-lg gap-1">
       <div
-        className={`absolute h-11 w-11 bg-white rounded-2xl shadow-sm transition-all duration-300 ease-in-out`}
+        className="absolute h-11 w-11 bg-white rounded-2xl shadow-sm transition-all duration-300 ease-in-out"
         style={{
           transform: activeType === "street" ? "translateX(0px)" : "translateX(48px)",
         }}
@@ -37,15 +40,16 @@ export default function MapViewToggle({ activeType, onChange }: Props) {
         const isActive = activeType === botao.id;
 
         return (
-          <button
-            key={botao.id}
-            onClick={() => onChange(botao.id)}
-            className={`${baseClasses} ${
-              isActive ? "text-primary" : "text-white hover:bg-white/10"
-            }`}
-          >
-            <Icon name={botao.icon} size={24} />
-          </button>
+          <Tooltip key={botao.id} content={botao.tooltip}>
+            <button
+              onClick={() => onChange(botao.id)}
+              className={`${baseClasses} ${
+                isActive ? "text-primary" : "text-white hover:bg-white/10"
+              }`}
+            >
+              <Icon name={botao.icon} size={24} />
+            </button>
+          </Tooltip>
         );
       })}
     </div>

@@ -1,8 +1,8 @@
 export const SUGGESTIONS = [
-  "Qual é a área de reserva legal em Campinas em 2023?",
-  "Mostre propriedades com APP irregular em São Paulo",
-  "Quais municípios têm maior índice de desmatamento?",
-  "Qual o total de área protegida em Ribeirão Preto?",
+  "Unidades de conservação em São Paulo",
+  "Me mostre as queimadas em Guarulhos",
+  "Lista de desmatamentos no município de Assis",
+  "Existem terras indígenas em São Vicente?",
 ];
 
 export const STEPS = [

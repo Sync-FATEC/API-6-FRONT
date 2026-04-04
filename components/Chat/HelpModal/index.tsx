@@ -68,7 +68,7 @@ export default function HelpModal({ open, onOpenChange }: HelpModalProps) {
             </p>
 
             <div className="flex flex-col gap-4">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              <p className="text-sm font-semibold text-slate-400 uppercase tracking-wide">
                 Sugestões de perguntas
               </p>
               {SUGGESTIONS.map((suggestion, index) => (
@@ -78,7 +78,7 @@ export default function HelpModal({ open, onOpenChange }: HelpModalProps) {
                   className="text-left cursor-pointer text-sm text-slate-700 bg-slate-50 hover:bg-primary/5 rounded-lg p-3 transition-all flex items-center justify-between gap-3 group"
                 >
                   <span>{suggestion}</span>
-                  <span className="text-xs shrink-0 text-slate-400 group-hover:text-primary transition-colors">
+                  <span className="text-sm shrink-0 text-slate-400 group-hover:text-primary transition-colors">
                     {copiedIndex === index ? "✓ Copiado" : "Copiar"}
                   </span>
                 </button>

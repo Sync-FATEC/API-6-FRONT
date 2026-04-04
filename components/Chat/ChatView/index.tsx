@@ -46,9 +46,7 @@ export default function ChatView({ messages }: Props) {
                   )}
                   <p>{msg.content}</p>
 
-                  {msg.status === "done" && (
-                    <DetailsModal source={msg.source} year={msg.year} intention={msg.intention} />
-                  )}
+                  {msg.status === "done" && msg.queryData && <DetailsModal data={msg.queryData} />}
                 </>
               )}
             </>

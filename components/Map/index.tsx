@@ -16,8 +16,8 @@ interface Props {
 export default function Map({ onSuggestionClick, geoJsonData, intention }: Props) {
   const suggestions = [
     "Qual a situação ambiental de Ubatuba?",
-    "Quais terras indígenas existem em Guarulhos?",
-    "Unidades de conservação em São Paulo",
+    "Quais terras indígenas existem em Osasco?",
+    "Imóveis rurais em Campinas",
     "Comunidades quilombolas em Eldorado",
   ];
 

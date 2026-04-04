@@ -1,4 +1,5 @@
 import { IGeoJSONFeatureCollection } from "../geojson";
+import { IQueryResponse } from "../services/QueryService";
 
 export interface ChatMessage {
   id: string;
@@ -10,4 +11,5 @@ export interface ChatMessage {
   year?: number;
   intention?: string;
   geojson?: IGeoJSONFeatureCollection;
+  queryData?: IQueryResponse;
 }
