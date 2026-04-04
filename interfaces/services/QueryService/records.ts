@@ -5,6 +5,7 @@ import {
   IConservationUnitMetadata,
   IProdesMetadata,
   IQuilombolaMetadata,
+  IFarmMetadata,
 } from "./metadata";
 
 export interface IBaseRecord {
@@ -46,6 +47,11 @@ export interface IQuilombolaRecord extends IBaseRecord {
   metadados_json: IQuilombolaMetadata;
 }
 
+export interface ISicarRecord extends IBaseRecord {
+  tipo_registro: "imovel_sicar";
+  metadados_json: IFarmMetadata;
+}
+
 export interface IGenericRecord extends IBaseRecord {
   tipo_registro: string;
   metadados_json: Record<string, unknown>;
@@ -58,4 +64,5 @@ export type AsgRecord =
   | IConservationUnitRecord
   | IProdesRecord
   | IQuilombolaRecord
+  | ISicarRecord
   | IGenericRecord;

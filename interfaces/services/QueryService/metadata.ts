@@ -48,6 +48,14 @@ export interface IQuilombolaMetadata {
   processo_incra: string;
 }
 
+export interface IFarmMetadata {
+  cod_imovel: string;
+  ind_tipo: string;
+  ind_status: string;
+  des_condic: string;
+  num_area: string | number;
+  mod_fiscal: string | number;
+}
 
 export type TFlatMetadata = 
   | IFireMetadata 
@@ -56,3 +64,4 @@ export type TFlatMetadata =
   | IConservationUnitMetadata 
   | IProdesMetadata 
   | IQuilombolaMetadata 
+  | IFarmMetadata

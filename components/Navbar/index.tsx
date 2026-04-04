@@ -2,9 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
-import Button from "./Button";
-import Icon from "./Icon";
-import ScheduleUpdateModal from "./ScheduleUpdateModal";
+import Button from "../Button";
+import Icon from "../Icon";
+import ModalUpdateData from "./ModalUpdateData";
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,20 +15,14 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-full">
           <img src="/visiona_logo.svg" alt="VISIONA GeoQuery Logo" className="w-auto h-full" />
 
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <Icon name="database-refresh" size={16} />
-            Atualizar Base
+          <Button variant="primary" size="md" className="me-1" onClick={() => setIsModalOpen(true)}>
+            <Icon name="data-plus" size={20} />
+            Atualizar dados
           </Button>
         </div>
       </nav>
 
-      {isModalOpen && (
-        <ScheduleUpdateModal onClose={() => setIsModalOpen(false)} />
-      )}
+      <ModalUpdateData open={isModalOpen} onOpenChange={setIsModalOpen} />
     </>
   );
 }

@@ -75,8 +75,8 @@ export function useChatForm() {
         const endTime = performance.now();
         const fullText = data.resumo || "";
 
-        if (data.geojson?.features?.length > 0) {
-          setActiveGeoJSON(data.geojson);
+        if (data.geojson && data.geojson.features && data.geojson.features.length > 0) {
+          setActiveGeoJSON(data.geojson as unknown as IGeoJSONFeatureCollection);
         }
 
         if (data.intencao_detectada) {

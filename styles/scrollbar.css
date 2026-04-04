@@ -1,12 +1,12 @@
-.chat-scrollbar::-webkit-scrollbar {
+.scrollbar-mini::-webkit-scrollbar {
   width: 3px;
 }
 
-.chat-scrollbar::-webkit-scrollbar-track {
+.scrollbar-mini::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.chat-scrollbar::-webkit-scrollbar-thumb {
+.scrollbar-mini::-webkit-scrollbar-thumb {
   background-color: #dee3e9;
   border-radius: 20px;
 }
