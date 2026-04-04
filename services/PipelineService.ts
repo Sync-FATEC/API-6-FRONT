@@ -6,7 +6,7 @@ import { BaseService } from "./BaseService";
 
 export const PipelineService = {
   execute: async (etapa: string = "full"): Promise<IPipelineExecutionResponse> => {
-    return BaseService.post<IPipelineExecutionResponse>(`/etl/executar?etapa=${etapa}`, {});
+    return BaseService.post<IPipelineExecutionResponse>(`/etl/executar?etapa=${etapa}&skip_sicar=true`, {});
   },
 
   history: async (): Promise<IPipelineHistoryResponse> => {

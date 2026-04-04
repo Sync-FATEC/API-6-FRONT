@@ -1,6 +1,5 @@
 export interface IPipelineExecutionResponse {
   status: "iniciado" | "erro";
-  pid?: number;
   etapa?: string;
   detalhe?: string;
 }
