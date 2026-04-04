@@ -31,6 +31,11 @@ export const MAP_SOURCES: Record<string, MapSourceConfig> = {
     label: "Quilombo",
     icon: "fist",
   },
+  desconhecida: {
+    color: "#888888", // Cinza
+    label: "Desconhecida",
+    icon: "help",
+  },
 };
 
 export const DEFAULT_COLOR = "#fff";
