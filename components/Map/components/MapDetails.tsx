@@ -12,9 +12,11 @@ import {
   isProdesFlat,
   isIcmbioFlat,
   isFunaiFlat,
+  isSicarFlat,
 } from "@/interfaces/services/QueryService/type_guards";
 import { formatArea, formatDate } from "@/utils/formatters";
 import { MAP_SOURCES } from "@/constants/map";
+import { SICAR_STATUS_MAP } from "@/helpers/mapDetails";
 
 export type PopupPayload = AsgRecord | GeoJSONProperties | TFlatMetadata;
 
@@ -49,6 +51,7 @@ const discoverSource = (p: PopupPayload, data: unknown): string => {
   if (isFunaiFlat(data)) return "funai";
   if (isIcmbioFlat(data)) return "icmbio";
   if (isQuilomboFlat(data)) return "palmares";
+  if (isSicarFlat(data)) return "sicar";
   return "desconhecida";
 };
 
@@ -165,6 +168,27 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
             <InfoRow label="Etnia" value={data.etnia} />
             <InfoRow label="Fase" value={data.fase} />
             <InfoRow label="Área" value={formatArea(data.area_ha, "ha")} />
+          </>
+        );
+      }
+      break;
+
+    case "sicar":
+      if (isSicarFlat(data)) {
+        title = data.cod_imovel || "Imóvel Rural (CAR)";
+
+        const formattedStatus = data.ind_status
+          ? SICAR_STATUS_MAP[String(data.ind_status).toUpperCase()] || data.ind_status
+          : null;
+
+        fields = (
+          <>
+            <InfoRow label="Município" value={municipio} />
+            <InfoRow label="Categoria" value={data.ind_tipo} />
+            <InfoRow label="Status" value={formattedStatus} />
+            <InfoRow label="Condição" value={data.des_condic} />
+            <InfoRow label="Área" value={formatArea(data.num_area, "ha")} />
+            <InfoRow label="Mód. Fiscais" value={data.mod_fiscal} />
           </>
         );
       }

@@ -23,7 +23,7 @@ export default function ExecutePopover({
         <Button variant="primary">
           <Icon name="play" size={20} />
           Executar Pipeline
-          <div className="w-0.5 h-6 bg-white/20 mx-2" />
+          <div className="w-0.5 h-6 bg-white/20 mx-3" />
           <Icon name="chevron-down" size={24} />
         </Button>
       }

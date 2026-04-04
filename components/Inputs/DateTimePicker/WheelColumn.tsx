@@ -71,7 +71,7 @@ export const WheelColumn = ({
                 disabled && "opacity-20",
                 !disabled &&
                   currentValue === opt &&
-                  "font-bold text-primary bg-primary/5 cursor-pointer",
+                  "font-medium text-primary bg-primary/5 cursor-pointer",
                 !disabled &&
                   currentValue !== opt &&
                   "text-slate-600 hover:bg-slate-50 cursor-pointer"

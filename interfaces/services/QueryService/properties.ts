@@ -45,15 +45,28 @@ export interface IGeoPropsPalmares {
   processo_incra: string | null;
 }
 
+export interface IGeoPropsSicar {
+  fonte: "sicar";
+  municipio: string | null;
+  data_referencia: string | null;
+  cod_imovel: string | null;
+  ind_tipo: string | null;
+  ind_status: string | null;
+  des_condic: string | null;
+  num_area: string | number | null;
+  mod_fiscal: string | number | null;
+}
+
 export interface IGeoPropsGeneric {
   fonte?: string;
   [key: string]: string | null | undefined;
 }
 
-export type GeoJSONProperties = 
-  | IGeoPropsFires 
-  | IGeoPropsFunai 
-  | IGeoPropsDeter 
-  | IGeoPropsProdes 
-  | IGeoPropsPalmares 
+export type GeoJSONProperties =
+  | IGeoPropsFires
+  | IGeoPropsFunai
+  | IGeoPropsDeter
+  | IGeoPropsProdes
+  | IGeoPropsPalmares
+  | IGeoPropsSicar
   | IGeoPropsGeneric;

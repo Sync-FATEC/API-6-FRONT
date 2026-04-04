@@ -50,18 +50,33 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     }),
   });
 
+  type SchedulePayload = {
+    date: string;
+    time: string;
+    interval: number;
+    unit: "minuto" | "hora" | "dia" | "semana" | "mes";
+  };
+
   const scheduleMutation = useMutation({
-    mutationFn: ({ date, time }: { date: string; time: string }) =>
-      ScheduleService.scheduleUpdate({ data: date, hora: time }),
+    mutationFn: (payload: SchedulePayload) =>
+      ScheduleService.scheduleUpdate({
+        data_inicio: payload.date,
+        horario: payload.time,
+        intervalo: payload.interval,
+        unidade: payload.unit,
+      }),
     onSuccess: () => {
       toast.success("Agendamento criado", "A atualização foi agendada com sucesso.");
     },
     onError: () => {
-      toast.error("Erro no agendamento", "Ocorreu um problema inesperado ao agendar a atualização.");
+      toast.error(
+        "Erro no agendamento",
+        "Ocorreu um problema inesperado ao agendar a atualização."
+      );
     },
   });
 
-  const handleSchedulePipeline = async (payload: { date: string; time: string }) => {
+  const handleSchedulePipeline = async (payload: SchedulePayload) => {
     await scheduleMutation.mutateAsync(payload);
   };
 

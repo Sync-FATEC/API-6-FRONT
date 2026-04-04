@@ -4,14 +4,19 @@ import { cn } from "@/utils/className";
 import Popover from "@/components/Popover";
 import { WheelColumn } from "./WheelColumn";
 import { useDateTimePicker } from "./useDateTimePicker";
+import InputWrapper from "../InputLabel";
+import { baseInputClasses } from "@/constants/styles/input";
 
 interface Props {
   includeTime?: boolean;
   value?: Date;
   onChange?: (date: Date) => void;
   className?: string;
+  wrapperClassName?: string;
   minDate?: Date;
   maxDate?: Date;
+  label?: string;
+  id?: string;
 }
 
 export default function DateTimePicker({
@@ -19,8 +24,11 @@ export default function DateTimePicker({
   value,
   onChange,
   className,
+  wrapperClassName,
   minDate,
   maxDate,
+  label,
+  id,
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -40,13 +48,15 @@ export default function DateTimePicker({
   const triggerButton = (
     <button
       type="button"
+      id={id}
       className={cn(
-        "flex items-center gap-2 w-fit rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-700 hover:bg-slate-50 focus:border-primary outline-none transition-all",
+        baseInputClasses,
+        "cursor-pointer",
         className
       )}
     >
       <Icon name="calendar" size={20} className="text-slate-400 me-1" />
-      <div className="flex items-center gap-2 font-medium">
+      <div className="flex items-center gap-2 text-slate-700">
         <span>{formattedDay}</span>
         <span className="text-slate-300">/</span>
         <span>{formattedMonthNumber}</span>
@@ -64,7 +74,7 @@ export default function DateTimePicker({
     </button>
   );
 
-  return (
+  const content = (
     <Popover
       open={open}
       onOpenChange={setOpen}
@@ -120,4 +130,14 @@ export default function DateTimePicker({
       </div>
     </Popover>
   );
+
+  if (label) {
+    return (
+      <InputWrapper label={label} id={id} className={wrapperClassName}>
+        {content}
+      </InputWrapper>
+    );
+  }
+
+  return content;
 }

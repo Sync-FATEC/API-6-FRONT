@@ -21,3 +21,4 @@ export type IconName =
   | "chevron-down"
   | "check"
   | "arrow-left"
+  | "farm"

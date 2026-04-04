@@ -31,6 +31,11 @@ export const MAP_SOURCES: Record<string, MapSourceConfig> = {
     label: "Quilombo",
     icon: "fist",
   },
+  sicar: {
+    color: "#16acf7", // Azul Claro
+    label: "Imóvel Rural",
+    icon: "farm",
+  },
   desconhecida: {
     color: "#888888", // Cinza
     label: "Desconhecida",

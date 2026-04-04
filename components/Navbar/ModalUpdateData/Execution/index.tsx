@@ -17,8 +17,6 @@ export default function ExecutionBody({ error, data }: Props) {
       {data?.status === "iniciado" && (
         <div className="p-4 bg-success/5 rounded-md text-green-700">
           <strong>Pipeline iniciado com sucesso!</strong>
-          <br />
-          Processo PID: {data.pid}
         </div>
       )}
 

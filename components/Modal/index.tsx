@@ -42,7 +42,7 @@ export default function Modal({
           <div className="flex items-center justify-between ps-6 pe-4 py-4">
             <Dialog.Title className="text-xl font-semibold text-primary">{title}</Dialog.Title>
             <Dialog.Close asChild>
-              <Button variant="ghost" square>
+              <Button variant="ghost" square size="md">
                 <Icon name="close" className="text-slate-400" />
               </Button>
             </Dialog.Close>
@@ -51,7 +51,7 @@ export default function Modal({
           <div className="px-6">{children}</div>
 
           {footer && (
-            <div className="flex items-center justify-end gap-3 p-5 pt-12 rounded-b-xl">
+            <div className="flex items-center justify-end gap-3 p-6 pt-12 rounded-b-xl">
               {footer}
             </div>
           )}
