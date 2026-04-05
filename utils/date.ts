@@ -7,5 +7,6 @@ export function formatDate(date: string | Date | undefined): string {
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "America/Sao_Paulo",
   });
 }

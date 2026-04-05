@@ -26,9 +26,13 @@ export default function ModalUpdateData({ open, onOpenChange }: BaseModalProps) 
     resetState,
     historyData,
     isLoadingHistory,
+    schedulesData,
+    isLoadingSchedules,
     schedulePipeline,
     isScheduling,
     isScheduleSuccess,
+    cancelSchedule,
+    isCancelingSchedule,
   } = usePipeline(currentView);
 
   useEffect(() => {
@@ -63,7 +67,7 @@ export default function ModalUpdateData({ open, onOpenChange }: BaseModalProps) 
 
   const bodies: Record<ModalView, React.ReactNode> = {
     execution: <ExecutionBody isLoading={isLoading} error={error} data={data} />,
-    history: <HistoryBody isLoading={isLoadingHistory} data={historyData} />,
+    history: <HistoryBody isLoading={isLoadingHistory} data={historyData} schedulesData={schedulesData} isLoadingSchedules={isLoadingSchedules} onCancelSchedule={cancelSchedule} isCancelingSchedule={isCancelingSchedule} />,
     schedule: (
       <ScheduleBody
         schedulePipeline={schedulePipeline}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { IPipelineHistoryResponse } from "@/interfaces/services/PipelineService";
+import { IAgendamentoResponse } from "@/interfaces/services/ScheduleService";
 import { toast } from "@/lib/toast";
 import { PipelineService } from "@/services/PipelineService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -50,6 +51,12 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     }),
   });
 
+  const schedulesQuery = useQuery<IAgendamentoResponse[]>({
+    queryKey: ["schedulesData"],
+    queryFn: () => ScheduleService.list(),
+    enabled: currentView === "history",
+  });
+
   type SchedulePayload = {
     date: string;
     time: string;
@@ -80,6 +87,24 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     await scheduleMutation.mutateAsync(payload);
   };
 
+  const cancelScheduleMutation = useMutation({
+    mutationFn: (scheduleId: number) => ScheduleService.cancelarComRecorrencias(scheduleId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["schedulesData"] });
+      toast.success("Agendamento cancelado", "O agendamento foi cancelado com sucesso.");
+    },
+    onError: () => {
+      toast.error(
+        "Erro ao cancelar",
+        "Ocorreu um problema inesperado ao cancelar o agendamento."
+      );
+    },
+  });
+
+  const handleCancelSchedule = async (scheduleId: number) => {
+    await cancelScheduleMutation.mutateAsync(scheduleId);
+  };
+
   return {
     executePipeline: handleExecutePipeline,
     cooldown,
@@ -91,11 +116,17 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     isScheduling: scheduleMutation.isPending,
     isScheduleSuccess: scheduleMutation.isSuccess,
 
+    cancelSchedule: handleCancelSchedule,
+    isCancelingSchedule: cancelScheduleMutation.isPending,
+
     resetState: () => {
       executeMutation.reset();
       scheduleMutation.reset();
+      cancelScheduleMutation.reset();
     },
     historyData: historyQuery.data,
     isLoadingHistory: historyQuery.isFetching,
+    schedulesData: schedulesQuery.data,
+    isLoadingSchedules: schedulesQuery.isFetching,
   };
 }
