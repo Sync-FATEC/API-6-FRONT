@@ -1,0 +1,12 @@
+.scrollbar-mini::-webkit-scrollbar {
+  width: 3px;
+}
+
+.scrollbar-mini::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-mini::-webkit-scrollbar-thumb {
+  background-color: #dee3e9;
+  border-radius: 20px;
+}
