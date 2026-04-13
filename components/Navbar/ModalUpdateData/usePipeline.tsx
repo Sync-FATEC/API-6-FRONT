@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { IPipelineHistoryResponse } from "@/interfaces/services/PipelineService";
+import {
+  IPipelineHistoryResponse,
+  PipelineStatusResponse,
+} from "@/interfaces/services/PipelineService";
 import { IAgendamentoResponse } from "@/interfaces/services/ScheduleService";
 import { toast } from "@/lib/toast";
 import { PipelineService } from "@/services/PipelineService";
@@ -25,19 +28,58 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     };
   }, [cooldown]);
 
+  const ENTITY_BACKEND_MAP: Record<string, string> = {
+    "mma/icmbio": "unidades_conservacao",
+    funai: "terras_indigenas",
+    "inpe/prodes": "desmatamentos",
+    "inpe/deter": "desmatamentos",
+    "inpe/queimadas": "queimadas",
+    fundação_cultural_palmares: "quilombos",
+    "sicar_-_sp_area_imovel": "sicar",
+    tudo: "tudo",
+  };
+
   const executeMutation = useMutation({
-    mutationFn: (stage: string = "full") => PipelineService.execute(stage),
+    mutationFn: ({ stage, entities }: { stage: string; entities: string[] }) =>
+      PipelineService.execute(stage, entities),
+
     onSuccess: () => {
+      queryClient.setQueryData<PipelineStatusResponse>(["pipelineStatus"], (oldData) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          rodando: true,
+        };
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["pipelineStatus"] });
       queryClient.invalidateQueries({ queryKey: ["historyData"] });
+
       toast.success("Pipeline iniciado", "A execução do pipeline começou com sucesso.");
     },
-    onError: () => {
+
+    onError: (error: Error) => {
+      if (error.message.includes("409")) {
+        toast.warning(
+          "Execução em andamento",
+          "Já existe um pipeline rodando no momento. Aguarde a conclusão."
+        );
+        return;
+      }
+
       toast.error("Erro na execução", "Ocorreu um problema inesperado ao iniciar o pipeline.");
     },
   });
 
-  const handleExecutePipeline = async (stage: string = "full") => {
-    await executeMutation.mutateAsync(stage);
+  const handleExecutePipeline = async (stage: string = "full", entities: string[]) => {
+    const entitiesToSend = entities.length > 0 ? entities : ["tudo"];
+
+    const mappedEntities = Array.from(
+      new Set(entitiesToSend.map((key) => ENTITY_BACKEND_MAP[key] || key))
+    );
+
+    await executeMutation.mutateAsync({ stage, entities: mappedEntities });
     setCooldown(10);
   };
 
@@ -87,6 +129,17 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     await scheduleMutation.mutateAsync(payload);
   };
 
+  const cancelExecutionMutation = useMutation({
+    mutationFn: () => PipelineService.cancel(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pipelineStatus"] });
+      toast.success("Execução cancelada", "A execução do pipeline atual foi cancelada com sucesso.");
+    },
+    onError: () => {
+      toast.error("Erro", "Não foi possível cancelar a execução.");
+    },
+  });
+
   const cancelScheduleMutation = useMutation({
     mutationFn: (scheduleId: number) => ScheduleService.cancelarComRecorrencias(scheduleId),
     onSuccess: () => {
@@ -94,16 +147,19 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
       toast.success("Agendamento cancelado", "O agendamento foi cancelado com sucesso.");
     },
     onError: () => {
-      toast.error(
-        "Erro ao cancelar",
-        "Ocorreu um problema inesperado ao cancelar o agendamento."
-      );
+      toast.error("Erro ao cancelar", "Ocorreu um problema inesperado ao cancelar o agendamento.");
     },
   });
 
   const handleCancelSchedule = async (scheduleId: number) => {
     await cancelScheduleMutation.mutateAsync(scheduleId);
   };
+
+  const statusQuery = useQuery({
+    queryKey: ["pipelineStatus"],
+    queryFn: () => PipelineService.status(),
+    enabled: currentView === "execution",
+  });
 
   return {
     executePipeline: handleExecutePipeline,
@@ -116,6 +172,9 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     isScheduling: scheduleMutation.isPending,
     isScheduleSuccess: scheduleMutation.isSuccess,
 
+    cancelExecution: cancelExecutionMutation.mutateAsync,
+    isCancelingExecution: cancelExecutionMutation.isPending,
+
     cancelSchedule: handleCancelSchedule,
     isCancelingSchedule: cancelScheduleMutation.isPending,
 
@@ -124,6 +183,10 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
       scheduleMutation.reset();
       cancelScheduleMutation.reset();
     },
+
+    pipelineStatus: statusQuery.data,
+    isLoadingStatus: statusQuery.isFetching,
+
     historyData: historyQuery.data,
     isLoadingHistory: historyQuery.isFetching,
     schedulesData: schedulesQuery.data,

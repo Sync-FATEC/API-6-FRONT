@@ -1,29 +1,22 @@
-import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import ModalFooter from "@/components/Modal/Footer";
+import { usePipelineContext } from "../Context";
+import { Button } from "@/components/Button";
 
-interface Props {
-  goToExecution: () => void;
-  isScheduling: boolean;
-  isScheduleSuccess?: boolean;
-}
+export default function ScheduleFooter() {
+  const { goToExecution, pipeline } = usePipelineContext();
+  const { isScheduling, isScheduleSuccess } = pipeline;
 
-export default function ScheduleFooter({ goToExecution, isScheduling, isScheduleSuccess }: Props) {
   return (
     <ModalFooter
       right={
         <>
-          <Button variant="secondary" onClick={goToExecution}>
+          <Button variant="soft" onClick={goToExecution}>
             <Icon name="arrow-left" />
             Voltar
           </Button>
           {!isScheduleSuccess && (
-            <Button
-              form="schedule-form"
-              type="submit"
-              variant="primary"
-              disabled={isScheduling}
-            >
+            <Button form="schedule-form" type="submit" disabled={isScheduling}>
               Agendar
               <Icon name="check" />
             </Button>

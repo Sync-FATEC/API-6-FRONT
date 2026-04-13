@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import Button from "../Button";
 import Icon from "../Icon";
 import HelpModal from "./HelpModal";
+import { Button } from "../Button";
 
 interface Props {
   message: string;
@@ -158,7 +158,7 @@ export default function ChatBox({
           <div className="flex gap-1">
             {hasMessages && (
               <Button
-                variant="ghost"
+                variant="plain"
                 size="md"
                 className="text-slate-400 animate-pop-in"
                 onClick={onNewChat}
@@ -168,10 +168,9 @@ export default function ChatBox({
             )}
 
             <Button
-              variant="ghost"
-              size="md"
+              variant="plain"
+              size="icon"
               className={`text-slate-500 me-2 transition-colors ${isListening ? "text-red-500" : ""}`}
-              square
               onClick={() => {
                 if (hasText) {
                   onSend();

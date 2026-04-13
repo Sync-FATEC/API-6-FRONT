@@ -1,16 +1,15 @@
-import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import ModalFooter from "@/components/Modal/Footer";
+import { usePipelineContext } from "../Context";
+import { Button } from "@/components/Button";
 
-interface Props {
-  goToExecution: () => void;
-}
+export default function HistoryFooter() {
+  const { goToExecution } = usePipelineContext();
 
-export default function HistoryFooter({ goToExecution }: Props) {
   return (
     <ModalFooter
       right={
-        <Button variant="primary" onClick={goToExecution}>
+        <Button onClick={goToExecution}>
           <Icon name="arrow-left" />
           Voltar
         </Button>

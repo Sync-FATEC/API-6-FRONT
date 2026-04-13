@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Modal from "@/components/Modal";
-import Button from "@/components/Button";
 import { IQueryResponse } from "@/interfaces/services/QueryService";
 import { cn } from "@/utils/className";
 import TooltipLabel from "@/components/Tooltip/TooltipLabel";
+import { Button } from "@/components/Button";
 
 interface Props {
   data: IQueryResponse;
@@ -67,7 +67,7 @@ export default function DetailsModal({ data }: Props) {
 
   return (
     <>
-      <Button variant="tertiary" size="sm" onClick={() => setOpen(true)} className="mt-2">
+      <Button variant="plain" size="sm" className="bg-slate-50 mt-2 text-xs text-slate-500 font-medium" onClick={() => setOpen(true)}>
         Mais informações
       </Button>
 
@@ -76,7 +76,7 @@ export default function DetailsModal({ data }: Props) {
         onOpenChange={setOpen}
         title="Detalhes do Processamento"
         footer={
-          <Button variant="primary" onClick={() => setOpen(false)}>
+          <Button onClick={() => setOpen(false)}>
             Fechar
           </Button>
         }

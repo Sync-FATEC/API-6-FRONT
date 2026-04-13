@@ -21,6 +21,11 @@ import {
   IconArrowLeft,
   IconHomeFilled,
   IconInfoSquareRounded,
+  IconDatabase,
+  IconScript,
+  IconMapPin,
+  IconSearch,
+  IconTrashXFilled,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -48,6 +53,11 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   "chevron-down": IconChevronDown,
   check: IconCheck,
   "arrow-left": IconArrowLeft,
-  "farm": IconHomeFilled,
-  "info": IconInfoSquareRounded
+  farm: IconHomeFilled,
+  info: IconInfoSquareRounded,
+  data: IconDatabase,
+  script: IconScript,
+  "gps-pin": IconMapPin,
+  search: IconSearch,
+  trash: IconTrashXFilled
 };

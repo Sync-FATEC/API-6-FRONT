@@ -1,36 +1,28 @@
 import Popover from "@/components/Popover";
 import { PopoverItem } from "@/components/Popover/Item";
-import Button from "@/components/Button";
 import Icon from "@/components/Icon";
+import { usePipelineContext } from "./Context";
+import { Button } from "@/components/Button";
 
-interface Props {
-  handleExecute: () => Promise<void>;
-  goToSchedule: () => void;
-  cooldown: number;
-  isLoading: boolean;
-}
+export default function ExecutePopover() {
+  const { goToSchedule, stage, selectedEntities, pipeline } = usePipelineContext();
+  const { executePipeline, cooldown, isLoading } = pipeline;
 
-export default function ExecutePopover({
-  handleExecute,
-  goToSchedule,
-  cooldown,
-  isLoading,
-}: Props) {
   return (
     <Popover
       align="end"
       trigger={
-        <Button variant="primary">
+        <Button>
           <Icon name="play" size={20} />
           Executar Pipeline
-          <div className="w-0.5 h-6 bg-white/20 mx-3" />
+          <div className="w-0.5 h-6 bg-white/20 " />
           <Icon name="chevron-down" size={24} />
         </Button>
       }
     >
       <div className="flex flex-col w-56">
         <PopoverItem
-          onClick={handleExecute}
+          onClick={() => executePipeline(stage, selectedEntities)}
           disabled={isLoading || cooldown > 0}
           className="justify-between"
         >

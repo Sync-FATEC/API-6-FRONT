@@ -1,6 +1,5 @@
-import Button from "@/components/Button";
+import { Button } from "@/components/Button";
 import ModalFooter from "@/components/Modal/Footer";
-import React from "react";
 
 interface Props {
   mode: "home" | "tutorial";
@@ -25,7 +24,7 @@ export default function HelpFooter({
     return (
       <ModalFooter
         right={
-          <Button variant="primary" onClick={onStartTutorial}>
+          <Button onClick={onStartTutorial}>
             Iniciar tutorial
           </Button>
         }
@@ -51,11 +50,11 @@ export default function HelpFooter({
       right={
         <>
           {step > 0 && (
-            <Button variant="tertiary" onClick={onPrev}>
+            <Button variant="soft" onClick={onPrev}>
               Anterior
             </Button>
           )}
-          <Button variant="primary" onClick={onNext}>
+          <Button onClick={onNext}>
             {step < totalSteps - 1 ? "Próximo" : "Concluir"}
           </Button>
         </>

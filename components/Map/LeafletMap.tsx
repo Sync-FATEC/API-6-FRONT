@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+
 import MapViewToggle from "./components/MapViewToggle";
 import StateOutline from "./components/StateOutline";
-import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
-
-import { MAP_PROVIDERS, INITIAL_CENTER, INITIAL_ZOOM, MAP_SOURCES } from "@/constants/map";
-import { INTENTION_TEMPLATES } from "./components/MapDetails";
 import MapLegend from "./components/Legend";
-import { extractSpRings, isFeatureInSaoPaulo, Position } from "./Calculation";
+import { INTENTION_TEMPLATES } from "./components/MapDetails";
+import { MAP_PROVIDERS, INITIAL_CENTER, INITIAL_ZOOM, MAP_SOURCES } from "@/constants/map";
+import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
+import { useLeafletMap } from "./useMap";
+import MapSearchInput from "./components/SearchInput";
 
 delete (L.Icon.Default.prototype as L.Icon.Default & { _getIconUrl?: () => string })._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -22,7 +23,6 @@ L.Icon.Default.mergeOptions({
 
 function MapController({ geoJsonData }: { geoJsonData: IGeoJSONFeatureCollection | null }) {
   const map = useMap();
-
   useEffect(() => {
     if (!geoJsonData?.features?.length) return;
     const layer = L.geoJSON(geoJsonData as IGeoJSONFeatureCollection);
@@ -35,7 +35,16 @@ function MapController({ geoJsonData }: { geoJsonData: IGeoJSONFeatureCollection
       }
     }
   }, [geoJsonData, map]);
+  return null;
+}
 
+function SearchLocationController({ position }: { position: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, 17, { duration: 1.5 });
+    }
+  }, [position, map]);
   return null;
 }
 
@@ -45,54 +54,30 @@ interface Props {
 }
 
 export default function LeafletMap({ geoJsonData, intention }: Props) {
-  const [mapType, setMapType] = useState<keyof typeof MAP_PROVIDERS>("satellite");
+  const {
+    mapType,
+    setMapType,
+    searchedLocation,
+    searchError,
+    clearSearchError,
+    availableSources,
+    activeSources,
+    filteredGeoJson,
+    geoJsonKey,
+    toggleSource,
+    handleSearch,
+  } = useLeafletMap({ geoJsonData, intention });
+
   const currentProvider = MAP_PROVIDERS[mapType];
-
-  const [hiddenSources, setHiddenSources] = useState<string[]>([]);
-  const [spRings, setSpRings] = useState<Position[][]>([]);
-
-  useEffect(() => {
-    fetch("/data/estado-sp.json")
-      .then((response) => response.json())
-      .then((data) => setSpRings(extractSpRings(data)))
-      .catch(() => setSpRings([]));
-  }, []);
-
-  const geoJsonMaskedSP = React.useMemo(() => {
-    return {
-      ...geoJsonData,
-      features: geoJsonData?.features?.filter((f) => isFeatureInSaoPaulo(f, spRings)) || [],
-    };
-  }, [geoJsonData, spRings]);
-
-  const availableSources = React.useMemo(() => {
-    return Array.from(
-      new Set(geoJsonMaskedSP?.features?.map((f) => String(f.properties?.fonte)) || [])
-    ).filter((s) => s !== "undefined" && s !== "null");
-  }, [geoJsonMaskedSP]);
-
-  const activeSources = availableSources.filter((s) => !hiddenSources.includes(s));
-
-  const filteredGeoJson = {
-    ...geoJsonMaskedSP,
-    features:
-      geoJsonMaskedSP?.features?.filter(
-        (f) => !hiddenSources.includes(String(f.properties?.fonte))
-      ) || [],
-  };
-
-  const geoJsonKey = `${intention}-${filteredGeoJson.features.length}-${hiddenSources.join(",")}`;
-
-  const toggleSource = (source: string) => {
-    setHiddenSources((prev) =>
-      prev.includes(source) ? prev.filter((s) => s !== source) : [...prev, source]
-    );
-  };
 
   return (
     <div className="relative w-full h-full rounded-lg overflow-hidden z-0">
+      <MapSearchInput
+        onSearch={handleSearch}
+        errorMessage={searchError}
+        onClearError={clearSearchError}
+      />{" "}
       <MapViewToggle activeType={mapType} onChange={setMapType} />
-
       <MapLegend
         availableSources={availableSources}
         activeSources={activeSources}
@@ -101,9 +86,11 @@ export default function LeafletMap({ geoJsonData, intention }: Props) {
       <MapContainer
         center={INITIAL_CENTER}
         zoom={INITIAL_ZOOM}
+        zoomControl={false}
         style={{ height: "100%", width: "100%" }}
       >
-        <MapController geoJsonData={filteredGeoJson} />
+        <MapController geoJsonData={filteredGeoJson as IGeoJSONFeatureCollection} />
+        <SearchLocationController position={searchedLocation} />
 
         <TileLayer
           key={mapType}
@@ -134,9 +121,7 @@ export default function LeafletMap({ geoJsonData, intention }: Props) {
             }}
             onEachFeature={(feature, layer) => {
               const props = feature.properties;
-
               const content = INTENTION_TEMPLATES[intention || String(props.intencao)](props);
-
               layer.bindPopup(content, {
                 maxWidth: 500,
                 className: "custom-popup",
