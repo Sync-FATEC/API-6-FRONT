@@ -104,27 +104,6 @@ export default function DetailsModal({ data }: Props) {
                 />
               </div>
             </div>
-
-            {data.confianca && (
-              <div className="flex flex-col">
-                <TooltipLabel
-                  label="Confiança"
-                  tip="Probabilidade do sistema de IA ter acertado a intenção da pergunta."
-                  className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2"
-                />
-
-                <div className="bg-slate-50 rounded-xl p-4 flex items-center justify-center h-full">
-                  <span
-                    className={cn(
-                      "text-5xl font-bold tabular-nums",
-                      data.confianca >= 0.9 ? "text-emerald-600" : "text-amber-500"
-                    )}
-                  >
-                    {(data.confianca * 100).toFixed(0)}%
-                  </span>
-                </div>
-              </div>
-            )}
           </section>
 
           {data.preprocessamento && (
