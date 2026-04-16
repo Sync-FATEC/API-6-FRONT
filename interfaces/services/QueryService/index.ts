@@ -23,6 +23,15 @@ export interface INlpPreprocessing {
   texto_limpo: string;
 }
 
+export type RiscoNivel = "sem_dados" | "baixo" | "moderado" | "alto" | "critico";
+
+export interface INotaRisco {
+  nota: number;
+  nivel: RiscoNivel;
+  fatores: string[];
+  por_dimensao: Record<string, number>;
+}
+
 export interface IQueryResponse {
   pergunta: string;
   intencao_detectada: string;
@@ -36,4 +45,5 @@ export interface IQueryResponse {
   total_resultados: number;
   tempo_processamento_ms: number;
   preprocessamento?: INlpPreprocessing | null;
+  nota_risco?: INotaRisco | null;
 }
