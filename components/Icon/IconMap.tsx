@@ -26,6 +26,8 @@ import {
   IconMapPin,
   IconSearch,
   IconTrashXFilled,
+  IconChartBar,
+  IconRefresh,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -59,5 +61,7 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   script: IconScript,
   "gps-pin": IconMapPin,
   search: IconSearch,
-  trash: IconTrashXFilled
+  trash: IconTrashXFilled,
+  "bar-chart-2": IconChartBar,
+  "refresh-cw": IconRefresh,
 };

@@ -28,3 +28,5 @@ export type IconName =
   | "gps-pin"
   | "search"
   | "trash"
+  | "bar-chart-2"
+  | "refresh-cw";
