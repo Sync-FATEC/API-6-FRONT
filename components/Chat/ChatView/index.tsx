@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import ChatHeader from "./Header";
 import DetailsModal from "./DetailsModal";
+import ImovelAmeacasCard from "./ImovelAmeacasCard";
+import GruposCard from "./GruposCard";
 import { ChatMessage } from "@/interfaces/components/chat";
 
 interface Props {
@@ -45,6 +47,22 @@ export default function ChatView({ messages }: Props) {
                     </div>
                   )}
                   <p>{msg.content}</p>
+
+                  {msg.status === "done" && msg.queryData?.imovel && (
+                    <ImovelAmeacasCard
+                      imovel={msg.queryData.imovel}
+                      ameacas={msg.queryData.ameacas_encontradas ?? []}
+                    />
+                  )}
+
+                  {msg.status === "done" &&
+                    msg.queryData?.grupos &&
+                    msg.queryData.grupos.length > 1 && (
+                      <GruposCard
+                        grupos={msg.queryData.grupos}
+                        eixo={msg.queryData.eixo_agrupamento ?? "unico"}
+                      />
+                    )}
 
                   {msg.status === "done" && msg.queryData && <DetailsModal data={msg.queryData} />}
                 </>
