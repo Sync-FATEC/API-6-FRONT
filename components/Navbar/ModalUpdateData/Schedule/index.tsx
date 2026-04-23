@@ -5,6 +5,7 @@ import DateTimePicker from "@/components/Inputs/DateTimePicker";
 import Select from "@/components/Inputs/Select";
 import Input, { InputPattern } from "@/components/Inputs/Text";
 import { usePipelineContext } from "../Context";
+import { PIPELINE_STAGES } from "@/constants/common";
 
 export default function ScheduleBody() {
   const { pipeline } = usePipelineContext();
@@ -13,6 +14,7 @@ export default function ScheduleBody() {
   const [dateTime, setDateTime] = useState<Date | undefined>();
   const [interval, setInterval] = useState<number | "">("");
   const [unit, setUnit] = useState<"minuto" | "hora" | "dia" | "semana" | "mes" | "">("");
+  const [stage, setStage] = useState<string>("full");
 
   const { minDate, maxDate } = useMemo(() => {
     const now = new Date();
@@ -35,6 +37,7 @@ export default function ScheduleBody() {
       time,
       interval: interval as number,
       unit: unit as "minuto" | "hora" | "dia" | "semana" | "mes",
+      stage,
     });
   };
 
@@ -121,6 +124,12 @@ export default function ScheduleBody() {
           includeTime
           minDate={minDate}
           maxDate={maxDate}
+        />
+        <Select
+          label="Etapa do Pipeline"
+          options={PIPELINE_STAGES}
+          value={stage}
+          onChange={setStage}
         />
       </div>
     </form>
