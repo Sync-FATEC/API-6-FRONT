@@ -94,6 +94,9 @@ export default function Modal({
                 </Button>
               </Dialog.Close>
             </div>
+            <Dialog.Description className="sr-only">
+              Modal dialog: {title}
+            </Dialog.Description>
           </div>
 
           <div className="px-6 py-2 flex-1 overflow-y-auto min-h-0">{children}</div>

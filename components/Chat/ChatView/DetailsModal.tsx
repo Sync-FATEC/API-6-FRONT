@@ -399,7 +399,7 @@ export default function DetailsModal({ data }: Props) {
         }
       >
         <div className="flex flex-col gap-8 py-2">
-          <section className="grid grid-cols-[1fr_160px] gap-4 items-stretch">
+          <section className="gap-4 items-stretch">
             <div className="flex flex-col">
               <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Geral
