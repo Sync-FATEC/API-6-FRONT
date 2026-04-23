@@ -5,6 +5,7 @@ export interface IScheduleUpdateRequest {
   horario?: string;
   intervalo?: number;
   unidade?: "minuto" | "hora" | "dia" | "semana" | "mes";
+  etapa?: string;
 }
 
 export interface IScheduleUpdateResponse {

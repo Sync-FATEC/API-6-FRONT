@@ -104,6 +104,7 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     time: string;
     interval: number;
     unit: "minuto" | "hora" | "dia" | "semana" | "mes";
+    stage?: string;
   };
 
   const scheduleMutation = useMutation({
@@ -113,6 +114,7 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
         horario: payload.time,
         intervalo: payload.interval,
         unidade: payload.unit,
+        etapa: payload.stage || "full",
       }),
     onSuccess: () => {
       toast.success("Agendamento criado", "A atualização foi agendada com sucesso.");
