@@ -3,7 +3,8 @@ import { Geist } from "next/font/google";
 import "@/styles/global.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
-import Footer from "@/components/Footer";
+import { cn } from "@/utils/className";
+import Footer from "@/components/Footer/Footer";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -21,13 +22,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} h-full antialiased bg-slate-50`}>
-      <body className="h-screen max-h-screen font-sans overflow-hidden">
+    <html lang="pt-BR" className={cn(geist.variable, "h-full antialiased bg-slate-50")}>
+      <body className="h-screen max-h-screen">
         <Providers>
-          <div className="flex flex-col h-full w-full p-3">
+          <div className="flex flex-col h-full w-full">
             <Navbar />
-            <main className="flex-1 flex flex-col min-h-0">{children}</main>
-            <Footer />
+            <main className="flex-1">
+              <div className="flex flex-col min-h-full">
+                <div className="flex-1 flex flex-col">{children}</div>
+                <Footer />
+              </div>
+            </main>
           </div>
         </Providers>
       </body>
