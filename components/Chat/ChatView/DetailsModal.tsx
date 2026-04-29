@@ -25,10 +25,10 @@ const DIMENSAO_LABEL: Record<string, string> = {
   desmatamento_deter:    "Desmatamento DETER",
   desmatamento_prodes:   "Desmatamento PRODES",
   terras_indigenas:      "Terras Indígenas",
+  terras_quilombolas:    "Terras Quilombolas",
   unidades_conservacao:  "Unid. Conservação",
-  quilombolas:           "Quilombolas",
   contexto_municipal:    "Contexto Municipal",
-  // Compatibilidade com versão antiga
+  quilombolas:           "Quilombolas",
   desmatamento:          "Desmatamento",
   territorios_sensiveis: "Territórios Sensíveis",
 };
