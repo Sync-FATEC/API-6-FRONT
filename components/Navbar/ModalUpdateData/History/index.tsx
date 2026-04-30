@@ -28,6 +28,41 @@ function recurringLabel(s: IAgendamentoResponse): string {
   return base;
 }
 
+function tipoStatusFonte(status: string | undefined): "ok" | "erro" | "retrying" | "andamento" | "neutro" {
+  const valor = (status ?? "").toUpperCase();
+  if (!valor) return "neutro";
+  if (valor.includes("RETRY")) return "retrying";
+  if (valor.includes("ERRO") || valor.includes("FALHA")) return "erro";
+  if (valor.includes("ANDAMENTO")) return "andamento";
+  if (valor.startsWith("OK") || valor.includes("SUCESSO")) return "ok";
+  return "neutro";
+}
+
+function classeStatusFonte(status: string | undefined): string {
+  const tipo = tipoStatusFonte(status);
+  if (tipo === "ok") return "bg-success-50 text-success";
+  if (tipo === "retrying") return "bg-amber-50 text-amber-700";
+  if (tipo === "erro") return "bg-danger-50 text-danger";
+  if (tipo === "andamento") return "bg-sky-50 text-sky-700";
+  return "bg-slate-100 text-slate-500";
+}
+
+function labelStatusFonte(status: string | undefined): string {
+  const tipo = tipoStatusFonte(status);
+  if (tipo === "ok") return "Sucesso";
+  if (tipo === "retrying") return "Retry";
+  if (tipo === "erro") return "Erro";
+  if (tipo === "andamento") return "Em andamento";
+  return status || "Pendente";
+}
+
+function formatarDataHora(dataIso: string | undefined): string {
+  if (!dataIso) return "";
+  const data = new Date(dataIso);
+  if (Number.isNaN(data.getTime())) return "";
+  return data.toLocaleString("pt-BR");
+}
+
 export default function HistoryBody() {
   const { pipeline } = usePipelineContext();
 
@@ -41,6 +76,7 @@ export default function HistoryBody() {
   } = pipeline;
 
   const [cancelingId, setCancelingId] = useState<number | null>(null);
+  const [detalhesAbertos, setDetalhesAbertos] = useState<Record<string, boolean>>({});
 
   const handleCancelSchedule = async (scheduleId: number) => {
     if (!onCancelSchedule) return;
@@ -52,6 +88,10 @@ export default function HistoryBody() {
     } finally {
       setCancelingId(null);
     }
+  };
+
+  const toggleDetalhes = (key: string) => {
+    setDetalhesAbertos((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -158,8 +198,8 @@ export default function HistoryBody() {
                     <span>Início: {formatDate(execution.inicio)}</span>
 
                     <span>
-                      Duração: {Math.floor((execution.duracao_total || 0) / 60)} min{" "}
-                      {Math.round((execution.duracao_total || 0) % 60)} s
+                      Duração: {Math.floor((execution.duracao_total || execution.duracao_total_segundos || 0) / 60)} min{" "}
+                      {Math.round((execution.duracao_total || execution.duracao_total_segundos || 0) % 60)} s
                     </span>
                   </div>
 
@@ -168,6 +208,78 @@ export default function HistoryBody() {
                       <span className="font-medium text-slate-600">Etapas: </span>
 
                       {execution.etapas.map((stage) => stage.etapa).join(" -> ")}
+                    </div>
+                  )}
+
+                  {execution.fontes && execution.fontes.length > 0 && (
+                    <div className="text-xs text-slate-500 space-y-2">
+                      <p className="font-medium text-slate-600">Status por base:</p>
+                      <ul className="space-y-1">
+                        {execution.fontes.map((fonte) => {
+                          const fonteKey = `${execution.inicio}-${fonte.fonte}`;
+                          const detalhesVisiveis = Boolean(detalhesAbertos[fonteKey]);
+
+                          return (
+                            <li key={fonteKey} className="rounded bg-white px-2 py-1 border border-slate-200">
+                              <div className="flex justify-between items-center gap-2">
+                                <span className="text-slate-700">{fonte.fonte}</span>
+                                <span className={cn("px-2 py-0.5 rounded-sm", classeStatusFonte(fonte.status))}>
+                                  {labelStatusFonte(fonte.status)}
+                                </span>
+                                <span className="text-slate-500">
+                                  {fonte.tentativas ?? 1}/{fonte.max_tentativas ?? fonte.tentativas ?? 1} tent.
+                                </span>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => toggleDetalhes(fonteKey)}
+                                className="mt-1 text-xs font-medium text-primary hover:underline"
+                              >
+                                {detalhesVisiveis ? "Ocultar detalhes técnicos" : "Ver detalhes técnicos"}
+                              </button>
+
+                              {detalhesVisiveis && (
+                                <div className="mt-2 rounded border border-slate-200 bg-slate-50 p-2 space-y-2 text-xs text-slate-600">
+                                  <p>
+                                    <span className="font-medium text-slate-700">Status bruto:</span> {fonte.status}
+                                  </p>
+
+                                  {fonte.erro && (
+                                    <p>
+                                      <span className="font-medium text-slate-700">Erro:</span> {fonte.erro}
+                                    </p>
+                                  )}
+
+                                  {fonte.mensagem_final && (
+                                    <p>
+                                      <span className="font-medium text-slate-700">Mensagem final:</span> {fonte.mensagem_final}
+                                    </p>
+                                  )}
+
+                                  {fonte.historico_tentativas && fonte.historico_tentativas.length > 0 && (
+                                    <div className="space-y-1">
+                                      <p className="font-medium text-slate-700">Histórico de tentativas:</p>
+                                      <ul className="space-y-1">
+                                        {fonte.historico_tentativas.map((tentativa) => (
+                                          <li key={`${fonteKey}-${tentativa.tentativa}-${tentativa.timestamp ?? "sem-data"}`} className="rounded border border-slate-200 bg-white px-2 py-1">
+                                            T{tentativa.tentativa} - {tentativa.status}
+                                            {typeof tentativa.duracao_segundos === "number" && ` - ${tentativa.duracao_segundos.toFixed(1)}s`}
+                                            {tentativa.timestamp && ` - ${formatarDataHora(tentativa.timestamp)}`}
+                                            {tentativa.erro && (
+                                              <div className="text-danger mt-0.5">{tentativa.erro}!</div>
+                                            )}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </div>
                   )}
                 </li>

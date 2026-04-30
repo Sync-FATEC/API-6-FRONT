@@ -1,6 +1,7 @@
 import {
   IPipelineHistoryResponse,
   IPipelineExecutionResponse,
+  IPipelineStatusResponse,
   PipelineStatusResponse,
   PipelineCancelResponse,
 } from "@/interfaces/services/PipelineService";
@@ -25,6 +26,10 @@ export const PipelineService = {
 
   status: async (): Promise<PipelineStatusResponse> => {
     return BaseService.get<PipelineStatusResponse>("/etl/status");
+  },
+
+  getExecutionStatus: async (executionId: string): Promise<IPipelineStatusResponse> => {
+    return BaseService.get<IPipelineStatusResponse>(`/etl/status/${executionId}?_=${Date.now()}`);
   },
 
   cancel: async (): Promise<PipelineCancelResponse> => {

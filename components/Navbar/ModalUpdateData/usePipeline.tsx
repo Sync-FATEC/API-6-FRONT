@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   IPipelineHistoryResponse,
+  IPipelineStatusResponse,
   PipelineStatusResponse,
 } from "@/interfaces/services/PipelineService";
 import { IAgendamentoResponse } from "@/interfaces/services/ScheduleService";
@@ -13,7 +14,9 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
   const queryClient = useQueryClient();
 
   const [cooldown, setCooldown] = useState(0);
+  const [executionId, setExecutionId] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const finalNotificationRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (cooldown > 0) {
@@ -43,7 +46,9 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     mutationFn: ({ stage, entities }: { stage: string; entities: string[] }) =>
       PipelineService.execute(stage, entities),
 
-    onSuccess: () => {
+    onSuccess: (response) => {
+      setExecutionId(response.execution_id ?? null);
+      
       queryClient.setQueryData<PipelineStatusResponse>(["pipelineStatus"], (oldData) => {
         if (!oldData) return oldData;
 
@@ -60,6 +65,7 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     },
 
     onError: (error: Error) => {
+      setExecutionId(null);
       if (error.message.includes("409")) {
         toast.warning(
           "Execução em andamento",
@@ -82,6 +88,48 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
     await executeMutation.mutateAsync({ stage, entities: mappedEntities });
     setCooldown(10);
   };
+
+  const executionStatusQuery = useQuery({
+    queryKey: ["executionStatus", executionId],
+    queryFn: () => PipelineService.getExecutionStatus(executionId as string),
+    enabled: Boolean(executionId),
+    retry: (failureCount, error) => {
+      const message = error instanceof Error ? error.message : "";
+      if (message.includes("404")) {
+        return failureCount < 6;
+      }
+      return failureCount < 2;
+    },
+    refetchInterval: (query) => {
+      const data = query.state.data as IPipelineStatusResponse | undefined;
+      if (!data) return 2000;
+      const finalizado = data.finalizado || data.status_execucao === "sucesso" || data.status_execucao === "falha";
+      return finalizado ? false : 2000;
+    },
+  });
+
+  useEffect(() => {
+    const status = executionStatusQuery.data;
+    if (!status || !executionId) return;
+
+    const finalizado = status.finalizado || status.status_execucao === "sucesso" || status.status_execucao === "falha";
+    if (!finalizado) return;
+    if (finalNotificationRef.current === executionId) return;
+
+    finalNotificationRef.current = executionId;
+    queryClient.invalidateQueries({ queryKey: ["historyData"] });
+    queryClient.invalidateQueries({ queryKey: ["pipelineStatus"] });
+
+    if (status.status_execucao === "sucesso") {
+      toast.success("Pipeline concluído", "A atualização das bases foi finalizada com sucesso.");
+      return;
+    }
+
+    toast.error(
+      "Pipeline finalizado com falha",
+      status.mensagem ?? "Uma ou mais bases apresentaram erro definitivo."
+    );
+  }, [executionId, queryClient, executionStatusQuery.data]);
 
   const historyQuery = useQuery({
     queryKey: ["historyData"],
@@ -182,10 +230,16 @@ export function usePipeline(currentView: "execution" | "history" | "schedule" = 
       executeMutation.reset();
       scheduleMutation.reset();
       cancelScheduleMutation.reset();
+      setExecutionId(null);
+      finalNotificationRef.current = null;
     },
 
     pipelineStatus: statusQuery.data,
-    isLoadingStatus: statusQuery.isFetching,
+    isLoadingStatus: statusQuery.isFetching || executionStatusQuery.isFetching,
+
+    executionId,
+    executionStatusData: executionStatusQuery.data,
+    statusError: executionStatusQuery.error instanceof Error ? executionStatusQuery.error.message : null,
 
     historyData: historyQuery.data,
     isLoadingHistory: historyQuery.isFetching,
