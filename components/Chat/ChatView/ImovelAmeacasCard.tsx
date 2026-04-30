@@ -43,7 +43,7 @@ const AMEACA_CONFIG: Record<
     icon: "shield",
     mapSource: "icmbio",
   },
-  quilombola: { label: "Quilombolas", icon: "fist", mapSource: "palmares" },
+  quilombola: { label: "Territórios quilombolas", icon: "fist", mapSource: "palmares" },
 };
 
 function formatarDetalhe(a: IAmeacaEncontrada): string {
