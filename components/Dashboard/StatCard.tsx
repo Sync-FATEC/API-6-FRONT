@@ -23,12 +23,7 @@ interface StatCardProps {
   trendValue?: string;
   color?: CategoryColor;
 }
-export default function StatCard({
-  title,
-  value,
-  icon,
-  color = "desconhecida",
-}: StatCardProps) {
+export default function StatCard({ title, value, icon, color = "desconhecida" }: StatCardProps) {
   const config = colorMap[color];
 
   const formattedValue =
@@ -44,10 +39,7 @@ export default function StatCard({
         <div className="mt-3 flex items-center gap-3">
           {icon && (
             <div
-              className={cn(
-                "p-2 rounded-lg flex items-center justify-center shrink-0 shadow-sm",
-                config.bg
-              )}
+              className={cn("p-2 rounded-lg flex items-center justify-center shrink-0", config.bg)}
             >
               <Icon name={icon} size={20} className="text-white" />
             </div>
