@@ -32,12 +32,13 @@ export default function DateTimePicker({
 }: Props) {
   const [open, setOpen] = useState(false);
 
+  const currentDate = value || new Date();
+
   const { state, actions, lists, validators } = useDateTimePicker({
-    initialDate: value || new Date(),
+    value: currentDate,
     minDate,
     maxDate,
-    includeTime,
-    onChange,
+    onChange: onChange || (() => {}),
   });
 
   const formattedDay = state.day.toString().padStart(2, "0");
@@ -46,15 +47,7 @@ export default function DateTimePicker({
   const formattedMinute = state.minute.toString().padStart(2, "0");
 
   const triggerButton = (
-    <button
-      type="button"
-      id={id}
-      className={cn(
-        baseInputClasses,
-        "cursor-pointer",
-        className
-      )}
-    >
+    <button type="button" id={id} className={cn(baseInputClasses, "cursor-pointer", className)}>
       <Icon name="calendar" size={20} className="text-slate-400 me-1" />
       <div className="flex items-center gap-2 text-slate-700">
         <span>{formattedDay}</span>

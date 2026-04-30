@@ -1,21 +1,18 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 interface Props {
-  initialDate: Date;
+  value: Date;
   minDate?: Date;
   maxDate?: Date;
-  includeTime: boolean;
-  onChange?: (date: Date) => void;
+  onChange: (date: Date) => void;
 }
 
-export function useDateTimePicker({ initialDate, minDate, maxDate, includeTime, onChange }: Props) {
-  const [day, setDay] = useState(initialDate.getDate());
-  const [month, setMonth] = useState(initialDate.getMonth() + 1);
-  const [year, setYear] = useState(initialDate.getFullYear());
-  const [hour, setHour] = useState(initialDate.getHours());
-
-  const initialMinute = initialDate.getMinutes();
-  const [minute, setMinute] = useState((Math.round(initialMinute / 5) * 5) % 60);
+export function useDateTimePicker({ value, minDate, maxDate, onChange }: Props) {
+  const day = value.getDate();
+  const month = value.getMonth() + 1;
+  const year = value.getFullYear();
+  const hour = value.getHours();
+  const minute = (Math.round(value.getMinutes() / 5) * 5) % 60;
 
   const getDaysInMonth = (m: number, y: number) => new Date(y, m, 0).getDate();
 
@@ -111,32 +108,54 @@ export function useDateTimePicker({ initialDate, minDate, maxDate, includeTime, 
     [minDate, maxDate, year, month, day, hour]
   );
 
-  useEffect(() => {
-    if (isMonthDisabled(month)) setMonth(monthsList.find((m) => !isMonthDisabled(m)) || month);
-    if (isDayDisabled(day)) setDay(daysList.find((d) => !isDayDisabled(d)) || day);
-    if (includeTime) {
-      if (isHourDisabled(hour)) setHour(hoursList.find((h) => !isHourDisabled(h)) || hour);
-      if (isMinuteDisabled(minute))
-        setMinute(minutesList.find((m) => !isMinuteDisabled(m)) || minute);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [year, month, day, hour, minute, includeTime]);
+  const handleSetDay = useCallback(
+    (newDay: number) => {
+      onChange(new Date(year, month - 1, newDay, hour, minute));
+    },
+    [year, month, hour, minute, onChange]
+  );
 
-  useEffect(() => {
-    const maxDays = getDaysInMonth(month, year);
-    if (day > maxDays) setDay(maxDays);
-  }, [month, year, day]);
+  const handleSetMonth = useCallback(
+    (newMonth: number) => {
+      const maxDays = getDaysInMonth(newMonth, year);
+      const cappedDay = Math.min(day, maxDays);
+      onChange(new Date(year, newMonth - 1, cappedDay, hour, minute));
+    },
+    [year, day, hour, minute, onChange]
+  );
 
-  useEffect(() => {
-    if (onChange) {
-      const newDate = new Date(year, month - 1, day, hour, minute);
-      onChange(newDate);
-    }
-  }, [day, month, year, hour, minute, onChange]);
+  const handleSetYear = useCallback(
+    (newYear: number) => {
+      const maxDays = getDaysInMonth(month, newYear);
+      const cappedDay = Math.min(day, maxDays);
+      onChange(new Date(newYear, month - 1, cappedDay, hour, minute));
+    },
+    [month, day, hour, minute, onChange]
+  );
+
+  const handleSetHour = useCallback(
+    (newHour: number) => {
+      onChange(new Date(year, month - 1, day, newHour, minute));
+    },
+    [year, month, day, minute, onChange]
+  );
+
+  const handleSetMinute = useCallback(
+    (newMinute: number) => {
+      onChange(new Date(year, month - 1, day, hour, newMinute));
+    },
+    [year, month, day, hour, onChange]
+  );
 
   return {
     state: { day, month, year, hour, minute },
-    actions: { setDay, setMonth, setYear, setHour, setMinute },
+    actions: {
+      setDay: handleSetDay,
+      setMonth: handleSetMonth,
+      setYear: handleSetYear,
+      setHour: handleSetHour,
+      setMinute: handleSetMinute,
+    },
     lists: { daysList, monthsList, yearsList, hoursList, minutesList },
     validators: { isMonthDisabled, isDayDisabled, isHourDisabled, isMinuteDisabled },
   };

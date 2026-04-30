@@ -29,4 +29,4 @@ export type IconName =
   | "search"
   | "trash"
   | "bar-chart-2"
-  | "refresh-cw";
+  | "download";

@@ -52,6 +52,7 @@ export default function ChatView({ messages }: Props) {
                     <ImovelAmeacasCard
                       imovel={msg.queryData.imovel}
                       ameacas={msg.queryData.ameacas_encontradas ?? []}
+                      risco={msg.queryData.nota_risco}
                     />
                   )}
 

@@ -27,7 +27,7 @@ import {
   IconSearch,
   IconTrashXFilled,
   IconChartBar,
-  IconRefresh,
+  IconDownload,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -63,5 +63,5 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   search: IconSearch,
   trash: IconTrashXFilled,
   "bar-chart-2": IconChartBar,
-  "refresh-cw": IconRefresh,
+  download: IconDownload,
 };

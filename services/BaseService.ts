@@ -40,4 +40,14 @@ export const BaseService = {
     if (!response.ok) throw new Error(`Erro na requisição: ${response.status}`);
     return (await response.json()) as T;
   },
+
+  async getBlob(endpoint: string): Promise<Blob> {
+    const response = await fetch(`${BASE_URL}${endpoint}`);
+    
+    if (!response.ok) {
+      throw new Error(`Erro ao baixar arquivo: ${response.status}`);
+    }
+    
+    return await response.blob();
+  },
 };

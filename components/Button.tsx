@@ -4,7 +4,7 @@ import { cn } from "@/utils/className";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 const buttonVariants = cva(
-  "inline-flex items-center shrink-0 font-semibold justify-center gap-3 whitespace-nowrap cursor-pointer disabled:pointer-events-none disabled:opacity-50",
+  "relative inline-flex items-center shrink-0 font-semibold justify-center whitespace-nowrap cursor-pointer disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -80,8 +80,18 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
         aria-busy={isLoading}
         {...props}
       >
-        {isLoading && <LoadingSpinner />}
-        {children}
+        {/* Spinner posicionado absolutamente ao centro */}
+        {isLoading && (
+          <span className="absolute inset-0 flex items-center justify-center">
+            <LoadingSpinner />
+          </span>
+        )}
+
+        <span
+          className={cn("inline-flex items-center justify-center gap-3", isLoading && "invisible")}
+        >
+          {children}
+        </span>
       </button>
     );
   }
