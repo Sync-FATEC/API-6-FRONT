@@ -21,6 +21,12 @@
   --color-warning: #e38e25;
   --color-warning-50: color-mix(in srgb, white 95%, var(--color-warning));
 
+  --color-asg-great: #346818;
+  --color-asg-good: #91b848;
+  --color-asg-okay: #f6a117;
+  --color-asg-bad: #f28c37;
+  --color-asg-terrible: #f61247;
+
   --font-sans: var(--font-geist);
 }
 

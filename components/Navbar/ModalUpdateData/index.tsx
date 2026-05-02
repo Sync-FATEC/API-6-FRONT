@@ -43,7 +43,6 @@ function ModalContent({ open, onOpenChange }: BaseModalProps) {
   );
 }
 
-// Exportação principal que injeta o Provider
 export default function ModalUpdateData(props: BaseModalProps) {
   return (
     <PipelineProvider open={props.open}>

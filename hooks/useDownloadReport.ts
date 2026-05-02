@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { QueryService } from "@/services/QueryService";
 import { toast } from "@/lib/toast";
+
 export function useDownloadReport() {
   return useMutation({
     mutationFn: (car: string) => QueryService.downloadPropertyReport(car),
@@ -19,11 +20,10 @@ export function useDownloadReport() {
         window.URL.revokeObjectURL(url);
 
         toast.success("Download concluído", "O relatório ASG foi gerado e baixado com sucesso.");
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (err) {
+      } catch {
         toast.error(
           "Erro ao processar arquivo",
-          "Houve um problema inesperado ao iniciar o download."
+          "Um problema com o seu navegador impediu o download do relatório."
         );
       }
     },
@@ -31,7 +31,7 @@ export function useDownloadReport() {
       console.error("Erro ao baixar o relatório ASG:", error);
       toast.error(
         "Erro no download",
-        "Não foi possível gerar o relatório para este imóvel no momento."
+        "Ocorreu um problema inesperado ao iniciar a geração do relatório."
       );
     },
   });
