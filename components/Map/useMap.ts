@@ -3,13 +3,17 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { MAP_PROVIDERS } from "@/constants/map";
 import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 import { extractSpRings, isFeatureInSaoPaulo } from "./Calculation";
+import type { FiltroMapaDia } from "@/contexts/DaySelectionContext";
 
 interface Props {
   geoJsonData: IGeoJSONFeatureCollection | null;
   intention: string | null;
+  dayFilter?: FiltroMapaDia;
+  dataSelecionada?: string;
+  onPointClick?: (text: string) => void;
 }
 
-export function useLeafletMap({ geoJsonData, intention }: Props) {
+export function useLeafletMap({ geoJsonData, intention, dayFilter, dataSelecionada, onPointClick }: Props) {
   const [mapType, setMapType] = useState<keyof typeof MAP_PROVIDERS>("satellite");
   const [hiddenSources, setHiddenSources] = useState<string[]>([]);
   const [searchedLocation, setSearchedLocation] = useState<[number, number] | null>(null);
@@ -25,6 +29,132 @@ export function useLeafletMap({ geoJsonData, intention }: Props) {
     },
     staleTime: Infinity,
   });
+
+  // Converter dados do dia em GeoJSON
+  const dayFilterGeoJson = useMemo(() => {
+    if (!dayFilter || !dataSelecionada) return null;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const features: any[] = [];
+
+    // Adicionar queimadas
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dayFilter.queimadasDia?.forEach((item: any) => {
+      if (item.longitude && item.latitude) {
+        features.push({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [item.longitude, item.latitude],
+          },
+          properties: {
+            fonte: "queimadas",
+            data: item.data_hora,
+            tipo: "queimada",
+            ...item,
+          },
+        });
+      }
+    });
+
+    // Adicionar desmatamento
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dayFilter.desmatamentoDia?.forEach((item: any) => {
+      if (item.longitude && item.latitude) {
+        features.push({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [item.longitude, item.latitude],
+          },
+          properties: {
+            fonte: "deter",
+            data: item.data_avistamento,
+            tipo: "desmatamento",
+            ...item,
+          },
+        });
+      }
+    });
+
+    // Adicionar SICAR
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dayFilter.sicarDia?.forEach((item: any) => {
+      if (item.geometry) {
+        features.push({
+          type: "Feature",
+          geometry: item.geometry,
+          properties: {
+            fonte: "sicar",
+            data: item.data_criacao,
+            tipo: "sicar",
+            ...item,
+          },
+        });
+      }
+    });
+
+    // Adicionar PRODES
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dayFilter.prodesDia?.forEach((item: any) => {
+      if (item.longitude && item.latitude) {
+        features.push({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [item.longitude, item.latitude],
+          },
+          properties: {
+            fonte: "prodes",
+            data: item.data_imagem,
+            tipo: "prodes",
+            ...item,
+          },
+        });
+      } else if (item.geometry) {
+        features.push({
+          type: "Feature",
+          geometry: item.geometry,
+          properties: {
+            fonte: "prodes",
+            data: item.data_imagem,
+            tipo: "prodes",
+            ...item,
+          },
+        });
+      }
+    });
+
+    return {
+      type: "FeatureCollection" as const,
+      features,
+    };
+  }, [dayFilter, dataSelecionada]);
+
+  // Handler para clique em pontos do mapa
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handlePointClick = (feature: any) => {
+    if (!onPointClick || !dataSelecionada) return;
+
+    const properties = feature.properties || {};
+    const tipo = properties.tipo || properties.fonte;
+
+    let query = "";
+
+    if (tipo === "desmatamento" || tipo === "Desmatamento") {
+      query = `Desmatamentos em ${dataSelecionada}`;
+    } else if (tipo === "queimada" || tipo === "Queimadas") {
+      query = `Queimadas em ${dataSelecionada}`;
+    } else if (tipo === "sicar" || tipo === "SICAR") {
+      query = `Imóveis rurais (SICAR) em ${dataSelecionada}`;
+    } else if (tipo === "prodes" || tipo === "PRODES") {
+      query = `Desmatamentos PRODES em ${dataSelecionada}`;
+    } else {
+      query = `Dados de ${tipo} em ${dataSelecionada}`;
+    }
+
+    onPointClick(query);
+  };
 
   const searchMutation = useMutation({
     mutationFn: async (term: string) => {
@@ -52,13 +182,16 @@ export function useLeafletMap({ geoJsonData, intention }: Props) {
     },
   });
 
+  // Se tem filtro de dia, usar os dados do dia; caso contrário, usar geoJsonData
+  const dataToUse = dayFilterGeoJson || geoJsonData;
+
   const geoJsonMaskedSP = useMemo(() => {
-    if (!geoJsonData) return null;
+    if (!dataToUse) return null;
     return {
-      ...geoJsonData,
-      features: geoJsonData.features?.filter((f) => isFeatureInSaoPaulo(f, spRings)) || [],
+      ...dataToUse,
+      features: dataToUse.features?.filter((f) => isFeatureInSaoPaulo(f, spRings)) || [],
     };
-  }, [geoJsonData, spRings]);
+  }, [dataToUse, spRings]);
 
   const availableSources = useMemo(() => {
     return Array.from(
@@ -79,7 +212,7 @@ export function useLeafletMap({ geoJsonData, intention }: Props) {
     };
   }, [geoJsonMaskedSP, hiddenSources]);
 
-  const geoJsonKey = `${intention}-${filteredGeoJson?.features.length}-${hiddenSources.join(",")}`;
+  const geoJsonKey = `${intention}-${dataSelecionada}-${filteredGeoJson?.features.length}-${hiddenSources.join(",")}`;
 
   const toggleSource = (source: string) => {
     setHiddenSources((prev) =>
@@ -105,6 +238,7 @@ export function useLeafletMap({ geoJsonData, intention }: Props) {
     geoJsonKey,
     toggleSource,
     handleSearch,
+    handlePointClick,
     isSearching: searchMutation.isPending,
   };
 }

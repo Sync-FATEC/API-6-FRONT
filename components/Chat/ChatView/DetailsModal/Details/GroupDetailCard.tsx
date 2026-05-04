@@ -1,16 +1,12 @@
-import { formatIntent, RISK_CONFIG } from "@/constants/chat";
-import { IGrupoResposta, RiscoNivel } from "@/interfaces/services/QueryService";
-import { cn } from "@/utils/className";
+import { formatIntent } from "@/constants/chat";
+import { IGrupoResposta } from "@/interfaces/services/QueryService";
 
 interface GroupDetailCardProps {
   group: IGrupoResposta;
 }
 
 export function GroupDetailCard({ group }: GroupDetailCardProps) {
-  const riskLevel = (group.nota_risco?.nivel ?? "sem_dados") as RiscoNivel;
-  const config = RISK_CONFIG[riskLevel] ?? RISK_CONFIG.sem_dados;
-  const score = group.nota_risco?.nota ?? 0;
-  
+      
   const formattedSources =
     group.fontes && group.fontes.length > 0
       ? group.fontes.map((source) => source.nome || source.identificador).join(" | ")
@@ -27,21 +23,8 @@ export function GroupDetailCard({ group }: GroupDetailCardProps) {
             {group.filtros?.cod_imovel && ` · ${group.filtros.cod_imovel}`}
           </div>
         </div>
-        
-        {group.nota_risco && riskLevel !== "sem_dados" ? (
-          <span
-            className={cn(
-              "px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap",
-              config.badge
-            )}
-          >
-            {config.label} · {score}/100
-          </span>
-        ) : (
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-200 text-slate-500">
-            sem dados
-          </span>
-        )}
+
+
       </div>
 
       <div className="grid grid-cols-2 gap-3 text-xs">

@@ -33,9 +33,8 @@ const InfoRow = ({
     <div className="flex justify-between items-center gap-8">
       <p className="uppercase font-semibold text-slate-400 whitespace-nowrap">{label}</p>
       <p
-        className={`uppercase font-semibold text-right truncate ${
-          isInvalid ? "text-slate-500" : "text-slate-700"
-        }`}
+        className={`uppercase font-semibold text-right truncate ${isInvalid ? "text-slate-500" : "text-slate-700"
+          }`}
       >
         {isInvalid ? "Não informado" : value}
       </p>
@@ -43,8 +42,22 @@ const InfoRow = ({
   );
 };
 
+const isRecordObject = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
 const discoverSource = (p: PopupPayload, data: unknown): string => {
-  if ("fonte" in p && typeof p.fonte === "string") return p.fonte;
+  const rawFonte = ("fonte" in p && typeof p.fonte === "string") ? p.fonte :
+    (isRecordObject(data) && "fonte" in data && typeof data.fonte === "string") ? data.fonte :
+      (isRecordObject(data) && "tipo" in data && typeof data.tipo === "string") ? data.tipo : null;
+
+  if (rawFonte) {
+    const f = rawFonte.toLowerCase();
+    if (MAP_SOURCES[f]) return f;
+    if (f === "queimada") return "queimadas";
+    if (f === "desmatamento") return "deter";
+  }
+
   if (isFireFlat(data)) return "queimadas";
   if (isDeterFlat(data)) return "deter";
   if (isProdesFlat(data)) return "prodes";
@@ -84,115 +97,121 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
   let fields: React.ReactNode = null;
 
   switch (fonte) {
-    case "queimadas":
-      if (isFireFlat(data)) {
-        title = "Área detectada";
-        fields = (
-          <>
-            <InfoRow label="Bioma" value={data.bioma} />
-            <InfoRow label="FRP (Potência)" value={data.frp ? `${data.frp} MW` : null} />
-            <InfoRow label="Risco Fogo" value={data.risco_fogo} />
-            <InfoRow label="Satélite" value={data.satelite} />
-          </>
-        );
-      }
+    case "queimadas": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      title = "Área detectada";
+      fields = (
+        <>
+          <InfoRow label="Bioma" value={d.bioma} />
+          <InfoRow label="FRP (Potência)" value={d.frp ? `${d.frp} MW` : null} />
+          <InfoRow label="Risco Fogo" value={d.risco_fogo} />
+          <InfoRow label="Satélite" value={d.satelite} />
+        </>
+      );
       break;
+    }
 
-    case "palmares":
-      if (isQuilomboFlat(data)) {
-        title = data.comunidade || "Comunidade Quilombola";
-        fields = (
-          <>
-            <InfoRow label="Município" value={(municipio as string) || data.comunidade} />
-            <InfoRow label="Certificação" value={data.ano_certificacao} />
-            <InfoRow label="FCP" value={data.processo_fcp} />
-            <InfoRow label="Incra" value={data.processo_incra} />
-          </>
-        );
-      }
+    case "palmares": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      title = d.comunidade || "Comunidade Quilombola";
+      fields = (
+        <>
+          <InfoRow label="Município" value={(municipio as string) || d.comunidade} />
+          <InfoRow label="Certificação" value={d.ano_certificacao} />
+          <InfoRow label="FCP" value={d.processo_fcp} />
+          <InfoRow label="Incra" value={d.processo_incra} />
+        </>
+      );
       break;
+    }
 
-    case "deter":
-      if (isDeterFlat(data)) {
-        title = data.classe || "Alerta DETER";
+    case "deter": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      title = d.classe || "Alerta DETER";
+      const area = "area_total_km2" in d ? d.area_total_km2 : d.area_km2;
+      const satelite = "satelite" in d ? d.satelite : null;
 
-        const area = "area_total_km2" in data ? data.area_total_km2 : data.area_km2;
-        const satelite = "satelite" in data ? data.satelite : null;
-
-        fields = (
-          <>
-            <InfoRow label="Classe" value={data.classe} />
-            <InfoRow label="Área" value={formatArea(area, "km²")} />
-            <InfoRow label="Satélite" value={satelite} />
-          </>
-        );
-      }
+      fields = (
+        <>
+          <InfoRow label="Classe" value={d.classe} />
+          <InfoRow label="Área" value={formatArea(area, "km²")} />
+          <InfoRow label="Satélite" value={satelite} />
+        </>
+      );
       break;
+    }
 
-    case "prodes":
-      if (isProdesFlat(data)) {
-        const classeNome = "classe_nome" in data ? data.classe_nome : data.classe;
-        title = classeNome || "Desmatamento PRODES";
+    case "prodes": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      const classeNome = d.classe_nome || d.classe;
+      title = classeNome || "Desmatamento PRODES";
 
-        fields = (
-          <>
-            <InfoRow label="Ano" value={data.ano} />
-            <InfoRow label="Classe" value={classeNome} />
-            <InfoRow label="Área" value={formatArea(data.area_km, "km²")} />
-            <InfoRow label="Satélite" value={data.satelite} />
-          </>
-        );
-      }
+      fields = (
+        <>
+          <InfoRow label="Ano" value={d.ano} />
+          <InfoRow label="Classe" value={classeNome} />
+          <InfoRow label="Área" value={formatArea(d.area_km || d.area_km2, "km²")} />
+          <InfoRow label="Satélite" value={d.satelite} />
+        </>
+      );
       break;
+    }
 
-    case "icmbio":
-      if (isIcmbioFlat(data)) {
-        title = data.nome || "Unidade de Conservação";
-        fields = (
-          <>
-            <InfoRow label="Categoria" value={data.categoria} />
-            <InfoRow label="Grupo" value={data.grupo} />
-            <InfoRow label="Esfera" value={data.esfera} />
-            <InfoRow label="Área" value={formatArea(data.area_ha, "ha")} />
-          </>
-        );
-      }
+    case "icmbio": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      title = d.nome || "Unidade de Conservação";
+      fields = (
+        <>
+          <InfoRow label="Categoria" value={d.categoria} />
+          <InfoRow label="Grupo" value={d.grupo} />
+          <InfoRow label="Esfera" value={d.esfera} />
+          <InfoRow label="Área" value={formatArea(d.area_ha, "ha")} />
+        </>
+      );
       break;
+    }
 
-    case "funai":
-      if (isFunaiFlat(data)) {
-        title = data.nome || "Terra Indígena";
-        fields = (
-          <>
-            <InfoRow label="Município" value={municipio} />
-            <InfoRow label="Etnia" value={data.etnia} />
-            <InfoRow label="Fase" value={data.fase} />
-            <InfoRow label="Área" value={formatArea(data.area_ha, "ha")} />
-          </>
-        );
-      }
+    case "funai": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      title = d.nome || "Terra Indígena";
+      fields = (
+        <>
+          <InfoRow label="Município" value={municipio} />
+          <InfoRow label="Etnia" value={d.etnia} />
+          <InfoRow label="Fase" value={d.fase} />
+          <InfoRow label="Área" value={formatArea(d.area_ha, "ha")} />
+        </>
+      );
       break;
+    }
 
-    case "sicar":
-      if (isSicarFlat(data)) {
-        title = data.cod_imovel || "Imóvel Rural (CAR)";
+    case "sicar": {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = data as any;
+      title = d.cod_imovel || "Imóvel Rural (CAR)";
 
-        const formattedStatus = data.ind_status
-          ? SICAR_STATUS_MAP[String(data.ind_status).toUpperCase()] || data.ind_status
-          : null;
+      const formattedStatus = d.ind_status
+        ? SICAR_STATUS_MAP[String(d.ind_status).toUpperCase()] || d.ind_status
+        : null;
 
-        fields = (
-          <>
-            <InfoRow label="Município" value={municipio} />
-            <InfoRow label="Categoria" value={data.ind_tipo} />
-            <InfoRow label="Status" value={formattedStatus} />
-            <InfoRow label="Condição" value={data.des_condic} />
-            <InfoRow label="Área" value={formatArea(data.num_area, "ha")} />
-            <InfoRow label="Mód. Fiscais" value={data.mod_fiscal} />
-          </>
-        );
-      }
+      fields = (
+        <>
+          <InfoRow label="Município" value={municipio} />
+          <InfoRow label="Categoria" value={d.ind_tipo} />
+          <InfoRow label="Status" value={formattedStatus} />
+          <InfoRow label="Condição" value={d.des_condic} />
+          <InfoRow label="Área" value={formatArea(d.num_area, "ha")} />
+          <InfoRow label="Mód. Fiscais" value={d.mod_fiscal} />
+        </>
+      );
       break;
+    }
   }
 
   return (

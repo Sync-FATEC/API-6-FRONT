@@ -48,6 +48,19 @@ export const DashboardService = {
     return BaseService.get("/dados/quilombolas");
   },
 
+  getSicar: async (dataInicio?: string, dataFim?: string) => {
+    let url = "/dados/sicar";
+    const params: string[] = [];
+    
+    if (dataInicio) params.push(`data_inicio=${dataInicio}`);
+    if (dataFim) params.push(`data_fim=${dataFim}`);
+    
+    if (params.length > 0) {
+      url += `?${params.join("&")}`;
+    }
+    return BaseService.get(url);
+  },
+
   getProdes: async (dataInicio?: string, dataFim?: string) => {
     let url = "/dados/prodes";
     if (dataInicio || dataFim) {
