@@ -19,13 +19,13 @@ const normalizeBaseUrl = (value?: string): string => {
 const BASE_URL = normalizeBaseUrl(rawBaseUrl);
 
 export const BaseService = {
-  async post<T>(endpoint: string, data: unknown): Promise<T> {
+  async post<T>(endpoint: string, data?: unknown): Promise<T> {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
     });
 
     if (!response.ok) {
@@ -39,5 +39,15 @@ export const BaseService = {
     const response = await fetch(`${BASE_URL}${endpoint}`);
     if (!response.ok) throw new Error(`Erro na requisição: ${response.status}`);
     return (await response.json()) as T;
-  }
+  },
+
+  async getBlob(endpoint: string): Promise<Blob> {
+    const response = await fetch(`${BASE_URL}${endpoint}`);
+    
+    if (!response.ok) {
+      throw new Error(`Erro ao baixar arquivo: ${response.status}`);
+    }
+    
+    return await response.blob();
+  },
 };

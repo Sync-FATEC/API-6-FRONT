@@ -23,3 +23,10 @@ export type IconName =
   | "arrow-left"
   | "farm"
   | "info"
+  | "data"
+  | "script"
+  | "gps-pin"
+  | "search"
+  | "trash"
+  | "bar-chart-2"
+  | "download";

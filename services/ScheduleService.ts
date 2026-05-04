@@ -17,6 +17,7 @@ export const ScheduleService = {
       intervalo: data.intervalo ?? 1,
       unidade: data.unidade ?? "semana",
       horario,
+      etapa: data.etapa ?? "full",
       ...(dataInicio ? { data_inicio: dataInicio } : {}),
     };
 

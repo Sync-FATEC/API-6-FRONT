@@ -6,16 +6,26 @@
 
 @theme {
   --color-primary: #ed6b1b;
+  --color-primary-50: color-mix(in srgb, white 95%, var(--color-primary));
+  --color-primary-100: color-mix(in srgb, white 90%, var(--color-primary));
   --color-primary-600: color-mix(in srgb, var(--color-primary), black 5%);
 
   --color-danger: #ef274f;
   --color-danger-50: color-mix(in srgb, white 95%, var(--color-danger));
+  --color-danger-100: color-mix(in srgb, white 90%, var(--color-danger));
+  --color-danger-600: color-mix(in srgb, var(--color-danger), black 10%);
 
   --color-success: #16640a;
   --color-success-50: color-mix(in srgb, white 95%, var(--color-success));
 
   --color-warning: #e38e25;
   --color-warning-50: color-mix(in srgb, white 95%, var(--color-warning));
+
+  --color-asg-great: #346818;
+  --color-asg-good: #91b848;
+  --color-asg-okay: #f6a117;
+  --color-asg-bad: #f28c37;
+  --color-asg-terrible: #f61247;
 
   --font-sans: var(--font-geist);
 }

@@ -1,38 +1,42 @@
-import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import ModalFooter from "@/components/Modal/Footer";
 import ExecutePopover from "../ExecutePopover";
+import { usePipelineContext } from "../Context";
+import { Button } from "@/components/Button";
 
-interface Props {
-  goToHistory: () => void;
-  goToSchedule: () => void;
-  handleExecute: () => Promise<void>;
-  cooldown: number;
-  isLoading: boolean;
-}
+export default function ExecutionFooter() {
+  const { goToHistory, isTerminalOpen, isStreamFinished, closeTerminal, pipeline } =
+    usePipelineContext();
 
-export default function ExecutionFooter({
-  goToHistory,
-  goToSchedule,
-  handleExecute,
-  cooldown,
-  isLoading,
-}: Props) {
   return (
     <ModalFooter
       left={
-        <Button variant="secondary" onClick={goToHistory}>
+        <Button variant="soft" onClick={goToHistory}>
           <Icon name="clock" />
           Ver histórico
         </Button>
       }
       right={
-        <ExecutePopover
-          handleExecute={handleExecute}
-          cooldown={cooldown}
-          isLoading={isLoading}
-          goToSchedule={goToSchedule}
-        />
+        isTerminalOpen ? (
+          isStreamFinished ? (
+            <Button variant="solid" onClick={closeTerminal}>
+              <Icon name="arrow-left" />
+              Voltar
+            </Button>
+          ) : (
+            <Button
+              variant="solid"
+              color="danger"
+              onClick={() => pipeline.cancelExecution()}
+              isLoading={pipeline.isCancelingExecution}
+            >
+              <Icon name="trash" />
+              Cancelar execução
+            </Button>
+          )
+        ) : (
+          <ExecutePopover />
+        )
       }
     />
   );

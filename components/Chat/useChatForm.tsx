@@ -124,10 +124,13 @@ export function useChatForm() {
         }, delayPerChar);
       },
       onError: (error) => {
+        const httpError = error as Error & { status?: number };
+        const content =
+          httpError.status === 503
+            ? "A base de dados está sendo atualizada no momento. As consultas estarão disponíveis assim que a atualização for concluída. Tente novamente em alguns minutos."
+            : error.message;
         setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === botId ? { ...msg, status: "done", content: `${error.message}` } : msg
-          )
+          prev.map((msg) => (msg.id === botId ? { ...msg, status: "done", content } : msg))
         );
       },
     });

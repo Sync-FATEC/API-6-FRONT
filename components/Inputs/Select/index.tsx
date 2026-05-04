@@ -11,7 +11,7 @@ export interface SelectOption {
 }
 
 interface SelectProps {
-  options: SelectOption[];
+  options: readonly SelectOption[];
   value?: string;
   onChange: (value: string) => void;
   placeholder?: string;

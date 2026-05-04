@@ -1,24 +1,20 @@
+"use client";
 import { useMemo, useState } from "react";
 import Icon from "@/components/Icon";
 import DateTimePicker from "@/components/Inputs/DateTimePicker";
 import Select from "@/components/Inputs/Select";
 import Input, { InputPattern } from "@/components/Inputs/Text";
+import { usePipelineContext } from "../Context";
+import { PIPELINE_STAGES } from "@/constants/common";
 
-interface Props {
-  schedulePipeline: (payload: {
-    date: string;
-    time: string;
-    interval: number;
-    unit: "minuto" | "hora" | "dia" | "semana" | "mes";
-  }) => Promise<void>;
-  isScheduling: boolean;
-  isSuccess: boolean;
-}
+export default function ScheduleBody() {
+  const { pipeline } = usePipelineContext();
+  const { schedulePipeline, isScheduleSuccess: isSuccess } = pipeline;
 
-export default function ScheduleBody({ schedulePipeline, isSuccess }: Props) {
   const [dateTime, setDateTime] = useState<Date | undefined>();
   const [interval, setInterval] = useState<number | "">("");
   const [unit, setUnit] = useState<"minuto" | "hora" | "dia" | "semana" | "mes" | "">("");
+  const [stage, setStage] = useState<string>("full");
 
   const { minDate, maxDate } = useMemo(() => {
     const now = new Date();
@@ -41,6 +37,7 @@ export default function ScheduleBody({ schedulePipeline, isSuccess }: Props) {
       time,
       interval: interval as number,
       unit: unit as "minuto" | "hora" | "dia" | "semana" | "mes",
+      stage,
     });
   };
 
@@ -90,7 +87,8 @@ export default function ScheduleBody({ schedulePipeline, isSuccess }: Props) {
   return (
     <form id="schedule-form" onSubmit={handleSubmit} className="flex flex-col gap-5">
       <p className="text-slate-500">
-        Selecione a data, o horário e a recorrência para agendar as próximas atualizações da base de dados.
+        Selecione a data, o horário e a recorrência para agendar as próximas atualizações da base de
+        dados.
       </p>
 
       <div className="grid grid-cols-2 gap-3">
@@ -126,6 +124,12 @@ export default function ScheduleBody({ schedulePipeline, isSuccess }: Props) {
           includeTime
           minDate={minDate}
           maxDate={maxDate}
+        />
+        <Select
+          label="Etapa do Pipeline"
+          options={PIPELINE_STAGES}
+          value={stage}
+          onChange={setStage}
         />
       </div>
     </form>

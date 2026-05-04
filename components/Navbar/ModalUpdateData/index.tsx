@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react";
 import { BaseModalProps } from "@/interfaces/components/modal";
-import { usePipeline } from "./usePipeline";
-
 import Modal from "@/components/Modal";
 
 import ExecutionBody from "./Execution";
@@ -11,92 +8,27 @@ import ScheduleBody from "./Schedule";
 import ExecutionFooter from "./Execution/Footer";
 import HistoryFooter from "./History/Footer";
 import ScheduleFooter from "./Schedule/Footer";
+import { PipelineProvider, usePipelineContext } from "./Context";
 
-export type ModalView = "execution" | "history" | "schedule";
+function ModalContent({ open, onOpenChange }: BaseModalProps) {
+  const { currentView } = usePipelineContext();
 
-export default function ModalUpdateData({ open, onOpenChange }: BaseModalProps) {
-  const [currentView, setCurrentView] = useState<ModalView>("execution");
-
-  const {
-    executePipeline,
-    isLoading,
-    cooldown,
-    error,
-    data,
-    resetState,
-    historyData,
-    isLoadingHistory,
-    schedulesData,
-    isLoadingSchedules,
-    schedulePipeline,
-    isScheduling,
-    isScheduleSuccess,
-    cancelSchedule,
-    isCancelingSchedule,
-  } = usePipeline(currentView);
-
-  useEffect(() => {
-    if (open) {
-      setCurrentView("execution");
-      resetState();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
-
-
-  const goToExecution = () => {
-    resetState();
-    setCurrentView("execution");
-  };
-
-  const goToHistory = () => {
-    resetState();
-    setCurrentView("history");
-  };
-
-  const goToSchedule = () => {
-    resetState();
-    setCurrentView("schedule");
-  };
-
-  const titles: Record<ModalView, string> = {
+  const titles = {
     execution: "Atualizar banco de dados",
     history: "Histórico de execuções",
     schedule: "Criar agendamento",
   };
 
-  const bodies: Record<ModalView, React.ReactNode> = {
-    execution: <ExecutionBody isLoading={isLoading} error={error} data={data} />,
-    history: <HistoryBody isLoading={isLoadingHistory} data={historyData} schedulesData={schedulesData} isLoadingSchedules={isLoadingSchedules} onCancelSchedule={cancelSchedule} isCancelingSchedule={isCancelingSchedule} />,
-    schedule: (
-      <ScheduleBody
-        schedulePipeline={schedulePipeline}
-        isScheduling={isScheduling}
-        isSuccess={isScheduleSuccess}
-      />
-    ),
+  const bodies = {
+    execution: <ExecutionBody />,
+    history: <HistoryBody />,
+    schedule: <ScheduleBody />,
   };
 
-  const footers: Record<ModalView, React.ReactNode> = {
-    execution: (
-      <ExecutionFooter
-        goToHistory={goToHistory}
-        goToSchedule={goToSchedule}
-        handleExecute={() => executePipeline("full")}
-        cooldown={cooldown}
-        isLoading={isLoading}
-      />
-    ),
-
-    history: <HistoryFooter goToExecution={goToExecution} />,
-
-    schedule: (
-      <ScheduleFooter
-        goToExecution={goToExecution}
-        isScheduling={isScheduling}
-        isScheduleSuccess={isScheduleSuccess}
-      />
-    ),
+  const footers = {
+    execution: <ExecutionFooter />,
+    history: <HistoryFooter />,
+    schedule: <ScheduleFooter />,
   };
 
   return (
@@ -108,5 +40,13 @@ export default function ModalUpdateData({ open, onOpenChange }: BaseModalProps) 
     >
       {bodies[currentView]}
     </Modal>
+  );
+}
+
+export default function ModalUpdateData(props: BaseModalProps) {
+  return (
+    <PipelineProvider open={props.open}>
+      <ModalContent {...props} />
+    </PipelineProvider>
   );
 }
