@@ -17,6 +17,7 @@ export default function Home() {
           onSuggestionClick={chat.handleSuggestion}
           geoJsonData={activeGeoJSON}
           intention={activeIntention}
+          onPointClick={chat.handleSuggestion}
         />
       </div>
     </div>

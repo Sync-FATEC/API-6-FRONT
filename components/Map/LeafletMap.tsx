@@ -13,6 +13,7 @@ import { MAP_PROVIDERS, INITIAL_CENTER, INITIAL_ZOOM, MAP_SOURCES } from "@/cons
 import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 import { useLeafletMap } from "./useMap";
 import MapSearchInput from "./components/SearchInput";
+import type { FiltroMapaDia } from "@/contexts/DaySelectionContext";
 
 delete (L.Icon.Default.prototype as L.Icon.Default & { _getIconUrl?: () => string })._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -51,9 +52,12 @@ function SearchLocationController({ position }: { position: [number, number] | n
 interface Props {
   geoJsonData: IGeoJSONFeatureCollection;
   intention: string | null;
+  dayFilter?: FiltroMapaDia;
+  dataSelecionada?: string;
+  onPointClick?: (text: string) => void;
 }
 
-export default function LeafletMap({ geoJsonData, intention }: Props) {
+export default function LeafletMap({ geoJsonData, intention, dayFilter, dataSelecionada, onPointClick }: Props) {
   const {
     mapType,
     setMapType,
@@ -66,7 +70,8 @@ export default function LeafletMap({ geoJsonData, intention }: Props) {
     geoJsonKey,
     toggleSource,
     handleSearch,
-  } = useLeafletMap({ geoJsonData, intention });
+    handlePointClick,
+  } = useLeafletMap({ geoJsonData, intention, dayFilter, dataSelecionada, onPointClick });
 
   const currentProvider = MAP_PROVIDERS[mapType];
 
@@ -128,6 +133,13 @@ export default function LeafletMap({ geoJsonData, intention }: Props) {
                 closeButton: false,
                 offset: [0, -10],
               });
+              
+              // Adicionar handler de clique se é dia selecionado
+              if (dataSelecionada) {
+                layer.on("click", () => {
+                  handlePointClick(feature);
+                });
+              }
             }}
           />
         )}

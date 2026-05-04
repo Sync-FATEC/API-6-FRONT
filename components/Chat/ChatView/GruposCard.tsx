@@ -3,7 +3,6 @@ import { IconName } from "@/components/Icon/IconName";
 import {
   EixoAgrupamento,
   IGrupoResposta,
-  RiscoNivel,
 } from "@/interfaces/services/QueryService";
 import { cn } from "@/utils/className";
 
@@ -12,47 +11,6 @@ interface Props {
   eixo: EixoAgrupamento;
 }
 
-const NIVEL_CONFIG: Record<
-  RiscoNivel,
-  { label: string; dot: string; bg: string; text: string }
-> = {
-  sem_dados: {
-    label: "sem dados",
-    dot: "bg-slate-300",
-    bg: "bg-slate-50",
-    text: "text-slate-500",
-  },
-  baixo: {
-    label: "baixo",
-    dot: "bg-emerald-500",
-    bg: "bg-emerald-50",
-    text: "text-emerald-700",
-  },
-  moderado: {
-    label: "moderado",
-    dot: "bg-amber-500",
-    bg: "bg-amber-50",
-    text: "text-amber-700",
-  },
-  elevado: {
-    label: "elevado",
-    dot: "bg-orange-500",
-    bg: "bg-orange-50",
-    text: "text-orange-700",
-  },
-  alto: {
-    label: "alto",
-    dot: "bg-orange-600",
-    bg: "bg-orange-50",
-    text: "text-orange-700",
-  },
-  critico: {
-    label: "crítico",
-    dot: "bg-rose-600",
-    bg: "bg-rose-50",
-    text: "text-rose-700",
-  },
-};
 
 const EIXO_LABEL: Record<EixoAgrupamento, { titulo: string; icon: IconName }> = {
   unico: { titulo: "Resultado", icon: "search" },
@@ -87,10 +45,7 @@ export default function GruposCard({ grupos, eixo }: Props) {
 
       <div className="p-3 flex flex-col gap-2">
         {grupos.map((g, idx) => {
-          const nivel = (g.nota_risco?.nivel ?? "sem_dados") as RiscoNivel;
-          const cfg = NIVEL_CONFIG[nivel] ?? NIVEL_CONFIG.sem_dados;
-          const nota = g.nota_risco?.nota ?? 0;
-          const sem = g.total_resultados === 0;
+                                        const sem = g.total_resultados === 0;
 
           return (
             <div
@@ -112,17 +67,7 @@ export default function GruposCard({ grupos, eixo }: Props) {
                     {g.total_resultados} registro{g.total_resultados === 1 ? "" : "s"}
                   </span>
                 </div>
-                <div
-                  className={cn(
-                    "px-2 py-0.5 rounded-full text-[10px] font-medium inline-flex items-center gap-1 whitespace-nowrap shrink-0",
-                    cfg.bg,
-                    cfg.text,
-                  )}
-                >
-                  <span className={cn("w-1.5 h-1.5 rounded-full", cfg.dot)} />
-                  {cfg.label}
-                  {nota > 0 && <span className="tabular-nums opacity-70">· {nota}</span>}
-                </div>
+
               </div>
 
               {g.resumo && (

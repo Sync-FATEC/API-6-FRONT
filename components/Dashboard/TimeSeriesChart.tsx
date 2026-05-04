@@ -29,6 +29,8 @@ interface TimeSeriesChartProps {
   smooth?: boolean;
   smoothWindow?: number;
   showRaw?: boolean;
+  onDataPointClick?: (dataLabel: string) => void | Promise<void>;
+  selectedData?: string | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +50,42 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
     );
   }
   return null;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CustomDot = ({ cx, cy, fill, payload, onDataPointClick, selectedData, dataKeyLabel }: any) => {
+  const isSelected = selectedData === payload?.[dataKeyLabel];
+  const radius = isSelected ? 8 : 5;
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (onDataPointClick && payload?.[dataKeyLabel]) {
+      onDataPointClick(String(payload[dataKeyLabel]));
+    }
+  };
+
+  return (
+    <g onClick={handleClick} style={{ cursor: "pointer" }}>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={16}
+        fill="transparent"
+        pointerEvents="all"
+      />
+
+      <circle
+        cx={cx}
+        cy={cy}
+        r={radius}
+        fill={isSelected ? "#fbbf24" : fill || "#f97316"}
+        stroke={isSelected ? "#f59e0b" : "#fff"}
+        strokeWidth={2}
+        pointerEvents="none"
+      />
+    </g>
+  );
 };
 
 function movingAverage(data: TimeSeriesData[], key: string, window: number) {
@@ -75,6 +113,8 @@ export default function TimeSeriesChart({
   smooth = false,
   smoothWindow = 7,
   showRaw = false,
+  onDataPointClick,
+  selectedData,
 }: TimeSeriesChartProps) {
   const processedData = useMemo(() => {
     if (!smooth) return data;
@@ -93,67 +133,85 @@ export default function TimeSeriesChart({
 
   return (
     <DashboardCard title={title} subtitle={subtitle}>
-      <ResponsiveContainer width="100%" height={300}>
-        {type === "bar" ? (
-          <BarChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+      <div
+      >
+        <ResponsiveContainer width="100%" height={300}>
+          {type === "bar" ? (
+            <BarChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
 
-            <XAxis
-              dataKey={dataKeyLabel}
-              stroke="#94a3b8"
-              minTickGap={60}
-              tickFormatter={(value) => value.slice(0, 5)}
-            />
+              <XAxis
+                dataKey={dataKeyLabel}
+                stroke="#94a3b8"
+                minTickGap={60}
+                tickFormatter={(value) => value.slice(0, 5)}
+              />
 
-            <YAxis stroke="#94a3b8" />
+              <YAxis stroke="#94a3b8" />
 
-            <Tooltip
-              content={<CustomTooltipContent />}
-              cursor={{ fill: "rgba(241, 245, 249, 0.5)" }}
-            />
+              <Tooltip
+                content={<CustomTooltipContent />}
+                cursor={{ fill: "rgba(241, 245, 249, 0.5)" }}
+              />
 
-            <Bar dataKey={dataKeyValue} fill={color} radius={[8, 8, 0, 0]} />
-          </BarChart>
-        ) : (
-          <LineChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <Bar dataKey={dataKeyValue} fill={color} radius={[8, 8, 0, 0]} />
+            </BarChart>
+          ) : (
+            <LineChart data={processedData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
 
-            <XAxis
-              dataKey={dataKeyLabel}
-              stroke="#94a3b8"
-              minTickGap={60}
-              tickFormatter={(value) => value.slice(0, 5)}
-              interval="preserveEnd"
-            />
+              <XAxis
+                dataKey={dataKeyLabel}
+                stroke="#94a3b8"
+                minTickGap={60}
+                tickFormatter={(value) => value.slice(0, 5)}
+                interval="preserveEnd"
+              />
 
-            <YAxis stroke="#94a3b8" />
+              <YAxis stroke="#94a3b8" />
 
-            <Tooltip
-              content={<CustomTooltipContent />}
-              cursor={{ stroke: "#cbd5e1", strokeWidth: 1, strokeDasharray: "3 3" }}
-            />
+              <Tooltip
+                content={<CustomTooltipContent />}
+                cursor={{ stroke: "#cbd5e1", strokeWidth: 1, strokeDasharray: "3 3" }}
+              />
 
-            {showRaw && smooth && (
+              {showRaw && smooth && (
+                <Line
+                  type="linear"
+                  dataKey={dataKeyValue}
+                  stroke={color}
+                  strokeOpacity={0.25}
+                  strokeWidth={1}
+                  dot={false}
+                />
+              )}
+
               <Line
-                type="linear"
+                type="monotone"
                 dataKey={dataKeyValue}
                 stroke={color}
-                strokeOpacity={0.25}
-                strokeWidth={1}
-                dot={false}
+                strokeWidth={3}
+                dot={(props) => (
+                  <CustomDot
+                    {...props}
+                    fill={color}
+                    onDataPointClick={onDataPointClick}
+                    selectedData={selectedData}
+                    dataKeyLabel={dataKeyLabel}
+                  />
+                )}
+                activeDot={{
+                  r: 8,
+                  fill: color,
+                  stroke: "#fff",
+                  strokeWidth: 2,
+                  cursor: "pointer",
+                }}
               />
-            )}
-
-            <Line
-              type="monotone"
-              dataKey={dataKeyValue}
-              stroke={color}
-              strokeWidth={3}
-              dot={false}
-            />
-          </LineChart>
-        )}
-      </ResponsiveContainer>
+            </LineChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </DashboardCard>
   );
 }
