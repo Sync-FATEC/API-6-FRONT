@@ -132,6 +132,7 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
                 borderBottom: "1px solid #e2e8f0",
               }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imgUrl}
                 alt="Imagem Sentinel-2 da queimada"
