@@ -18,6 +18,10 @@ import { formatArea, formatDate } from "@/utils/formatters";
 import { MAP_SOURCES } from "@/constants/map";
 import { SICAR_STATUS_MAP } from "@/helpers/mapDetails";
 
+// URL base da API — avaliada em módulo (build-time pelo Next.js), funciona dentro de renderToString
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8000/api";
+
 export type PopupPayload = AsgRecord | GeoJSONProperties | TFlatMetadata;
 
 const InfoRow = ({
@@ -101,8 +105,60 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const d = data as any;
       title = "Área detectada";
+
+      // Monta URL do Sentinel-2:
+      // Prioridade 1: por id (mais preciso)
+      // Prioridade 2: por lat/lon/data como query params (fallback robusto)
+      let imgUrl: string | null = null;
+      if (d.id) {
+        imgUrl = `${API_BASE}/dados/queimadas/${d.id}/imagem-satelite`;
+      } else if (d.latitude && d.longitude) {
+        const dataStr = (d.data_hora ?? d.data ?? "").slice(0, 10);
+        const params = new URLSearchParams({
+          lat: String(d.latitude),
+          lon: String(d.longitude),
+          ...(dataStr ? { data: dataStr } : {}),
+        });
+        imgUrl = `${API_BASE}/dados/queimadas/0/imagem-satelite?${params.toString()}`;
+      }
+
       fields = (
         <>
+          {imgUrl && (
+            <div
+              style={{
+                margin: "-16px -16px 8px -16px",
+                overflow: "hidden",
+                borderBottom: "1px solid #e2e8f0",
+              }}
+            >
+              <img
+                src={imgUrl}
+                alt="Imagem Sentinel-2 da queimada"
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  maxHeight: 160,
+                  objectFit: "cover",
+                  display: "block",
+                }}
+                onError={(e) => {
+                  (e.currentTarget.parentElement as HTMLElement).style.display = "none";
+                }}
+              />
+              <div
+                style={{
+                  fontSize: 10,
+                  color: "#94a3b8",
+                  textAlign: "right",
+                  padding: "2px 6px",
+                  background: "rgba(0,0,0,0.03)",
+                }}
+              >
+                Sentinel-2 · Planetary Computer
+              </div>
+            </div>
+          )}
           <InfoRow label="Bioma" value={d.bioma} />
           <InfoRow label="FRP (Potência)" value={d.frp ? `${d.frp} MW` : null} />
           <InfoRow label="Risco Fogo" value={d.risco_fogo} />
