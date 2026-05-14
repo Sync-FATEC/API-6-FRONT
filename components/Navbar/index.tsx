@@ -8,10 +8,12 @@ import Icon from "../Icon";
 import ModalUpdateData from "./ModalUpdateData";
 import { Button } from "../Button";
 import { cn } from "@/utils/className";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   const isDashboard = pathname === "/dashboard";
   const isQgis = pathname === "/qgis";
@@ -33,7 +35,7 @@ export default function Navbar() {
               alt="VISIONA GeoQuery Logo"
               className="w-auto h-full"
             />
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Link href={toggleLink}>
               <Button size="md" className="me-1" variant="soft" color="primary">
                 <Icon name={toggleIcon} size={20} />
@@ -54,6 +56,10 @@ export default function Navbar() {
             <Button size="md" className="me-1" onClick={() => setIsModalOpen(true)}>
               <Icon name="data-plus" size={20} />
               Atualizar dados
+            </Button>
+            <Button size="md" variant="soft" color="danger" onClick={logout}>
+              <Icon name="log-out" size={20} />
+              Sair
             </Button>
           </div>
         </div>

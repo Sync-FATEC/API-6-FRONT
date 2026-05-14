@@ -32,6 +32,7 @@ import {
   IconWorld,
   IconExternalLink,
   IconMap2,
+  IconLogout,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -72,4 +73,5 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   world: IconWorld,
   "external-link": IconExternalLink,
   map: IconMap2,
+  "log-out": IconLogout,
 };
