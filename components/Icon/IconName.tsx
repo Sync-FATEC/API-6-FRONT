@@ -29,4 +29,8 @@ export type IconName =
   | "search"
   | "trash"
   | "bar-chart-2"
-  | "download";
+  | "download"
+  | "copy"
+  | "world"
+  | "external-link"
+  | "map";

@@ -14,6 +14,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isDashboard = pathname === "/dashboard";
+  const isQgis = pathname === "/qgis";
   const toggleLink = isDashboard ? "/" : "/dashboard";
   const toggleLabel = isDashboard ? "Chat" : "Dashboard";
   const toggleIcon = isDashboard ? "search" : "bar-chart-2";
@@ -37,6 +38,17 @@ export default function Navbar() {
               <Button size="md" className="me-1" variant="soft" color="primary">
                 <Icon name={toggleIcon} size={20} />
                 {toggleLabel}
+              </Button>
+            </Link>
+            <Link href={isQgis ? "/" : "/qgis"}>
+              <Button
+                size="md"
+                className="me-1"
+                variant={isQgis ? "solid" : "soft"}
+                color="primary"
+              >
+                <Icon name="world" size={20} />
+                QGIS
               </Button>
             </Link>
             <Button size="md" className="me-1" onClick={() => setIsModalOpen(true)}>
