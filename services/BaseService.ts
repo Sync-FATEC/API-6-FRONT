@@ -7,7 +7,7 @@ const normalizeBaseUrl = (value?: string): string => {
     if (typeof window !== "undefined") {
       const host = window.location.hostname;
       if (host === "localhost" || host === "127.0.0.1") {
-        return "http://127.0.0.1:8000/api";
+        return "http://127.0.0.1:8001/api/v1";
       }
     }
     return "/api";

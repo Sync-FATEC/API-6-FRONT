@@ -33,4 +33,5 @@ export type IconName =
   | "copy"
   | "world"
   | "external-link"
+  | "log-out"
   | "map";
