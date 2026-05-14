@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "@/styles/global.css";
-import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import { cn } from "@/utils/className";
-import Footer from "@/components/Footer/Footer";
 import AppShell from "@/components/AppShell";
 
 const geist = Geist({

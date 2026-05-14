@@ -1,11 +1,28 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService, type IAuthUser } from "@/services/AuthService";
 
 const TOKEN_KEY = "visiona_auth_token";
 const USER_KEY = "visiona_auth_user";
+
+function readToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+function readUser(): IAuthUser | null {
+  if (typeof window === "undefined") return null;
+  const stored = localStorage.getItem(USER_KEY);
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored) as IAuthUser;
+  } catch {
+    localStorage.removeItem(USER_KEY);
+    return null;
+  }
+}
 
 interface AuthContextValue {
   user: IAuthUser | null;
@@ -19,28 +36,9 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<IAuthUser | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<IAuthUser | null>(readUser);
+  const [token, setToken] = useState<string | null>(readToken);
   const router = useRouter();
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem(TOKEN_KEY);
-    const storedUser = localStorage.getItem(USER_KEY);
-
-    if (storedToken) {
-      setToken(storedToken);
-      if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch {
-          localStorage.removeItem(USER_KEY);
-        }
-      }
-    }
-
-    setIsLoading(false);
-  }, []);
 
   const login = useCallback(
     async (email: string, senha: string) => {
@@ -69,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isAuthenticated: !!token, isLoading, login, logout }}
+      value={{ user, token, isAuthenticated: !!token, isLoading: false, login, logout }}
     >
       {children}
     </AuthContext.Provider>

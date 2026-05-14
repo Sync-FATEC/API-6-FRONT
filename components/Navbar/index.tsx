@@ -13,7 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
 
   const isDashboard = pathname === "/dashboard";
   const isQgis = pathname === "/qgis";
