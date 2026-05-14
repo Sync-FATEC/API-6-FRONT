@@ -29,4 +29,8 @@ export type IconName =
   | "search"
   | "trash"
   | "bar-chart-2"
-  | "download";
+  | "download"
+  | "clock-past"
+  | "history"
+  | "chevron-right"
+  | "chevron-left";

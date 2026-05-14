@@ -28,6 +28,10 @@ import {
   IconTrashXFilled,
   IconChartBar,
   IconDownload,
+  IconHistoryToggle,
+  IconClockFilled,
+  IconChevronRight,
+  IconChevronLeft,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -64,4 +68,8 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   trash: IconTrashXFilled,
   "bar-chart-2": IconChartBar,
   download: IconDownload,
+  "clock-past": IconHistoryToggle,
+  history: IconClockFilled,
+  "chevron-right": IconChevronRight,
+  "chevron-left": IconChevronLeft
 };

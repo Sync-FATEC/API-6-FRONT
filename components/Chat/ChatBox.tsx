@@ -14,6 +14,7 @@ interface Props {
   onSend: () => void;
   onNewChat: () => void;
   onVoiceInput: (text: string) => void;
+  onToggleHistory: () => void;
 }
 
 interface SpeechRecognitionAlternative {
@@ -66,6 +67,7 @@ export default function ChatBox({
   onSend,
   onNewChat,
   onVoiceInput,
+  onToggleHistory,
 }: Props) {
   const hasText = message.trim().length > 0;
   const [isListening, setIsListening] = useState(false);
@@ -145,15 +147,22 @@ export default function ChatBox({
         />
 
         <div className="flex justify-between items-end mt-2">
-          <Button
-            variant="ghost"
-            size="md"
-            className="text-primary"
-            onClick={() => setHelpOpen(true)}
-          >
-            <Icon name="help" size={20} />
-            Ajuda
-          </Button>
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="md"
+              className="text-primary"
+              onClick={() => setHelpOpen(true)}
+            >
+              <Icon name="help" size={20} />
+              Ajuda
+            </Button>
+
+            <Button variant="ghost" size="md" className="text-primary" onClick={onToggleHistory}>
+              <Icon name="history" size={20} />
+              Histórico
+            </Button>
+          </div>
 
           <div className="flex gap-1">
             {hasMessages && (
