@@ -6,17 +6,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "../Icon";
 import ModalUpdateData from "./ModalUpdateData";
+import ModalAlterarSenha from "./ModalAlterarSenha";
 import { Button } from "../Button";
+import Popover from "../Popover";
+import { PopoverItem } from "../Popover/Item";
 import { cn } from "@/utils/className";
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlterarSenhaOpen, setIsAlterarSenhaOpen] = useState(false);
   const pathname = usePathname();
 
   const isDashboard = pathname === "/dashboard";
   const toggleLink = isDashboard ? "/" : "/dashboard";
   const toggleLabel = isDashboard ? "Chat" : "Dashboard";
   const toggleIcon = isDashboard ? "search" : "bar-chart-2";
+
+  const handleSair = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -27,12 +36,12 @@ export default function Navbar() {
             !isDashboard ? "w-full px-6" : "w-5/6"
           )}
         >
-            <img
-              src="/visiona_logo.svg"
-              alt="VISIONA GeoQuery Logo"
-              className="w-auto h-full"
-            />
-          <div className="flex gap-2">
+          <img
+            src="/visiona_logo.svg"
+            alt="VISIONA GeoQuery Logo"
+            className="w-auto h-full"
+          />
+          <div className="flex gap-2 items-center">
             <Link href={toggleLink}>
               <Button size="md" className="me-1" variant="soft" color="primary">
                 <Icon name={toggleIcon} size={20} />
@@ -43,11 +52,30 @@ export default function Navbar() {
               <Icon name="data-plus" size={20} />
               Atualizar dados
             </Button>
+
+            <Popover
+              align="end"
+              trigger={
+                <button className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer">
+                  <Icon name="shield" size={18} />
+                </button>
+              }
+            >
+              <PopoverItem onClick={() => setIsAlterarSenhaOpen(true)}>
+                <Icon name="shield" size={16} />
+                Alterar senha
+              </PopoverItem>
+              <PopoverItem onClick={handleSair} className="text-danger hover:bg-red-50">
+                <Icon name="close" size={16} />
+                Sair
+              </PopoverItem>
+            </Popover>
           </div>
         </div>
       </nav>
 
       <ModalUpdateData open={isModalOpen} onOpenChange={setIsModalOpen} />
+      <ModalAlterarSenha open={isAlterarSenhaOpen} onOpenChange={setIsAlterarSenhaOpen} />
     </>
   );
 }
