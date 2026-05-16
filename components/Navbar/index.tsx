@@ -6,14 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "../Icon";
 import ModalUpdateData from "./ModalUpdateData";
+import ModalAlterarSenha from "./ModalAlterarSenha";
+import Popover from "../Popover";
+import { PopoverItem } from "../Popover/Item";
 import { Button } from "../Button";
 import { cn } from "@/utils/className";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlterarSenhaOpen, setIsAlterarSenhaOpen] = useState(false);
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const isDashboard = pathname === "/dashboard";
   const isQgis = pathname === "/qgis";
@@ -30,11 +34,11 @@ export default function Navbar() {
             !isDashboard ? "w-full px-6" : "w-5/6"
           )}
         >
-            <img
-              src="/visiona_logo.svg"
-              alt="VISIONA GeoQuery Logo"
-              className="w-auto h-full"
-            />
+          <img
+            src="/visiona_logo.svg"
+            alt="VISIONA GeoQuery Logo"
+            className="w-auto h-full"
+          />
           <div className="flex gap-2 items-center">
             <Link href={toggleLink}>
               <Button size="md" className="me-1" variant="soft" color="primary">
@@ -57,15 +61,29 @@ export default function Navbar() {
               <Icon name="data-plus" size={20} />
               Atualizar dados
             </Button>
-            <Button size="md" variant="soft" color="danger" onClick={logout}>
-              <Icon name="log-out" size={20} />
-              Sair
-            </Button>
+            <Popover
+              align="end"
+              trigger={
+                <button className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer">
+                  {user?.nome ? user.nome[0].toUpperCase() : <Icon name="shield" size={18} />}
+                </button>
+              }
+            >
+              <PopoverItem onClick={() => setIsAlterarSenhaOpen(true)}>
+                <Icon name="shield" size={16} />
+                Alterar senha
+              </PopoverItem>
+              <PopoverItem onClick={logout} className="text-danger hover:bg-red-50">
+                <Icon name="log-out" size={16} />
+                Sair
+              </PopoverItem>
+            </Popover>
           </div>
         </div>
       </nav>
 
       <ModalUpdateData open={isModalOpen} onOpenChange={setIsModalOpen} />
+      <ModalAlterarSenha open={isAlterarSenhaOpen} onOpenChange={setIsAlterarSenhaOpen} />
     </>
   );
 }

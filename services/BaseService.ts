@@ -19,6 +19,23 @@ const normalizeBaseUrl = (value?: string): string => {
 const BASE_URL = normalizeBaseUrl(rawBaseUrl);
 
 export const BaseService = {
+  async postWithAuth<T>(endpoint: string, token: string, data?: unknown): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    const json = await response.json();
+    if (!response.ok) {
+      throw new Error(json.detail ?? `Erro: ${response.status}`);
+    }
+    return json as T;
+  },
+
   async post<T>(endpoint: string, data?: unknown): Promise<T> {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: "POST",
