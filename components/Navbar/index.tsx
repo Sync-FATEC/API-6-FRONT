@@ -7,9 +7,9 @@ import { usePathname } from "next/navigation";
 import Icon from "../Icon";
 import ModalUpdateData from "./ModalUpdateData";
 import ModalAlterarSenha from "./ModalAlterarSenha";
-import { Button } from "../Button";
 import Popover from "../Popover";
 import { PopoverItem } from "../Popover/Item";
+import { Button } from "../Button";
 import { cn } from "@/utils/className";
 
 export default function Navbar() {
@@ -23,8 +23,9 @@ export default function Navbar() {
   const toggleIcon = isDashboard ? "search" : "bar-chart-2";
 
   const handleSair = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
+    localStorage.removeItem("visiona_auth_token");
+    localStorage.removeItem("visiona_auth_user");
+    window.location.href = "/login";
   };
 
   return (
@@ -52,7 +53,6 @@ export default function Navbar() {
               <Icon name="data-plus" size={20} />
               Atualizar dados
             </Button>
-
             <Popover
               align="end"
               trigger={
