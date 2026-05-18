@@ -18,7 +18,6 @@ export default function Navbar() {
   const [isAlterarSenhaOpen, setIsAlterarSenhaOpen] = useState(false);
   const pathname = usePathname();
   const { logout, user } = useAuth();
-
   const isDashboard = pathname === "/dashboard";
   const isQgis = pathname === "/qgis";
   const toggleLink = isDashboard ? "/" : "/dashboard";
@@ -64,8 +63,13 @@ export default function Navbar() {
             <Popover
               align="end"
               trigger={
-                <button className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer">
-                  {user?.nome ? user.nome[0].toUpperCase() : <Icon name="shield" size={18} />}
+                <button
+                  suppressHydrationWarning
+                  className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  {user?.nome
+                    ? user.nome[0].toUpperCase()
+                    : <Icon name="shield" size={18} />}
                 </button>
               }
             >
