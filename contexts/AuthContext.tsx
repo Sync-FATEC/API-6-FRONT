@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService, type IAuthUser } from "@/services/AuthService";
 
@@ -41,7 +41,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IAuthUser | null>(() => initializeUser());
   const [token, setToken] = useState<string | null>(() => initializeToken());
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const router = useRouter();
 
   const login = useCallback(
