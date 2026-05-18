@@ -6,6 +6,8 @@ import {
   QgisFilterKey,
   QgisFilterValues,
 } from "@/interfaces/services/QgisService";
+import DateTimePicker from "@/components/Inputs/DateTimePicker";
+import { formatToYYYYMMDD } from "@/helpers/dashboard";
 
 interface Props {
   camada: IQgisLayer;
@@ -106,6 +108,24 @@ export default function LayerFilterForm({ camada, valores, onChange, onReset }: 
         {visiveis.map((key) => {
           const lim = camada.limites?.[key];
           const hint = hintFromLimite(lim);
+          if (key === "data_inicio" || key === "data_fim") {
+            return (
+              <DateTimePicker
+                key={key}
+                label={LABELS[key]}
+                id={key}
+                includeTime={false}
+                value={
+                  valores[key]
+                    ? new Date(`${valores[key]}T00:00:00`)
+                    : undefined
+                }
+                onChange={(date: Date) => handle(key, formatToYYYYMMDD(date))}
+                wrapperClassName="w-full"
+                className="w-full"
+              />
+            );
+          }
           return (
             <div key={key}>
               <div className="flex items-baseline justify-between gap-2 mb-1">

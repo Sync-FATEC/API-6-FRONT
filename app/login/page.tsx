@@ -2,11 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { FormEvent, useState } from "react";
-import { IconAt, IconEye, IconEyeOff, IconLock } from "@tabler/icons-react";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/utils/className";
-
+import TextInput from "@/components/Inputs/Text";
 interface FormErrors {
   email?: string;
   senha?: string;
@@ -17,7 +15,6 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [showSenha, setShowSenha] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,80 +66,64 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
           {/* Email field */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-sm font-semibold text-slate-700">
-              E-mail
-            </label>
+
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                <IconAt size={18} />
-              </span>
-              <input
+
+              <TextInput
                 id="email"
+                label="E-mail"
                 type="email"
-                autoComplete="email"
                 placeholder="seu@email.com"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+
+                  if (errors.email) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      email: undefined,
+                    }));
+                  }
+
                   setApiError(null);
                 }}
-                className={cn(
-                  "w-full h-11 pl-10 pr-4 rounded-lg border text-slate-800 text-sm outline-none transition-all",
-                  "placeholder:text-slate-400",
-                  "focus:ring-2 focus:ring-primary focus:border-primary",
-                  errors.email
-                    ? "border-danger ring-1 ring-danger bg-danger-50"
-                    : "border-slate-300 bg-white hover:border-slate-400"
-                )}
               />
+              {errors.email && (
+                <p className="text-danger text-xs font-medium">
+                  {errors.email}
+                </p>
+              )}
             </div>
-            {errors.email && (
-              <p className="text-danger text-xs font-medium">{errors.email}</p>
-            )}
           </div>
 
           {/* Password field */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="senha" className="text-sm font-semibold text-slate-700">
-              Senha
-            </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                <IconLock size={18} />
-              </span>
-              <input
+              <TextInput
                 id="senha"
-                type={showSenha ? "text" : "password"}
-                autoComplete="current-password"
+                label="Senha"
+                type="password"
                 placeholder="Sua senha"
                 value={senha}
                 onChange={(e) => {
                   setSenha(e.target.value);
-                  if (errors.senha) setErrors((prev) => ({ ...prev, senha: undefined }));
+
+                  if (errors.senha) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      senha: undefined,
+                    }));
+                  }
+
                   setApiError(null);
                 }}
-                className={cn(
-                  "w-full h-11 pl-10 pr-11 rounded-lg border text-slate-800 text-sm outline-none transition-all",
-                  "placeholder:text-slate-400",
-                  "focus:ring-2 focus:ring-primary focus:border-primary",
-                  errors.senha
-                    ? "border-danger ring-1 ring-danger bg-danger-50"
-                    : "border-slate-300 bg-white hover:border-slate-400"
-                )}
               />
-              <button
-                type="button"
-                onClick={() => setShowSenha((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
-              >
-                {showSenha ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-              </button>
+              {errors.senha && (
+                <p className="text-danger text-xs font-medium">
+                  {errors.senha}
+                </p>
+              )}
             </div>
-            {errors.senha && (
-              <p className="text-danger text-xs font-medium">{errors.senha}</p>
-            )}
           </div>
 
           {/* API error */}

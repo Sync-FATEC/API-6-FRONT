@@ -10,46 +10,62 @@ import ModalAlterarSenha from "./ModalAlterarSenha";
 import Popover from "../Popover";
 import { PopoverItem } from "../Popover/Item";
 import { Button } from "../Button";
-import { cn } from "@/utils/className";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAlterarSenhaOpen, setIsAlterarSenhaOpen] = useState(false);
   const pathname = usePathname();
-  const { logout, user } = useAuth();
-  const isDashboard = pathname === "/dashboard";
-  const isQgis = pathname === "/qgis";
-  const toggleLink = isDashboard ? "/" : "/dashboard";
-  const toggleLabel = isDashboard ? "Chat" : "Dashboard";
-  const toggleIcon = isDashboard ? "search" : "bar-chart-2";
+  const { logout, user, isLoading } = useAuth();
 
   return (
     <>
       <nav className="bg-white text-white py-5 shadow-sm z-49">
-        <div
-          className={cn(
-            "mx-auto transition-all duration-300 flex justify-between items-center",
-            !isDashboard ? "w-full px-6" : "w-5/6"
-          )}
-        >
+        <div className="w-full px-6 mx-auto transition-all duration-300 flex justify-between items-center">
           <img
             src="/visiona_logo.svg"
             alt="VISIONA GeoQuery Logo"
             className="w-auto h-full"
           />
           <div className="flex gap-2 items-center">
-            <Link href={toggleLink}>
-              <Button size="md" className="me-1" variant="soft" color="primary">
-                <Icon name={toggleIcon} size={20} />
-                {toggleLabel}
-              </Button>
-            </Link>
-            <Link href={isQgis ? "/" : "/qgis"}>
+            <Link href="/">
               <Button
                 size="md"
                 className="me-1"
-                variant={isQgis ? "solid" : "soft"}
+                variant={pathname === "/" ? "solid" : "soft"}
+                color="primary"
+              >
+                <Icon name="search" size={20} />
+                Chat
+              </Button>
+            </Link>
+            <Link href="/users">
+              <Button
+                size="md"
+                className="me-1"
+                variant={pathname === "/users" ? "solid" : "soft"}
+                color="primary"
+              >
+                <Icon name="users" size={20} />
+                Usuários
+              </Button>
+            </Link>
+            <Link href="/dashboard">
+              <Button
+                size="md"
+                className="me-1"
+                variant={pathname === "/dashboard" ? "solid" : "soft"}
+                color="primary"
+              >
+                <Icon name="bar-chart-2" size={20} />
+                Dashboard
+              </Button>
+            </Link>
+            <Link href="/qgis">
+              <Button
+                size="md"
+                className="me-1"
+                variant={pathname === "/qgis" ? "solid" : "soft"}
                 color="primary"
               >
                 <Icon name="world" size={20} />
@@ -67,9 +83,7 @@ export default function Navbar() {
                   suppressHydrationWarning
                   className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer"
                 >
-                  {user?.nome
-                    ? user.nome[0].toUpperCase()
-                    : <Icon name="shield" size={18} />}
+                  {!isLoading && user?.nome?.charAt(0).toUpperCase()}
                 </button>
               }
             >
