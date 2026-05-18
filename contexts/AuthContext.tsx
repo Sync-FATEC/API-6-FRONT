@@ -7,12 +7,13 @@ import { AuthService, type IAuthUser } from "@/services/AuthService";
 const TOKEN_KEY = "visiona_auth_token";
 const USER_KEY = "visiona_auth_user";
 
-function readToken(): string | null {
+
+function initializeToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY);
 }
 
-function readUser(): IAuthUser | null {
+function initializeUser(): IAuthUser | null {
   if (typeof window === "undefined") return null;
   const stored = localStorage.getItem(USER_KEY);
   if (!stored) return null;
@@ -23,6 +24,7 @@ function readUser(): IAuthUser | null {
     return null;
   }
 }
+
 
 interface AuthContextValue {
   user: IAuthUser | null;
@@ -35,9 +37,11 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<IAuthUser | null>(readUser);
-  const [token, setToken] = useState<string | null>(readToken);
+  const [user, setUser] = useState<IAuthUser | null>(() => initializeUser());
+  const [token, setToken] = useState<string | null>(() => initializeToken());
+  const [isLoading] = useState(false);
   const router = useRouter();
 
   const login = useCallback(
@@ -67,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isAuthenticated: !!token, isLoading: false, login, logout }}
+      value={{ user, token, isAuthenticated: !!token, isLoading, login, logout }}
     >
       {children}
     </AuthContext.Provider>
