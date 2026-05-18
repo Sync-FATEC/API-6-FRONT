@@ -18,9 +18,7 @@ import { formatArea, formatDate } from "@/utils/formatters";
 import { MAP_SOURCES } from "@/constants/map";
 import { SICAR_STATUS_MAP } from "@/helpers/mapDetails";
 
-// URL base da API — avaliada em módulo (build-time pelo Next.js), funciona dentro de renderToString
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8000/api";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL!.replace(/\/$/, "");
 
 export type PopupPayload = AsgRecord | GeoJSONProperties | TFlatMetadata;
 
