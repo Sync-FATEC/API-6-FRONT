@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Icon from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { BaseService } from "@/services/BaseService";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Usuario {
   id: number;
@@ -19,6 +21,15 @@ export default function UsuariosPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && user?.papel !== "ADMIN") {
+      router.replace("/");
+    }
+  }, [isLoading, user, router]);
 
   useEffect(() => {
     async function carregarUsuarios() {
@@ -35,8 +46,14 @@ export default function UsuariosPage() {
       }
     }
 
-    carregarUsuarios();
-  }, []);
+    if (!isLoading && user?.papel === "ADMIN") {
+      carregarUsuarios();
+    }
+  }, [isLoading, user]);
+
+  if (isLoading) return null;
+
+  if (user?.papel !== "ADMIN") return null;
 
   if (loading) {
     return (
@@ -73,9 +90,7 @@ export default function UsuariosPage() {
             Gerenciamento
           </div>
 
-          <h1 className="text-2xl font-semibold text-slate-800">
-            Usuários
-          </h1>
+          <h1 className="text-2xl font-semibold text-slate-800">Usuários</h1>
 
           <p className="text-sm text-slate-500 mt-1">
             Visualize os usuários cadastrados no sistema ASG.
