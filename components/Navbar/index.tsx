@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "../Icon";
@@ -15,8 +15,17 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAlterarSenhaOpen, setIsAlterarSenhaOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const pathname = usePathname();
   const { logout, user, isLoading } = useAuth();
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setIsHydrated(true);
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return (
     <>
@@ -39,17 +48,19 @@ export default function Navbar() {
                 Chat
               </Button>
             </Link>
-            <Link href="/users">
-              <Button
-                size="md"
-                className="me-1"
-                variant={pathname === "/users" ? "solid" : "soft"}
-                color="primary"
-              >
-                <Icon name="users" size={20} />
-                Usuários
-              </Button>
-            </Link>
+            {isHydrated && !isLoading && user?.papel === "ADMIN" && (
+              <Link href="/users">
+                <Button
+                  size="md"
+                  className="me-1"
+                  variant={pathname === "/users" ? "solid" : "soft"}
+                  color="primary"
+                >
+                  <Icon name="users" size={20} />
+                  Usuários
+                </Button>
+              </Link>
+            )}
             <Link href="/dashboard">
               <Button
                 size="md"
@@ -72,10 +83,12 @@ export default function Navbar() {
                 QGIS
               </Button>
             </Link>
-            <Button size="md" className="me-1" onClick={() => setIsModalOpen(true)}>
-              <Icon name="data-plus" size={20} />
-              Atualizar dados
-            </Button>
+            {isHydrated && !isLoading && user?.papel === "ADMIN" && (
+              <Button size="md" className="me-1" onClick={() => setIsModalOpen(true)}>
+                <Icon name="data-plus" size={20} />
+                Atualizar dados
+              </Button>
+            )}
             <Popover
               align="end"
               trigger={
@@ -83,7 +96,7 @@ export default function Navbar() {
                   suppressHydrationWarning
                   className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer"
                 >
-                  {!isLoading && user?.nome?.charAt(0).toUpperCase()}
+                  {isHydrated && !isLoading && user?.nome?.charAt(0).toUpperCase()}
                 </button>
               }
             >
