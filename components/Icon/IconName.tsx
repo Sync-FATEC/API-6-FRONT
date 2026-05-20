@@ -35,5 +35,6 @@ export type IconName =
   | "external-link"
   | "log-out"
   | "users"
+  | "edit"
   | "map";
 

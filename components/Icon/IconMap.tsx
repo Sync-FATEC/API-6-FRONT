@@ -34,6 +34,7 @@ import {
   IconMap2,
   IconLogout,
   IconUsersGroup,
+  IconPencil,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -76,4 +77,5 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   map: IconMap2,
   "log-out": IconLogout,
   users: IconUsersGroup,
+  edit: IconPencil,
 };

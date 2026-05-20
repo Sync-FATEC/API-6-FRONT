@@ -6,8 +6,7 @@ import {
   PipelineCancelResponse,
 } from "@/interfaces/services/PipelineService";
 import { BaseService } from "./BaseService";
-
-const TOKEN_KEY = "visiona_auth_token";
+import { TOKEN_KEY } from "@/constants/auth";
 
 export const PipelineService = {
   execute: async (stage: string, entities: string[]): Promise<IPipelineExecutionResponse> => {

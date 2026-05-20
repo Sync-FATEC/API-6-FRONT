@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import Icon from "@/components/Icon";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { BaseService } from "@/services/BaseService";
 import { useAuth } from "@/contexts/AuthContext";
-
-const TOKEN_KEY = "visiona_auth_token";
+import { Button } from "@/components/Button";
+import ModalCadastrarUsuario from "@/components/Modal/ModalCadastrarUsuario";
+import ModalEditarUsuario from "@/components/Modal/ModalEditarUsuario";
+import ModalExcluirUsuario from "@/components/Modal/ModalExcluirUsuario";
+import { TOKEN_KEY } from "@/constants/auth";
 
 interface Usuario {
   id: number;
@@ -23,15 +25,25 @@ export default function UsuariosPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-
+  const [mounted, setMounted] = useState(false);
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [openCadastrarModal, setOpenCadastrarModal] = useState(false);
+  const [openEditarModal, setOpenEditarModal] = useState(false);
+  const [openExcluirModal, setOpenExcluirModal] = useState(false);
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
+    null
+  );
 
   useEffect(() => {
-    if (!isLoading && user?.papel !== "ADMIN") {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isLoading && user?.papel !== "ADMIN") {
       router.replace("/");
     }
-  }, [isLoading, user, router]);
+  }, [mounted, isLoading, user, router]);
 
   useEffect(() => {
     async function carregarUsuarios() {
@@ -40,7 +52,11 @@ export default function UsuariosPage() {
         setErro(null);
 
         const token = localStorage.getItem(TOKEN_KEY) ?? "";
-        const data = await BaseService.getWithAuth<Usuario[]>("/v1/auth/usuarios", token);
+        const data = await BaseService.getWithAuth<Usuario[]>(
+          "/v1/auth/usuarios",
+          token
+        );
+
         setUsuarios(data);
       } catch {
         setErro("Não foi possível carregar a listagem de usuários.");
@@ -49,12 +65,12 @@ export default function UsuariosPage() {
       }
     }
 
-    if (!isLoading && user?.papel === "ADMIN") {
+    if (mounted && !isLoading && user?.papel === "ADMIN") {
       carregarUsuarios();
     }
-  }, [isLoading, user]);
+  }, [mounted, isLoading, user]);
 
-  if (isLoading) return null;
+  if (!mounted || isLoading) return null;
 
   if (user?.papel !== "ADMIN") return null;
 
@@ -96,12 +112,14 @@ export default function UsuariosPage() {
           <h1 className="text-2xl font-semibold text-slate-800">Usuários</h1>
 
           <p className="text-sm text-slate-500 mt-1">
-            Visualize os usuários cadastrados no sistema ASG.
+            Visualize os usuários cadastrados no sistema.
           </p>
         </div>
 
-        <div className="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center">
-          <Icon name="users" size={28} className="text-primary" />
+        <div className="flex items-center gap-3">
+          <Button onClick={() => setOpenCadastrarModal(true)}>
+            Novo usuário
+          </Button>
         </div>
       </section>
 
@@ -110,14 +128,22 @@ export default function UsuariosPage() {
           <EmptyUsuariosState />
         ) : (
           <div className="overflow-auto h-full scrollbar-mini">
-            <table className="w-full text-sm">
+            <table className="w-full table-fixed text-sm">
+              <colgroup>
+                <col className="w-[25%]" />
+                <col className="w-[38%]" />
+                <col className="w-[16%]" />
+                <col className="w-[10%]" />
+                <col className="w-[11%]" />
+              </colgroup>
+
               <thead className="sticky top-0 bg-white z-10">
                 <tr className="border-b border-slate-100 text-left text-slate-500">
                   <th className="py-3 px-3 font-semibold">Nome</th>
                   <th className="py-3 px-3 font-semibold">E-mail</th>
                   <th className="py-3 px-3 font-semibold">Cargo</th>
                   <th className="py-3 px-3 font-semibold">Papel</th>
-                  <th className="py-3 px-3 font-semibold">Criado em</th>
+                  <th className="py-3 px-3 font-semibold text-center">Ações</th>
                 </tr>
               </thead>
 
@@ -139,7 +165,7 @@ export default function UsuariosPage() {
                       </div>
                     </td>
 
-                    <td className="py-3 px-3 text-slate-600">
+                    <td className="py-3 px-3 text-slate-600 truncate">
                       {usuario.email}
                     </td>
 
@@ -149,20 +175,39 @@ export default function UsuariosPage() {
 
                     <td className="py-3 px-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          usuario.papel === "ADMIN"
-                            ? "bg-primary-50 text-primary"
-                            : "bg-slate-100 text-slate-600"
-                        }`}
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${usuario.papel === "ADMIN"
+                          ? "bg-primary-50 text-primary"
+                          : "bg-slate-100 text-slate-600"
+                          }`}
                       >
                         {usuario.papel}
                       </span>
                     </td>
 
-                    <td className="py-3 px-3 text-slate-500">
-                      {usuario.criado_em
-                        ? new Date(usuario.criado_em).toLocaleDateString("pt-BR")
-                        : "-"}
+                    <td className="py-3 px-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition"
+                          title="Editar usuário"
+                            onClick={() => {
+                            setUsuarioSelecionado(usuario);
+                            setOpenEditarModal(true);
+                          }}
+                        >
+                          <Icon name="edit" size={18} />
+                        </button>
+
+                        <button
+                          className="w-9 h-9 rounded-lg border border-red-200 flex items-center justify-center text-red-500 hover:bg-red-50 transition"
+                          title="Excluir usuário"
+                          onClick={() => {
+                            setUsuarioSelecionado(usuario);
+                            setOpenExcluirModal(true);
+                          }}
+                        >
+                          <Icon name="trash" size={18} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -171,7 +216,28 @@ export default function UsuariosPage() {
           </div>
         )}
       </section>
+      <ModalCadastrarUsuario
+        open={openCadastrarModal}
+        onOpenChange={setOpenCadastrarModal}
+        onSuccess={() => {
+          window.location.reload();
+        }}
+      />
+      <ModalEditarUsuario
+        open={openEditarModal}
+        usuario={usuarioSelecionado}
+        onOpenChange={setOpenEditarModal}
+      />
+      <ModalExcluirUsuario
+        open={openExcluirModal}
+        usuario={usuarioSelecionado}
+        onOpenChange={setOpenExcluirModal}
+        onSuccess={() => {
+          window.location.reload();
+        }}
+      />
     </div>
+
   );
 }
 

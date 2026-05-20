@@ -3,10 +3,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService, type IAuthUser } from "@/services/AuthService";
-
-const TOKEN_KEY = "visiona_auth_token";
-const USER_KEY = "visiona_auth_user";
-
+import { TOKEN_KEY, USER_KEY } from "@/constants/auth";
 
 function initializeToken(): string | null {
   if (typeof window === "undefined") return null;

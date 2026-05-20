@@ -79,4 +79,25 @@ export const BaseService = {
 
     return await response.blob();
   },
+
+  async deleteWithAuth<T>(
+    endpoint: string,
+    token: string
+  ): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      throw new Error(json.detail ?? `Erro: ${response.status}`);
+    }
+
+    return json as T;
+  },
 };
+
