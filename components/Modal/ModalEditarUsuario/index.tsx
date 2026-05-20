@@ -21,7 +21,6 @@ interface Props {
 
 export default function ModalEditarUsuario({
   open,
-  usuario,
   onOpenChange,
 }: Props) {
   const [nome, setNome] = useState("");
