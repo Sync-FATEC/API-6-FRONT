@@ -3,6 +3,7 @@ import ChatHeader from "./Header";
 import DetailsModal from "./DetailsModal";
 import ImovelAmeacasCard from "./ImovelAmeacasCard";
 import GruposCard from "./GruposCard";
+import QgisExportLink from "./QgisExportLink";
 import { ChatMessage } from "@/interfaces/components/chat";
 
 interface Props {
@@ -62,6 +63,15 @@ export default function ChatView({ messages }: Props) {
                       <GruposCard
                         grupos={msg.queryData.grupos}
                         eixo={msg.queryData.eixo_agrupamento ?? "unico"}
+                      />
+                    )}
+
+                  {msg.status === "done" &&
+                    msg.queryData &&
+                    (msg.queryData.total_resultados ?? 0) > 0 && (
+                      <QgisExportLink
+                        url={msg.queryData.qgis_url}
+                        urlsGrupos={msg.queryData.qgis_urls}
                       />
                     )}
 
