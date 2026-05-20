@@ -8,6 +8,8 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { BaseService } from "@/services/BaseService";
 import { useAuth } from "@/contexts/AuthContext";
 
+const TOKEN_KEY = "visiona_auth_token";
+
 interface Usuario {
   id: number;
   nome: string;
@@ -37,7 +39,8 @@ export default function UsuariosPage() {
         setLoading(true);
         setErro(null);
 
-        const data = await BaseService.get<Usuario[]>("/usuarios");
+        const token = localStorage.getItem(TOKEN_KEY) ?? "";
+        const data = await BaseService.getWithAuth<Usuario[]>("/v1/auth/usuarios", token);
         setUsuarios(data);
       } catch {
         setErro("Não foi possível carregar a listagem de usuários.");

@@ -54,6 +54,22 @@ export const BaseService = {
     return json as T;
   },
 
+  async getWithAuth<T>(endpoint: string, token: string): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      throw new Error(json.detail ?? `Erro: ${response.status}`);
+    }
+
+    return json as T;
+  },
+
   async getBlob(endpoint: string): Promise<Blob> {
     const response = await fetch(`${BASE_URL}${endpoint}`);
 
