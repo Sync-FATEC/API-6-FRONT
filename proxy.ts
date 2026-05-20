@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { TOKEN_KEY } from "@/constants/auth";
 
 const AUTH_ENABLED = true;
 
-const TOKEN_KEY = "visiona_auth_token";
 const PUBLIC_ROUTES = ["/login"];
 
 export function proxy(request: NextRequest) {
