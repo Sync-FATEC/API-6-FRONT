@@ -6,9 +6,11 @@ import {
   PipelineCancelResponse,
 } from "@/interfaces/services/PipelineService";
 import { BaseService } from "./BaseService";
+import { TOKEN_KEY } from "@/constants/auth";
 
 export const PipelineService = {
   execute: async (stage: string, entities: string[]): Promise<IPipelineExecutionResponse> => {
+    const token = localStorage.getItem(TOKEN_KEY) ?? "";
     const params = new URLSearchParams();
 
     params.append("etapa", stage);
@@ -17,7 +19,10 @@ export const PipelineService = {
       params.append("entidades", entity);
     });
 
-    return BaseService.post<IPipelineExecutionResponse>(`/etl/executar?${params.toString()}`);
+    return BaseService.postWithAuth<IPipelineExecutionResponse>(
+      `/etl/executar?${params.toString()}`,
+      token
+    );
   },
 
   history: async (): Promise<IPipelineHistoryResponse> => {
@@ -33,6 +38,7 @@ export const PipelineService = {
   },
 
   cancel: async (): Promise<PipelineCancelResponse> => {
-    return BaseService.post<PipelineCancelResponse>("/etl/cancelar");
+    const token = localStorage.getItem(TOKEN_KEY) ?? "";
+    return BaseService.postWithAuth<PipelineCancelResponse>("/etl/cancelar", token);
   },
 };

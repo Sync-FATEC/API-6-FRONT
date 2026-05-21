@@ -94,11 +94,10 @@ export default function DashboardPage() {
     return date;
   }, []);
 
-      
-  return (
-    <div className="flex flex-col gap-6 flex-1 w-5/6 mx-auto my-12">
-      <h1 className="text-primary text-3xl font-bold">Dashboard</h1>
 
+  return (
+    <div className="flex flex-col gap-6 flex-1 w-full p-6">
+      <h1 className="text-primary text-3xl font-bold">Dashboard</h1>
       {isLoading ? (
         <div className="flex h-96 items-center justify-center">
           <LoadingSpinner />

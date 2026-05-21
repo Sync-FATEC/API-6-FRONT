@@ -32,6 +32,13 @@ import {
   IconClockFilled,
   IconChevronRight,
   IconChevronLeft,
+  IconCopy,
+  IconWorld,
+  IconExternalLink,
+  IconMap2,
+  IconLogout,
+  IconUsersGroup,
+  IconPencil,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -71,5 +78,12 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   "clock-past": IconHistoryToggle,
   history: IconClockFilled,
   "chevron-right": IconChevronRight,
-  "chevron-left": IconChevronLeft
+  "chevron-left": IconChevronLeft,
+  copy: IconCopy,
+  world: IconWorld,
+  "external-link": IconExternalLink,
+  map: IconMap2,
+  "log-out": IconLogout,
+  users: IconUsersGroup,
+  edit: IconPencil,
 };

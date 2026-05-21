@@ -121,6 +121,12 @@ export interface IGrupoResposta {
   total_resultados: number;
   nota_risco?: INotaRisco | null;
   fontes?: ISource[];
+  qgis_url?: string | null;
+}
+
+export interface IQgisUrlGrupo {
+  rotulo: string;
+  url: string;
 }
 
 export interface IQueryResponse {
@@ -144,4 +150,7 @@ export interface IQueryResponse {
   grupos?: IGrupoResposta[] | null;
   eixo_agrupamento?: EixoAgrupamento | null;
   intencoes_detectadas?: IIntencaoDetectada[] | null;
+  // URL pronta para abrir a mesma consulta no QGIS
+  qgis_url?: string | null;
+  qgis_urls?: IQgisUrlGrupo[] | null;
 }

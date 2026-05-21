@@ -121,4 +121,34 @@ export const STEPS = [
       </div>
     ),
   },
+  {
+    title: "Integração com QGIS",
+    content: (
+      <div className="flex flex-col gap-3 text-slate-600 leading-relaxed">
+        <p>
+          Acesse a aba <span className="font-semibold text-slate-800">QGIS</span> na barra
+          superior para gerar URLs prontas das camadas geoespaciais no formato
+          <span className="font-mono"> GeoJSON </span> em EPSG:4326.
+        </p>
+        <div className="bg-slate-50 rounded-lg p-5 flex flex-col gap-2">
+          <p className="font-semibold text-slate-700 text-sm uppercase tracking-wide">
+            Fluxo recomendado
+          </p>
+          <ol className="list-decimal list-inside text-slate-600 flex flex-col gap-0.5">
+            <li>Escolha a camada desejada (queimadas, SICAR, DETER, etc.).</li>
+            <li>Defina filtros opcionais: município, período, bounding box.</li>
+            <li>Clique em <strong>Pré-visualizar</strong> para validar no mapa.</li>
+            <li>Clique em <strong>Copiar URL</strong> e cole no QGIS.</li>
+            <li>
+              No QGIS: <span className="font-mono">Layer → Add Vector Layer → Protocol HTTP(S)</span>.
+            </li>
+          </ol>
+        </div>
+        <p className="text-sm text-slate-500">
+          As camadas SICAR e PRODES podem ser pesadas — use a opção <strong>bbox</strong> ou
+          filtros para reduzir o volume antes de carregar no QGIS.
+        </p>
+      </div>
+    ),
+  },
 ];

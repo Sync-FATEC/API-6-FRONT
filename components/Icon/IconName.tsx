@@ -33,4 +33,12 @@ export type IconName =
   | "clock-past"
   | "history"
   | "chevron-right"
-  | "chevron-left";
+  | "chevron-left"
+  | "copy"
+  | "world"
+  | "external-link"
+  | "log-out"
+  | "users"
+  | "edit"
+  | "map";
+
