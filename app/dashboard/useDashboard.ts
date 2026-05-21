@@ -119,7 +119,6 @@ export function useDashboard() {
 
         setDesmatamentoRawData(filteredDeter);
 
-        // Combina DETER e PRODES para o gráfico
         const combined = [
           ...filteredDeter.map(d => ({ ...d, _date: d.data_avistamento })),
           ...prodesRawData.map(p => ({ ...p, _date: p.data_imagem }))
@@ -320,7 +319,6 @@ export function useDashboard() {
       return coords ? { ...item, latitude: coords[0], longitude: coords[1] } : item;
     });
 
-    // Filtrar PRODES para o mesmo dia
     const prodesDia = prodesRawData.filter(
       (item) => String(item.data_imagem ?? "").slice(0, 10) === isoDate
     );
@@ -339,12 +337,8 @@ export function useDashboard() {
   const displayStats = useMemo(() => {
     return {
       corpus_asg: stats?.corpus_asg || 0,
-
-      // Sempre usar a contagem dos dados filtrados para refletir exatamente o período selecionado nas datas
       queimadas: queimadasRawData.length,
       desmatamento_alertas: desmatamentoRawData.length + prodesRawData.length,
-
-      // Esses NÃO mudam com filtro
       terras_indigenas: stats?.terras_indigenas || tiRawData.length || 0,
       unidades_conservacao: stats?.unidades_conservacao || ucRawData.length || 0,
       comunidades_quilombolas: stats?.comunidades_quilombolas || quilombolasRawData.length || 0,

@@ -20,7 +20,7 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
       await navigator.clipboard.writeText(url);
       setCopiado(true);
       toast.success("URL copiada", {
-        description: "Cole no QGIS em Layer → Add Vector Layer → Protocol HTTP(S).",
+        description: "Cole no QGIS em Layer > Add Vector Layer > Protocol HTTP(S).",
       });
       setTimeout(() => setCopiado(false), 2000);
     } catch {

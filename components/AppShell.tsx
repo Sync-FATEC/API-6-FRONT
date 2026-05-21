@@ -15,14 +15,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex min-h-screen flex-col w-full">
       <Navbar />
-      <main className="flex-1">
-        <div className="flex flex-col min-h-full">
-          <div className="flex-1 flex flex-col">{children}</div>
-          <Footer />
-        </div>
-      </main>
+
+      <main className="flex flex-1 flex-col">{children}</main>
+
+      <Footer />
     </div>
   );
 }

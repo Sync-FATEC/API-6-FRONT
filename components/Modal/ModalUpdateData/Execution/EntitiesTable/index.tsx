@@ -26,7 +26,7 @@ export default function GeoEntitiesTable({ status, selectedEntities, setSelected
       >
         <span className="flex items-center gap-1.5">
           <Icon name="gps-pin" size={16} />
-          Entidade geográfica
+          Entidade
         </span>
 
         <span className="flex items-center gap-1.5">

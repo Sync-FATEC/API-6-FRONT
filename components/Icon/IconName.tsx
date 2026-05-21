@@ -38,7 +38,8 @@ export type IconName =
   | "world"
   | "external-link"
   | "log-out"
-  | "users"
+  | "user"
   | "edit"
-  | "map";
+  | "map"
+  | "add";
 

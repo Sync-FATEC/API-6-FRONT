@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import QgisHeader from "@/components/Qgis/QgisHeader";
 import LayerSelector from "@/components/Qgis/LayerSelector";
 import LayerFilterForm from "@/components/Qgis/LayerFilterForm";
 import UrlPreview from "@/components/Qgis/UrlPreview";
@@ -62,22 +61,18 @@ export default function QgisPage() {
   }
 
   return (
-    <div className="flex gap-3 flex-1 min-h-0">
-      {/* Coluna 1 - 25% - Header + Seletor de camadas */}
+    <div className="flex gap-3 flex-1 min-h-0 p-3">
       <aside className="w-[25%] flex flex-col min-h-0">
-        <div className="flex-1 bg-white rounded-lg p-5 shadow-sm flex flex-col gap-4 min-h-0 overflow-hidden">
-          <QgisHeader camadaNome={selecionada?.nome ?? null} />
-          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-mini pr-1">
-            <LayerSelector
-              camadas={catalogo.camadas}
-              selecionada={selecionada}
-              onSelect={handleSelectCamada}
-            />
-          </div>
+        <div className="flex-1 bg-white rounded-lg p-6 shadow-sm flex flex-col gap-4 min-h-0 overflow-hidden">
+          <h1 className="text-xl font-semibold text-primary mb-1">Integração QGIS</h1>
+          <LayerSelector
+            camadas={catalogo.camadas}
+            selecionada={selecionada}
+            onSelect={handleSelectCamada}
+          />
         </div>
       </aside>
 
-      {/* Coluna 2 - 25% - Filtros + URL + Instruções */}
       <section className="w-[25%] flex flex-col min-h-0">
         <div className="flex-1 bg-white rounded-lg p-5 shadow-sm flex flex-col gap-4 min-h-0 overflow-hidden">
           {selecionada ? (
@@ -110,7 +105,6 @@ export default function QgisPage() {
         </div>
       </section>
 
-      {/* Coluna 3 - 50% - Mapa */}
       <section className="w-[50%] flex flex-col min-h-0">
         {preview ? (
           <div className="bg-white rounded-lg shadow-sm h-full w-full relative overflow-hidden">
@@ -148,8 +142,8 @@ function EmptyMapState({
           Pré-visualize a camada antes de copiar
         </h3>
         <p className="text-base text-slate-500 max-w-lg leading-relaxed">
-          Configure os filtros e clique em <strong>Mapa</strong> para validar visualmente o
-          GeoJSON antes de colar a URL no QGIS.
+          Configure os filtros e clique em <strong>Mapa</strong> para validar visualmente o GeoJSON
+          antes de colar a URL no QGIS.
         </p>
         {hasCamada && (
           <button

@@ -38,7 +38,7 @@ export default function QgisExportLink({ url, urlsGrupos }: Props) {
       await navigator.clipboard.writeText(target);
       setCopiado(target);
       toast.success("URL copiada", {
-        description: `${label} — cole no QGIS em Layer → Add Vector Layer → Protocol HTTP(S).`,
+        description: `${label} — cole no QGIS em Layer > Add Vector Layer > Protocol HTTP(S).`,
       });
       setTimeout(() => setCopiado(null), 2000);
     } catch {
@@ -49,7 +49,7 @@ export default function QgisExportLink({ url, urlsGrupos }: Props) {
   const isMultiplo = gruposAbs.length > 0;
 
   return (
-    <div className="mt-3 rounded-xl border border-primary-100 bg-gradient-to-br from-primary-50/60 to-white p-3 flex flex-col gap-2.5 animate-pop-in-up shadow-sm">
+    <div className="mt-3 rounded-xl border border-primary-100 bg-linear-to-br from-primary-50/60 to-white p-3 flex flex-col gap-2.5 animate-pop-in-up shadow-sm">
       <div className="flex items-center gap-2">
         <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary text-white shrink-0">
           <Icon name="world" size={13} />

@@ -2,7 +2,7 @@ import Icon from "../Icon";
 
 export default function FooterContent() {
   return (
-    <footer className="bg-white text-white py-12 shadow-sm mt-3">
+    <footer className="bg-white text-white py-12 shadow-sm">
       <div className="w-full px-6 mx-auto flex justify-between items-center h-full text-slate-400">
         <p>VISIONA GeoQuery © Todos os direitos reservados. 2026</p>
         <div className="flex gap-3 items-center">
