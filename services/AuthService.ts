@@ -73,6 +73,22 @@ export const AuthService = {
     return data.mensagem;
   },
 
+  async esqueciSenha(email: string): Promise<string> {
+    const data = await BaseService.post<{ mensagem: string }>(
+      "/v1/auth/esqueci-senha",
+      { email }
+    );
+    return data.mensagem;
+  },
+
+  async redefinirSenha(token: string, novaSenha: string): Promise<string> {
+    const data = await BaseService.post<{ mensagem: string }>(
+      "/v1/auth/redefinir-senha",
+      { token, nova_senha: novaSenha }
+    );
+    return data.mensagem;
+  },
+
   async excluirUsuario(usuarioId: number): Promise<string> {
     const token = localStorage.getItem(TOKEN_KEY) ?? "";
 
