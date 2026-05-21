@@ -227,6 +227,9 @@ export default function UsuariosPage() {
         open={openEditarModal}
         usuario={usuarioSelecionado}
         onOpenChange={setOpenEditarModal}
+        onSuccess={() => {
+          window.location.reload();
+        }}
       />
       <ModalExcluirUsuario
         open={openExcluirModal}

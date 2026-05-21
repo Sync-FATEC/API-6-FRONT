@@ -80,6 +80,29 @@ export const BaseService = {
     return await response.blob();
   },
 
+  async putWithAuth<T>(
+    endpoint: string,
+    token: string,
+    data?: unknown
+  ): Promise<T> {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      throw new Error(json.detail ?? `Erro: ${response.status}`);
+    }
+
+    return json as T;
+  },
+
   async deleteWithAuth<T>(
     endpoint: string,
     token: string
