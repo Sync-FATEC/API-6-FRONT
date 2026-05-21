@@ -3,6 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { QueryService } from "@/services/QueryService";
 import { ChatMessage } from "@/interfaces/components/chat";
 import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
+import { useAuth } from "@/contexts/AuthContext";
+import { TOKEN_KEY } from "@/constants/auth";
 
 export function useChatForm() {
   const [message, setMessage] = useState("");
@@ -10,6 +12,9 @@ export function useChatForm() {
   const [activeGeoJSON, setActiveGeoJSON] = useState<IGeoJSONFeatureCollection | null>(null);
   const [activeIntention, setActiveIntention] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { user } = useAuth();
+
+  const getToken = () => (user ? (localStorage.getItem(TOKEN_KEY) ?? undefined) : undefined);
 
   const handleNewChat = () => {
     setMessages([]);
@@ -44,7 +49,7 @@ export function useChatForm() {
   };
 
   const chatMutation = useMutation({
-    mutationFn: (pergunta: string) => QueryService.query(pergunta),
+    mutationFn: (pergunta: string) => QueryService.query(pergunta, getToken()),
   });
 
   const handleSend = () => {
