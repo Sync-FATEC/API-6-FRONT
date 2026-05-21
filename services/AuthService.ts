@@ -27,6 +27,14 @@ export interface ICadastroUsuarioPayload {
   papel: "ADMIN" | "USER";
 }
 
+export interface IEditarUsuarioPayload {
+  nome?: string;
+  cargo?: string;
+  email?: string;
+  papel?: "ADMIN" | "USER";
+  nova_senha?: string;
+}
+
 export const AuthService = {
   async login(credentials: ILoginCredentials): Promise<IAuthResponse> {
     return BaseService.post<IAuthResponse>(
@@ -74,5 +82,18 @@ export const AuthService = {
     );
 
     return data.mensagem;
+  },
+
+  async editarUsuario(
+    usuarioId: number,
+    payload: IEditarUsuarioPayload
+  ): Promise<IAuthUser> {
+    const token = localStorage.getItem(TOKEN_KEY) ?? "";
+
+    return BaseService.putWithAuth<IAuthUser>(
+      `/v1/auth/usuarios/${usuarioId}`,
+      token,
+      payload
+    );
   },
 };
