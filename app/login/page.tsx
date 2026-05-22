@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import TextInput from "@/components/Inputs/Text";
@@ -12,6 +13,7 @@ interface FormErrors {
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -137,6 +139,14 @@ export default function LoginPage() {
           <Button type="submit" size="lg" isLoading={isLoading} className="w-full mt-1">
             Entrar
           </Button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/esqueci-senha")}
+            className="text-center text-sm text-slate-500 hover:text-slate-700 underline underline-offset-2 cursor-pointer"
+          >
+            Esqueci minha senha
+          </button>
         </form>
       </div>
     </div>
