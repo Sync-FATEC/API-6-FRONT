@@ -2,7 +2,7 @@ import { useState } from "react";
 import Icon from "@/components/Icon";
 import Popover from "@/components/Popover";
 import { cn } from "@/utils/className";
-import InputWrapper from "../InputLabel";
+import InputWrapper from "../InputWrapper";
 import { baseInputClasses } from "@/constants/styles/input";
 
 export interface SelectOption {
@@ -44,11 +44,7 @@ export default function Select({
     <button
       type="button"
       id={id}
-      className={cn(
-        baseInputClasses,
-        "cursor-pointer justify-between text-left",
-        className
-      )}
+      className={cn(baseInputClasses, "cursor-pointer justify-between text-left", className)}
     >
       <span className={cn("truncate", !selectedOption && "text-slate-400")}>
         {selectedOption ? selectedOption.label : placeholder}

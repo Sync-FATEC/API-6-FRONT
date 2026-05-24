@@ -81,7 +81,6 @@ export default function ExecutionBody() {
     pipelineStatus,
     isLoading,
     error,
-    data,
     executionId,
     executionStatusData: statusData,
     isLoadingStatus,
@@ -217,18 +216,6 @@ export default function ExecutionBody() {
       {error && (
         <div className="p-3 rounded-md bg-danger-50 text-danger text-sm">
           {error}
-        </div>
-      )}
-
-      {data?.status === "iniciado" && !statusData && (
-        <div className="p-3 bg-success/5 rounded-md text-green-700 text-sm">
-          <strong>Pipeline iniciado com sucesso.</strong>
-          {executionId && (
-            <>
-              <br />
-              ID da execução: <span className="font-medium">{executionId}</span>
-            </>
-          )}
         </div>
       )}
 

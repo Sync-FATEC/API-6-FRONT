@@ -24,11 +24,9 @@ const FONTE_PARA_KEY: Record<string, string> = {
 
 export default function LayerSelector({ camadas, selecionada, onSelect }: Props) {
   return (
-    <section className="flex flex-col gap-2">
-      <h3 className="text-xs uppercase font-bold text-slate-500 tracking-wider px-0.5">
-        Camadas
-      </h3>
-      <div className="flex flex-col gap-1.5">
+    <section className="flex flex-col gap-4">
+      <h3 className="font-medium text-slate-400">Selecione uma entidade</h3>
+      <div className="flex flex-col gap-4">
         {camadas.map((camada) => {
           const key = FONTE_PARA_KEY[camada.fonte] ?? "desconhecida";
           const cfg = MAP_SOURCES[key] ?? MAP_SOURCES.desconhecida;
@@ -41,29 +39,30 @@ export default function LayerSelector({ camadas, selecionada, onSelect }: Props)
               onClick={() => onSelect(camada)}
               title={camada.descricao}
               className={cn(
-                "group flex items-center gap-2.5 rounded-lg border p-2.5 text-left transition cursor-pointer",
-                isActive
-                  ? "border-primary bg-primary-50 shadow-sm"
-                  : "border-slate-200 bg-white hover:border-primary-200 hover:bg-slate-50",
+                "group flex items-center gap-4 rounded-lg p-1 text-left cursor-pointer",
+                isActive ? "" : "bg-white hover:bg-slate-100"
               )}
+              style={isActive ? { backgroundColor: cfg.color } : {}}
             >
               <span
-                className="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-md text-white"
-                style={{ backgroundColor: cfg.color }}
+                className="shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-md"
+                style={
+                  isActive
+                    ? { backgroundColor: "#ffffff", color: cfg.color }
+                    : { backgroundColor: cfg.color, color: "#ffffff" }
+                }
               >
-                <Icon name={cfg.icon as IconName} size={16} />
+                <Icon name={cfg.icon as IconName} />
               </span>
               <span
                 className={cn(
-                  "text-xs font-semibold leading-tight line-clamp-1 flex-1",
-                  isActive ? "text-primary" : "text-slate-700",
+                  "text-sm font-semibold leading-tight line-clamp-1 flex-1",
+                  isActive ? "text-white" : "text-slate-600"
                 )}
               >
                 {nomeCurto}
               </span>
-              {isActive && (
-                <Icon name="check" size={14} className="text-primary shrink-0" />
-              )}
+              {isActive && <Icon name="check" size={20} className="text-white shrink-0 mr-4" />}
             </button>
           );
         })}

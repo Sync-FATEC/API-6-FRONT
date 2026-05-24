@@ -31,9 +31,7 @@ export default function UsuariosPage() {
   const [openCadastrarModal, setOpenCadastrarModal] = useState(false);
   const [openEditarModal, setOpenEditarModal] = useState(false);
   const [openExcluirModal, setOpenExcluirModal] = useState(false);
-  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(
-    null
-  );
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -52,10 +50,7 @@ export default function UsuariosPage() {
         setErro(null);
 
         const token = localStorage.getItem(TOKEN_KEY) ?? "";
-        const data = await BaseService.getWithAuth<Usuario[]>(
-          "/v1/auth/usuarios",
-          token
-        );
+        const data = await BaseService.getWithAuth<Usuario[]>("/v1/auth/usuarios", token);
 
         setUsuarios(data);
       } catch {
@@ -91,37 +86,19 @@ export default function UsuariosPage() {
 
         <p className="text-sm text-slate-500">
           Verifique se o backend está em execução e se a rota{" "}
-          <code className="bg-slate-100 px-1.5 py-0.5 rounded">
-            /api/usuarios
-          </code>{" "}
-          existe.
+          <code className="bg-slate-100 px-1.5 py-0.5 rounded">/api/usuarios</code> existe.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3 flex-1 min-h-0">
-      <section className="bg-white rounded-lg p-5 shadow-sm flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-primary font-semibold text-sm mb-1">
-            <Icon name="users" size={18} />
-            Gerenciamento
-          </div>
+    <div className="flex flex-col gap-3 w-3/4 mx-auto py-12">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-bold text-primary">Usuários</h1>
 
-          <h1 className="text-2xl font-semibold text-slate-800">Usuários</h1>
-
-          <p className="text-sm text-slate-500 mt-1">
-            Visualize os usuários cadastrados no sistema.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Button onClick={() => setOpenCadastrarModal(true)}>
-            Novo usuário
-          </Button>
-        </div>
-      </section>
+        <Button onClick={() => setOpenCadastrarModal(true)}><Icon name="add" /> Novo usuário</Button>
+      </div>
 
       <section className="bg-white rounded-lg p-5 shadow-sm flex-1 min-h-0 overflow-hidden">
         {usuarios.length === 0 ? (
@@ -165,20 +142,17 @@ export default function UsuariosPage() {
                       </div>
                     </td>
 
-                    <td className="py-3 px-3 text-slate-600 truncate">
-                      {usuario.email}
-                    </td>
+                    <td className="py-3 px-3 text-slate-600 truncate">{usuario.email}</td>
 
-                    <td className="py-3 px-3 text-slate-600">
-                      {usuario.cargo || "-"}
-                    </td>
+                    <td className="py-3 px-3 text-slate-600">{usuario.cargo || "-"}</td>
 
                     <td className="py-3 px-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${usuario.papel === "ADMIN"
-                          ? "bg-primary-50 text-primary"
-                          : "bg-slate-100 text-slate-600"
-                          }`}
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          usuario.papel === "ADMIN"
+                            ? "bg-primary-50 text-primary"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
                       >
                         {usuario.papel}
                       </span>
@@ -189,7 +163,7 @@ export default function UsuariosPage() {
                         <button
                           className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition"
                           title="Editar usuário"
-                            onClick={() => {
+                          onClick={() => {
                             setUsuarioSelecionado(usuario);
                             setOpenEditarModal(true);
                           }}
@@ -240,7 +214,6 @@ export default function UsuariosPage() {
         }}
       />
     </div>
-
   );
 }
 
@@ -249,12 +222,10 @@ function EmptyUsuariosState() {
     <div className="flex h-full justify-center items-center">
       <div className="flex flex-col gap-4 max-w-md w-full items-center text-center">
         <div className="w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center">
-          <Icon name="users" size={40} className="text-primary" />
+          <Icon name="user" size={40} className="text-primary" />
         </div>
 
-        <h3 className="font-semibold text-2xl text-slate-700">
-          Nenhum usuário encontrado
-        </h3>
+        <h3 className="font-semibold text-2xl text-slate-700">Nenhum usuário encontrado</h3>
 
         <p className="text-base text-slate-500 leading-relaxed">
           Quando houver usuários cadastrados, eles aparecerão nesta listagem.

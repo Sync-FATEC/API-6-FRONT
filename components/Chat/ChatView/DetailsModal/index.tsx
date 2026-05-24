@@ -6,6 +6,8 @@ import { DetailsBody } from "./Details";
 import { CalculationBody } from "./Calculation";
 import { DetailsFooter } from "./Details/Footer";
 import { CalculationFooter } from "./Calculation/Footer";
+import Icon from "@/components/Icon";
+import Tooltip from "@/components/Tooltip";
 
 interface Props {
   data: IQueryResponse;
@@ -51,14 +53,16 @@ export default function DetailsModal({ data }: Props) {
 
   return (
     <>
-      <Button
-        variant="plain"
-        size="sm"
-        className="bg-slate-50 mt-2 text-slate-500 text-xs font-medium"
-        onClick={() => setIsOpen(true)}
-      >
-        Mais informações
-      </Button>
+      <Tooltip content="Mais informações">
+        <Button
+          variant="plain"
+          size="sm"
+          className="bg-slate-50 text-slate-500 text-xs font-medium px-2"
+          onClick={() => setIsOpen(true)}
+        >
+          <Icon name="info" size={20} />
+        </Button>
+      </Tooltip>
 
       <Modal
         open={isOpen}

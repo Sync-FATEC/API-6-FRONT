@@ -30,11 +30,16 @@ export type IconName =
   | "trash"
   | "bar-chart-2"
   | "download"
+  | "clock-past"
+  | "history"
+  | "chevron-right"
+  | "chevron-left"
   | "copy"
   | "world"
   | "external-link"
   | "log-out"
-  | "users"
+  | "user"
   | "edit"
-  | "map";
+  | "map"
+  | "add";
 

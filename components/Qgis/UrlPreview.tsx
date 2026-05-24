@@ -20,7 +20,7 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
       await navigator.clipboard.writeText(url);
       setCopiado(true);
       toast.success("URL copiada", {
-        description: "Cole no QGIS em Layer → Add Vector Layer → Protocol HTTP(S).",
+        description: "Cole no QGIS em Layer > Add Vector Layer > Protocol HTTP(S).",
       });
       setTimeout(() => setCopiado(false), 2000);
     } catch {
@@ -34,11 +34,11 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
 
   return (
     <section className="flex flex-col gap-2.5">
-      <h3 className="text-xs uppercase font-bold text-slate-500 tracking-wider px-0.5">
+      <h3 className="text-sm font-medium text-slate-500 ">
         URL gerada
       </h3>
 
-      <div className="relative rounded-md border border-slate-200 bg-slate-50 p-2.5">
+      <div className="relative rounded-md bg-slate-50 p-2">
         <textarea
           readOnly
           value={url}
@@ -50,9 +50,9 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
           onClick={handleCopy}
           title="Copiar URL"
           className={cn(
-            "absolute top-2 right-2 flex items-center justify-center w-7 h-7 rounded-md transition cursor-pointer",
+            "absolute top-2 right-2 flex items-center justify-center w-7 h-7 rounded-sm transition cursor-pointer",
             copiado
-              ? "bg-success-50 text-success"
+              ? "bg-success text-white"
               : "bg-white text-slate-500 hover:bg-primary hover:text-white shadow-sm",
           )}
         >

@@ -14,7 +14,7 @@ import { useDaySelection } from "@/contexts/DaySelectionContext";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { } = useDaySelection();
+  const {} = useDaySelection();
   const {
     isLoading,
     displayStats,
@@ -94,12 +94,12 @@ export default function DashboardPage() {
     return date;
   }, []);
 
-
   return (
-    <div className="flex flex-col gap-6 flex-1 w-full p-6">
-      <h1 className="text-primary text-3xl font-bold">Dashboard</h1>
+    <div className="flex flex-col gap-6 flex-1 w-3/4 mx-auto py-12">
+      <h1 className="text-primary text-4xl font-bold">Dashboard</h1>
+
       {isLoading ? (
-        <div className="flex h-96 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : (
@@ -158,9 +158,7 @@ export default function DashboardPage() {
             {isLoadingDayData && (
               <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center rounded-lg gap-2">
                 <div className="w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm text-slate-600 font-medium">
-                  Buscando dados do dia...
-                </p>
+                <p className="text-sm text-slate-600 font-medium">Buscando dados do dia...</p>
               </div>
             )}
 

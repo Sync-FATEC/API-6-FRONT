@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
 import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 import {
   INITIAL_CENTER,
@@ -16,6 +15,7 @@ import {
 import StateOutline from "@/components/Map/components/StateOutline";
 import MapViewToggle from "@/components/Map/components/MapViewToggle";
 import { IQgisLayer } from "@/interfaces/services/QgisService";
+import { INTENTION_TEMPLATES } from "@/components/Map/components/MapDetails";
 
 delete (L.Icon.Default.prototype as L.Icon.Default & { _getIconUrl?: () => string })._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -59,7 +59,7 @@ export default function PreviewMap({ data, camada }: Props) {
   const [mapType, setMapType] = useState<TMapProvider>("satellite");
   const currentProvider = MAP_PROVIDERS[mapType];
 
-  const fonteKey = camada ? FONTE_PARA_KEY[camada.fonte] ?? "desconhecida" : "desconhecida";
+  const fonteKey = camada ? (FONTE_PARA_KEY[camada.fonte] ?? "desconhecida") : "desconhecida";
   const cfg = MAP_SOURCES[fonteKey] ?? MAP_SOURCES.desconhecida;
 
   return (
@@ -68,17 +68,13 @@ export default function PreviewMap({ data, camada }: Props) {
 
       {camada && (
         <div className="absolute bottom-6 left-6 z-1000 bg-black/50 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-lg">
-          <h4 className="text-xs uppercase font-bold text-white tracking-wider mb-2">
-            Legenda
-          </h4>
+          <h4 className="text-xs uppercase font-bold text-white tracking-wider mb-2">Legenda</h4>
           <div className="flex items-center gap-2">
             <span
               className="w-2.5 h-2.5 rounded-full shrink-0"
               style={{ backgroundColor: cfg.color }}
             />
-            <span className="text-sm font-semibold text-white whitespace-nowrap">
-              {cfg.label}
-            </span>
+            <span className="text-sm font-semibold text-white whitespace-nowrap">{cfg.label}</span>
           </div>
         </div>
       )}
@@ -117,29 +113,18 @@ export default function PreviewMap({ data, camada }: Props) {
               })
             }
             onEachFeature={(feature, layer) => {
-              const props = feature.properties || {};
-              const ignorar = new Set(["fonte"]);
-              const html = Object.entries(props)
-                .filter(([k, v]) => !ignorar.has(k) && v !== null && v !== undefined && v !== "")
-                .slice(0, 12)
-                .map(
-                  ([k, v]) =>
-                    `<div class="flex justify-between gap-3 text-xs py-0.5">
-                      <span class="font-semibold text-slate-600">${k}</span>
-                      <span class="text-slate-800 text-right truncate max-w-[180px]">${String(v)}</span>
-                    </div>`,
-                )
-                .join("");
-              const title = camada
-                ? `<div class="font-bold text-primary mb-1 pb-1 border-b border-slate-200">${
-                    cfg.label
-                  }</div>`
-                : "";
-              layer.bindPopup(`<div class="min-w-[220px]">${title}${html}</div>`, {
-                maxWidth: 320,
+              const props = {
+                ...(feature.properties || {}),
+                fonte: feature.properties?.fonte || fonteKey,
+              };
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const content = INTENTION_TEMPLATES["default"](props as any);
+
+              layer.bindPopup(content, {
+                maxWidth: 500,
                 className: "custom-popup",
                 closeButton: false,
-                offset: [0, -8] as L.PointTuple,
+                offset: [0, -10] as L.PointTuple,
               });
             }}
           />
