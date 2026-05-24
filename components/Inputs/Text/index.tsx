@@ -1,7 +1,7 @@
 import { ChangeEvent, forwardRef, useState } from "react";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { cn } from "@/utils/className";
-import InputWrapper from "../InputLabel";
+import InputWrapper from "../InputWrapper";
 import { baseInputClasses } from "@/constants/styles/input";
 
 export const InputPattern = {
@@ -18,7 +18,10 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const TextInput = forwardRef<HTMLInputElement, Props>(
-  ({ label, id, wrapperClassName, allowPattern, onChange, className, required, type, ...props }, ref) => {
+  (
+    { label, id, wrapperClassName, allowPattern, onChange, className, required, type, ...props },
+    ref
+  ) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const isPassword = type === "password";

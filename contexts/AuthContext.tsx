@@ -1,27 +1,9 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService, type IAuthUser } from "@/services/AuthService";
 import { TOKEN_KEY, USER_KEY } from "@/constants/auth";
-
-function initializeToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-function initializeUser(): IAuthUser | null {
-  if (typeof window === "undefined") return null;
-  const stored = localStorage.getItem(USER_KEY);
-  if (!stored) return null;
-  try {
-    return JSON.parse(stored) as IAuthUser;
-  } catch {
-    localStorage.removeItem(USER_KEY);
-    return null;
-  }
-}
-
 
 interface AuthContextValue {
   user: IAuthUser | null;
@@ -34,12 +16,35 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<IAuthUser | null>(() => initializeUser());
-  const [token, setToken] = useState<string | null>(() => initializeToken());
-  const [isLoading] = useState(false);
+  const [user, setUser] = useState<IAuthUser | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const router = useRouter();
+
+  useEffect(() => {
+    const carregarDadosLocais = async () => {
+      await Promise.resolve();
+
+      const storedToken = localStorage.getItem(TOKEN_KEY);
+      const storedUser = localStorage.getItem(USER_KEY);
+
+      if (storedToken) setToken(storedToken);
+
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch {
+          localStorage.removeItem(USER_KEY);
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    carregarDadosLocais();
+  }, []);
 
   const login = useCallback(
     async (email: string, senha: string) => {
@@ -50,8 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.setItem(USER_KEY, JSON.stringify(data.usuario));
       setUser(data.usuario);
-
       setToken(data.access_token);
+
       router.replace("/");
     },
     [router]

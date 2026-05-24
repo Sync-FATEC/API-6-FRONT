@@ -146,8 +146,9 @@ export default function ChatBox({
           className="w-full text-slate-700 bg-transparent outline-none p-3 resize-none overflow-y-hidden max-h-24 h-12 scrollbar-mini"
         />
 
-        <div className="flex justify-between items-end mt-2">
-          <div className="flex gap-1">
+        <div className="flex justify-between items-center mt-2">
+          
+          <div className="flex items-center">
             <Button
               variant="ghost"
               size="md"
@@ -164,7 +165,7 @@ export default function ChatBox({
             </Button>
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex items-center">
             {hasMessages && (
               <Button
                 variant="plain"
@@ -179,7 +180,7 @@ export default function ChatBox({
             <Button
               variant="plain"
               size="icon"
-              className={`text-slate-500 me-2 transition-colors ${isListening ? "text-red-500" : ""}`}
+              className={`text-slate-500 me-2 ${isListening ? "text-red-500" : ""}`}
               onClick={() => {
                 if (hasText) {
                   onSend();

@@ -4,7 +4,7 @@ import { cn } from "@/utils/className";
 import Popover from "@/components/Popover";
 import { WheelColumn } from "./WheelColumn";
 import { useDateTimePicker } from "./useDateTimePicker";
-import InputWrapper from "../InputLabel";
+import InputWrapper from "../InputWrapper";
 import { baseInputClasses } from "@/constants/styles/input";
 
 interface Props {

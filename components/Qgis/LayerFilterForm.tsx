@@ -8,6 +8,7 @@ import {
 } from "@/interfaces/services/QgisService";
 import DateTimePicker from "@/components/Inputs/DateTimePicker";
 import { formatToYYYYMMDD } from "@/helpers/dashboard";
+import TextInput from "../Inputs/Text";
 
 interface Props {
   camada: IQgisLayer;
@@ -47,7 +48,7 @@ const TIPOS: Record<QgisFilterKey, "text" | "date" | "number"> = {
 const PLACEHOLDERS: Partial<Record<QgisFilterKey, string>> = {
   municipio: "Ex: Ubatuba",
   bbox: "-48.0,-23.5,-47.5,-23.0",
-  cod_imovel: "SP-3555406-...",
+  cod_imovel: "SP-3555406...",
   ind_status: "AT",
   simplify: "0.0001",
 };
@@ -90,15 +91,15 @@ export default function LayerFilterForm({ camada, valores, onChange, onReset }: 
   if (visiveis.length === 0) return null;
 
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs uppercase font-bold text-slate-500 tracking-wider px-0.5">
+        <h3 className="font-semibold text-primary">
           Filtros
         </h3>
         <button
           onClick={onReset}
           type="button"
-          className="text-xs font-medium text-slate-400 hover:text-primary cursor-pointer"
+          className="text-sm font-medium text-slate-400 hover:text-primary cursor-pointer"
         >
           Limpar
         </button>
@@ -108,6 +109,7 @@ export default function LayerFilterForm({ camada, valores, onChange, onReset }: 
         {visiveis.map((key) => {
           const lim = camada.limites?.[key];
           const hint = hintFromLimite(lim);
+
           if (key === "data_inicio" || key === "data_fim") {
             return (
               <DateTimePicker
@@ -115,36 +117,27 @@ export default function LayerFilterForm({ camada, valores, onChange, onReset }: 
                 label={LABELS[key]}
                 id={key}
                 includeTime={false}
-                value={
-                  valores[key]
-                    ? new Date(`${valores[key]}T00:00:00`)
-                    : undefined
-                }
+                value={valores[key] ? new Date(`${valores[key]}T00:00:00`) : undefined}
                 onChange={(date: Date) => handle(key, formatToYYYYMMDD(date))}
                 wrapperClassName="w-full"
                 className="w-full"
               />
             );
           }
+
           return (
-            <div key={key}>
-              <div className="flex items-baseline justify-between gap-2 mb-1">
-                <label className="text-[11px] font-semibold text-slate-600">
-                  {LABELS[key]}
-                </label>
-                {hint && <span className="text-[10px] text-slate-400">{hint}</span>}
-              </div>
-              <input
-                type={TIPOS[key]}
-                value={(valores[key] ?? "") as string | number}
-                placeholder={PLACEHOLDERS[key] ?? lim?.formato}
-                onChange={(e) => handle(key, e.target.value)}
-                min={lim?.min}
-                max={lim?.max}
-                step={key === "simplify" ? "0.0001" : undefined}
-                className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-              />
-            </div>
+            <TextInput
+              key={key}
+              id={key}
+              label={hint ? `${LABELS[key]} (${hint})` : LABELS[key]}
+              type={TIPOS[key]}
+              value={(valores[key] ?? "") as string | number}
+              placeholder={PLACEHOLDERS[key] ?? lim?.formato}
+              onChange={(e) => handle(key, e.target.value)}
+              min={lim?.min}
+              max={lim?.max}
+              step={key === "simplify" ? "0.0001" : undefined}
+            />
           );
         })}
       </div>

@@ -25,9 +25,7 @@ export default function Map({ onSuggestionClick, geoJsonData, intention, onPoint
     "Comunidades quilombolas em Eldorado",
   ];
 
-  // Se há uma data selecionada do dashboard, mostrar os dados do dia
   if (dataSelecionada) {
-    // Formata yyyy-mm-dd → dd/mm/yyyy para exibição
     const dataFormatada = dataSelecionada.includes("-")
       ? dataSelecionada.split("-").reverse().join("/")
       : dataSelecionada;

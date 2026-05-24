@@ -25,7 +25,7 @@ const FONTE_PARA_KEY: Record<string, string> = {
 export default function LayerSelector({ camadas, selecionada, onSelect }: Props) {
   return (
     <section className="flex flex-col gap-4">
-      <h3 className="font-semibold text-slate-400">Selecione uma camada</h3>
+      <h3 className="font-medium text-slate-400">Selecione uma entidade</h3>
       <div className="flex flex-col gap-4">
         {camadas.map((camada) => {
           const key = FONTE_PARA_KEY[camada.fonte] ?? "desconhecida";

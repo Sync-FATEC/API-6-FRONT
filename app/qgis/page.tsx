@@ -10,6 +10,7 @@ import QgisInstructions from "@/components/Qgis/QgisInstructions";
 import PreviewStats from "@/components/Qgis/PreviewStats";
 import { useQgis } from "@/components/Qgis/useQgis";
 import Icon from "@/components/Icon";
+import { Button } from "@/components/Button";
 
 const PreviewMap = dynamic(() => import("@/components/Qgis/PreviewMap"), {
   ssr: false,
@@ -142,18 +143,14 @@ function EmptyMapState({
           Pré-visualize a camada antes de copiar
         </h3>
         <p className="text-base text-slate-500 max-w-lg leading-relaxed">
-          Configure os filtros e clique em <strong>Mapa</strong> para validar visualmente o GeoJSON
-          antes de colar a URL no QGIS.
+          Configure os filtros e clique no botão abaixo para validar visualmente o GeoJSON antes de
+          colar a URL no QGIS.
         </p>
         {hasCamada && (
-          <button
-            onClick={onPreview}
-            disabled={loading}
-            className="mt-2 flex items-center gap-2 rounded-lg bg-primary text-white font-semibold px-6 py-3 hover:bg-primary-600 transition disabled:opacity-50 cursor-pointer"
-          >
-            <Icon name="map" size={20} />
+          <Button variant="solid" onClick={onPreview} disabled={loading}>
+            <Icon name="map" />
             {loading ? "Carregando..." : "Pré-visualizar agora"}
-          </button>
+          </Button>
         )}
       </div>
     </div>
