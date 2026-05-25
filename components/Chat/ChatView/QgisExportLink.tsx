@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import Icon from "@/components/Icon";
 import { Button } from "@/components/Button";
 import { IQgisUrlGrupo } from "@/interfaces/services/QueryService";
 
