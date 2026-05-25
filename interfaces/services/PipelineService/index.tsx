@@ -80,6 +80,7 @@ export interface IPipelineExecution {
   inicio: string;
   fim: string;
   duracao_total: number;
+  duracao_total_segundos?: number;
   etapas: IPipelineStep[];
   erros: IPipelineError[];
   fontes?: IPipelineSourceStatus[];
