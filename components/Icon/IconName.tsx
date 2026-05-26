@@ -41,5 +41,6 @@ export type IconName =
   | "user"
   | "edit"
   | "map"
-  | "add";
+  | "add"
+  | "login";
 

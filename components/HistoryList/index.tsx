@@ -35,7 +35,7 @@ export default function HistoryList({ onClose, onSelectChat, activeChatId, onDel
         {isLoading && <LoadingSpinner />}
 
         {isError && (
-          <p className="text-sm text-red-500 bg-red-50 p-3 rounded-md">
+          <p className="text-sm text-red-500 bg-red-50 p-3 rounded-md me-4">
             Ocorreu um erro inesperado ao carregar o histórico.
           </p>
         )}

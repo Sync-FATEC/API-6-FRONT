@@ -4,7 +4,7 @@ import { TOKEN_KEY } from "@/constants/auth";
 
 const AUTH_ENABLED = true;
 
-const PUBLIC_ROUTES = ["/login", "/esqueci-senha", "/redefinir-senha"];
+const PUBLIC_ROUTES = ["/login", "/redefinir-senha"];
 
 export function proxy(request: NextRequest) {
   if (!AUTH_ENABLED) return NextResponse.next();

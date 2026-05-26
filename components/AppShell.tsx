@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer/Footer";
 
-const NO_SHELL_PATHS = ["/login", "/esqueci-senha", "/redefinir-senha"];
+const NO_SHELL_PATHS = ["/login", "/redefinir-senha"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

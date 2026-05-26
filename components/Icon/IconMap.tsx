@@ -40,6 +40,7 @@ import {
   IconUser,
   IconPencil,
   IconPlus,
+  IconLogin2,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -88,4 +89,5 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   user: IconUser,
   edit: IconPencil,
   add: IconPlus,
+  login: IconLogin2
 };

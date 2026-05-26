@@ -15,11 +15,23 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   wrapperClassName?: string;
   allowPattern?: RegExp;
+  error?: string;
 }
 
 const TextInput = forwardRef<HTMLInputElement, Props>(
   (
-    { label, id, wrapperClassName, allowPattern, onChange, className, required, type, ...props },
+    {
+      label,
+      id,
+      wrapperClassName,
+      allowPattern,
+      error,
+      onChange,
+      className,
+      required,
+      type,
+      ...props
+    },
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +56,7 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
               baseInputClasses,
               "justify-between text-left",
               isPassword && "pr-12",
+              error && "border-danger focus:border-danger",
               className
             )}
             {...props}
@@ -60,6 +73,8 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
             </button>
           )}
         </div>
+
+        {error && <p className="text-danger text-xs font-medium mt-1">{error}</p>}
       </InputWrapper>
     );
   }

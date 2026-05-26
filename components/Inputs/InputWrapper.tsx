@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { cn } from "@/utils/className";
 
 export function InputLabel({
@@ -9,20 +8,17 @@ export function InputLabel({
   if (!children) return null;
 
   return (
-    <label
-      className={cn("text-sm font-medium text-slate-500", className)}
-      {...props}
-    >
+    <label className={cn("text-sm font-medium text-slate-500", className)} {...props}>
       {children}
     </label>
   );
 }
 
-interface Props {
-  children: ReactNode;
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  id?: string;
-  className?: string;
+  wrapperClassName?: string;
+  allowPattern?: RegExp;
+  error?: string;
 }
 
 export default function InputWrapper({ children, label, id, className }: Props) {
