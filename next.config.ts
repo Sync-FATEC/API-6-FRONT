@@ -1,18 +1,21 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
+const isDev = process.env.NODE_ENV === "development";
 
 const nextConfig: NextConfig = {
+  trailingSlash: true,
   async rewrites() {
-    if (!isProd) return [];
-
-    return [
-      {
-        source: "/api/:path*",
-        destination:
-          "http://asg-backend-alb-85114170.us-east-1.elb.amazonaws.com/api/:path*",
-      },
-    ];
+    // Em DEV: reescreve /api/* para localhost:8000
+    // Em PROD: deixa relativo (Vercel roteará conforme configurado)
+    if (isDev) {
+      return [
+        {
+          source: "/api/:path*",
+          destination: "http://127.0.0.1:8000/api/:path*",
+        },
+      ];
+    }
+    return [];
   },
 };
 

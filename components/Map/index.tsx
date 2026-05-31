@@ -17,7 +17,7 @@ interface Props {
 
 export default function Map({ onSuggestionClick, geoJsonData, intention, onPointClick }: Props) {
   const { dataSelecionada, filtroMapaDia, clearDaySelection } = useDaySelection();
-  
+
   const suggestions = [
     "Qual a situação ambiental de Ubatuba?",
     "Quais terras indígenas existem em Osasco?",
@@ -62,8 +62,8 @@ export default function Map({ onSuggestionClick, geoJsonData, intention, onPoint
           </button>
         </div>
         <div className="flex-1">
-          <LeafletMap 
-            geoJsonData={geoJsonData || { type: "FeatureCollection", features: [] }} 
+          <LeafletMap
+            geoJsonData={geoJsonData || { type: "FeatureCollection", features: [] }}
             intention={intention ?? null}
             dayFilter={filtroMapaDia}
             dataSelecionada={dataSelecionada}
