@@ -141,8 +141,8 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
                   objectFit: "cover",
                   display: "block",
                 }}
-                onError={(e) => {
-                  (e.currentTarget.parentElement as HTMLElement).style.display = "none";
+                {...{
+                  onerror: "this.style.display='none'; if(this.nextSibling) this.nextSibling.style.display='none'; if(this.nextSibling && this.nextSibling.nextSibling) this.nextSibling.nextSibling.style.display='block';"
                 }}
               />
               <div
@@ -155,6 +155,19 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
                 }}
               >
                 Sentinel-2 · Planetary Computer
+              </div>
+              <div
+                style={{
+                  display: "none",
+                  fontSize: 13,
+                  color: "#64748b",
+                  textAlign: "center",
+                  padding: "24px 16px",
+                  fontWeight: 500,
+                  background: "#f8fafc",
+                }}
+              >
+                Não encontramos imagem para essa data
               </div>
             </div>
           )}

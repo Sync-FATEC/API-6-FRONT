@@ -3,11 +3,11 @@
  *
  * Regras de negocio cobertas:
  * 1. Nao renderiza nada quando nao ha url nem urlsGrupos.
- * 2. Renderiza linha unica quando url principal eh fornecida.
+ * 2. Renderiza botao de copiar quando url principal ou urlsGrupos sao fornecidos.
  * 3. URL relativa eh convertida para absoluta usando localhost por padrao.
  * 4. URL absoluta passa direto sem prefixo.
- * 5. Renderiza uma linha por item em urlsGrupos.
- * 6. Botao de copiar coloca a URL no clipboard e mostra feedback (icone troca).
+ * 5. Multiplos urlsGrupos sao copiados juntos separados por quebra de linha.
+ * 6. Botao de copiar coloca a URL no clipboard e mostra feedback (muda classes).
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
@@ -62,58 +62,22 @@ describe("QgisExportLink — renderizacao condicional", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("deve renderizar o card de exportacao quando url principal eh fornecida", () => {
+  it("deve renderizar o botao de copiar quando url principal eh fornecida", () => {
     render(<QgisExportLink url="/api/geo/queimadas?municipio=Ubatuba" />);
-    expect(screen.getByText(/Abrir no QGIS/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Copiar URL/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
-  it("deve renderizar uma linha por item quando urlsGrupos tem multiplos elementos", () => {
+  it("deve renderizar o botao de copiar quando urlsGrupos tem elementos", () => {
     const urlsGrupos = [
       umUrlGrupo({ rotulo: "Campinas", url: "/api/geo/queimadas?municipio=Campinas" }),
-      umUrlGrupo({ rotulo: "Sorocaba", url: "/api/geo/queimadas?municipio=Sorocaba" }),
     ];
     render(<QgisExportLink urlsGrupos={urlsGrupos} />);
-
-    expect(screen.getByText("Campinas")).toBeInTheDocument();
-    expect(screen.getByText("Sorocaba")).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: /Copiar URL/i })).toHaveLength(2);
-  });
-
-  it("deve mostrar quantidade de camadas no subtitulo quando ha multiplos grupos", () => {
-    const urlsGrupos = [
-      umUrlGrupo({ rotulo: "Campinas" }),
-      umUrlGrupo({ rotulo: "Sorocaba" }),
-      umUrlGrupo({ rotulo: "Ubatuba" }),
-    ];
-    render(<QgisExportLink urlsGrupos={urlsGrupos} />);
-    expect(screen.getByText(/3 camadas disponíveis/i)).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 });
 
 // ---------------------------------------------------------------------------
-// Resolucao de URL relativa -> absoluta
-// ---------------------------------------------------------------------------
-
-describe("QgisExportLink — resolucao de URL", () => {
-  it("deve apontar o link de abrir para URL absoluta com localhost quando entrada eh relativa", () => {
-    render(<QgisExportLink url="/api/geo/queimadas?municipio=Ubatuba" />);
-    const link = screen.getByTitle(/Abrir GeoJSON em nova aba/i) as HTMLAnchorElement;
-    expect(link.href).toBe("http://127.0.0.1:8000/api/geo/queimadas?municipio=Ubatuba");
-  });
-
-  it("deve preservar URL absoluta inalterada quando entrada ja vem com http", () => {
-    const urlAbsoluta = "https://api.exemplo.com/api/geo/quilombolas";
-    render(<QgisExportLink url={urlAbsoluta} />);
-    const link = screen.getByTitle(/Abrir GeoJSON em nova aba/i) as HTMLAnchorElement;
-    expect(link.href).toBe(urlAbsoluta);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Acao de copiar
+// Resolucao de URL relativa -> absoluta & Acao de copiar
 // ---------------------------------------------------------------------------
 
 describe("QgisExportLink — botao copiar", () => {
@@ -121,14 +85,26 @@ describe("QgisExportLink — botao copiar", () => {
     const writeText = setarClipboardMock();
     render(<QgisExportLink url="/api/geo/queimadas?municipio=Ubatuba" />);
 
-    await userEvent.click(screen.getByRole("button", { name: /Copiar URL/i }));
+    const botao = screen.getByRole("button");
+    await userEvent.click(botao);
 
     expect(writeText).toHaveBeenCalledWith(
-      "http://127.0.0.1:8000/api/geo/queimadas?municipio=Ubatuba",
+      "http://127.0.0.1:8000/api/geo/queimadas?municipio=Ubatuba"
     );
   });
 
-  it("deve copiar URL especifica do grupo quando o botao da linha do grupo eh clicado", async () => {
+  it("deve preservar URL absoluta inalterada quando entrada ja vem com http", async () => {
+    const writeText = setarClipboardMock();
+    const urlAbsoluta = "https://api.exemplo.com/api/geo/quilombolas";
+    render(<QgisExportLink url={urlAbsoluta} />);
+
+    const botao = screen.getByRole("button");
+    await userEvent.click(botao);
+
+    expect(writeText).toHaveBeenCalledWith(urlAbsoluta);
+  });
+
+  it("deve copiar todas as URLs dos grupos unidas por quebra de linha quando clicado", async () => {
     const writeText = setarClipboardMock();
     const urlsGrupos = [
       umUrlGrupo({ rotulo: "Campinas", url: "/api/geo/queimadas?municipio=Campinas" }),
@@ -136,24 +112,24 @@ describe("QgisExportLink — botao copiar", () => {
     ];
     render(<QgisExportLink urlsGrupos={urlsGrupos} />);
 
-    const botoesCopiar = screen.getAllByRole("button", { name: /Copiar URL/i });
-    await userEvent.click(botoesCopiar[1]);
+    const botao = screen.getByRole("button");
+    await userEvent.click(botao);
 
     expect(writeText).toHaveBeenCalledWith(
-      "http://127.0.0.1:8000/api/geo/queimadas?municipio=Sorocaba",
+      "http://127.0.0.1:8000/api/geo/queimadas?municipio=Campinas\nhttp://127.0.0.1:8000/api/geo/queimadas?municipio=Sorocaba"
     );
-    expect(writeText).toHaveBeenCalledTimes(1);
   });
 
-  it("deve trocar o texto do botao para Copiado apos o clique com sucesso", async () => {
+  it("deve mudar a classe do botao para indicar sucesso apos o clique", async () => {
     setarClipboardMock();
     render(<QgisExportLink url="/api/geo/queimadas" />);
 
-    await userEvent.click(screen.getByRole("button", { name: /Copiar URL/i }));
+    const botao = screen.getByRole("button");
+    expect(botao).toHaveClass("text-slate-500");
 
-    expect(
-      await screen.findByRole("button", { name: /Copiado/i }),
-    ).toBeInTheDocument();
+    await userEvent.click(botao);
+
+    expect(botao).toHaveClass("text-success");
   });
 
   it("deve chamar toast.success quando a copia funciona", async () => {
@@ -161,11 +137,14 @@ describe("QgisExportLink — botao copiar", () => {
     const { toast } = await import("sonner");
     render(<QgisExportLink url="/api/geo/queimadas" />);
 
-    await userEvent.click(screen.getByRole("button", { name: /Copiar URL/i }));
+    const botao = screen.getByRole("button");
+    await userEvent.click(botao);
 
     expect(toast.success).toHaveBeenCalledWith(
-      "URL copiada",
-      expect.objectContaining({ description: expect.stringContaining("Camada principal") }),
+      "URL copiado",
+      expect.objectContaining({
+        description: "Cole no QGIS em Layer > Add Vector Layer > Protocol HTTP(S).",
+      })
     );
   });
 
@@ -176,25 +155,14 @@ describe("QgisExportLink — botao copiar", () => {
     const { toast } = await import("sonner");
     render(<QgisExportLink url="/api/geo/queimadas" />);
 
-    await userEvent.click(screen.getByRole("button", { name: /Copiar URL/i }));
+    const botao = screen.getByRole("button");
+    await userEvent.click(botao);
 
     expect(toast.error).toHaveBeenCalledWith(
       "Falha ao copiar",
-      expect.any(Object),
+      expect.objectContaining({
+        description: "Tente novamente.",
+      })
     );
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Link "abrir em nova aba"
-// ---------------------------------------------------------------------------
-
-describe("QgisExportLink — link de abrir", () => {
-  it("deve renderizar um link com target _blank apontando para a URL absoluta", () => {
-    render(<QgisExportLink url="/api/geo/queimadas" />);
-    const link = screen.getByTitle(/Abrir GeoJSON em nova aba/i) as HTMLAnchorElement;
-    expect(link.tagName).toBe("A");
-    expect(link.target).toBe("_blank");
-    expect(link.href).toBe("http://127.0.0.1:8000/api/geo/queimadas");
   });
 });
