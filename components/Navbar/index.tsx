@@ -81,7 +81,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="flex-1 flex gap-3 items-center justify-end">
+          <div className="flex-1 flex gap-6 items-center justify-end">
             {isHydrated && !isLoading && user?.papel === "ADMIN" && (
               <Button size="md" onClick={() => setIsModalOpen(true)}>
                 <Icon name="data-plus" size={20} />
@@ -91,11 +91,12 @@ export default function Navbar() {
             <Popover
               align="end"
               trigger={
-                <button
-                  suppressHydrationWarning
-                  className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer shrink-0"
-                >
-                  {isHydrated && !isLoading && user?.nome?.charAt(0).toUpperCase()}
+                <button className="flex gap-3 items-center hover:bg-slate-100 px-3 py-1.5 rounded-lg cursor-pointer">
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-sm shrink-0">
+                    {isHydrated && !isLoading && user?.nome?.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-slate-700 font-semibold">{user?.nome}</span>
+                  <Icon name="chevron-down" className="text-slate-400" />
                 </button>
               }
             >

@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { toast } from "@/lib/toast";
 import { AuthService } from "@/services/AuthService";
 import { useAuth } from "@/contexts/AuthContext";
+import Select from "@/components/Inputs/Select";
 
 interface Usuario {
   id: number;
@@ -23,12 +24,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-export default function ModalEditarUsuario({
-  open,
-  usuario,
-  onOpenChange,
-  onSuccess,
-}: Props) {
+export default function ModalEditarUsuario({ open, usuario, onOpenChange, onSuccess }: Props) {
   const { user: loggedUser } = useAuth();
 
   const [nome, setNome] = useState("");
@@ -155,9 +151,7 @@ export default function ModalEditarUsuario({
       handleClose(false);
       onSuccess?.();
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Erro ao atualizar usuário."
-      );
+      toast.error(err instanceof Error ? err.message : "Erro ao atualizar usuário.");
     } finally {
       setLoading(false);
     }
@@ -181,74 +175,77 @@ export default function ModalEditarUsuario({
             Cancelar
           </Button>
 
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Salvando..." : "Salvar alterações"}
+          <Button onClick={handleSubmit} isLoading={loading}>
+            Salvar alterações
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4 py-2">
-        <TextInput
-          id="editar-nome"
-          label="Nome"
-          placeholder="Digite o nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          disabled={loading}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <TextInput
+            id="editar-nome"
+            label="Nome"
+            placeholder="Digite o nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            disabled={loading}
+          />
 
-        <TextInput
-          id="editar-cargo"
-          label="Cargo"
-          placeholder="Digite o cargo"
-          value={cargo}
-          onChange={(e) => setCargo(e.target.value)}
-          disabled={loading}
-        />
+          <TextInput
+            id="editar-email"
+            label="E-mail"
+            type="email"
+            placeholder="Digite o e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+          />
+        </div>
 
-        <TextInput
-          id="editar-email"
-          label="E-mail"
-          type="email"
-          placeholder="Digite o e-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={loading}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <TextInput
+            id="editar-cargo"
+            label="Cargo"
+            placeholder="Digite o cargo"
+            value={cargo}
+            onChange={(e) => setCargo(e.target.value)}
+            disabled={loading}
+          />
 
-        {podeEditarPapel && (
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="editar-papel"
-              className="text-sm font-medium text-slate-700"
-            >
-              Papel
-            </label>
-
-            <select
+          {podeEditarPapel ? (
+            <Select
               id="editar-papel"
+              label="Papel"
               value={papel}
-              onChange={(e) => setPapel(e.target.value as "ADMIN" | "USER")}
-              className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-primary disabled:bg-slate-100 disabled:cursor-not-allowed"
-              disabled={loading}
-            >
-              <option value="USER">Usuário comum</option>
-              <option value="ADMIN">Administrador</option>
-            </select>
-          </div>
-        )}
+              onChange={(value) => setPapel(value as "ADMIN" | "USER")}
+              options={[
+                {
+                  value: "USER",
+                  label: "Usuário comum",
+                },
+                {
+                  value: "ADMIN",
+                  label: "Administrador",
+                },
+              ]}
+            />
+          ) : (
+            <div />
+          )}
+        </div>
 
         <div className="border-t border-slate-200 pt-4 mt-2">
-          <p className="text-sm font-medium text-slate-700 mb-3">
-            Alterar senha (opcional)
+          <p className="font-medium text-slate-700 mb-3">
+            Alterar senha <span className="ms-1 text-slate-400">(opcional)</span>
           </p>
 
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <TextInput
               id="editar-nova-senha"
               label="Nova senha"
               type="password"
-              placeholder="Mínimo 8 caracteres (deixe vazio para manter)"
+              placeholder="Mínimo 8 caracteres"
               value={novaSenha}
               onChange={(e) => setNovaSenha(e.target.value)}
               disabled={loading}

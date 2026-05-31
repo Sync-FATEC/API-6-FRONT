@@ -20,9 +20,19 @@ const FONTE_PARA_KEY: Record<string, string> = {
   SICAR: "sicar",
   "ICMBio/MMA": "icmbio",
   "Fundacao Cultural Palmares": "palmares",
+  "Multi-fonte": "consulta_livre",
+  "SICAR + cruzamento": "imovel_e_ameacas"
+
 };
 
 export default function LayerSelector({ camadas, selecionada, onSelect }: Props) {
+
+  camadas.forEach((camada) => {
+  if (!FONTE_PARA_KEY[camada.fonte]) {
+    console.warn("Fonte não mapeada:", camada.fonte);
+  }
+});
+
   return (
     <section className="flex flex-col gap-4">
       <h3 className="font-medium text-slate-400">Selecione uma entidade</h3>

@@ -1,5 +1,6 @@
 import {
   IconArrowRight,
+  IconShield,
   IconShieldFilled,
   IconGpsFilled,
   IconHelpHexagonFilled,
@@ -41,6 +42,8 @@ import {
   IconPencil,
   IconPlus,
   IconLogin2,
+  IconWorldFilled,
+  IconPencilFilled,
 } from "@tabler/icons-react";
 import { IconName } from "./IconName";
 import { IconAxe, IconFist, IconGithub } from "./CustomIcons";
@@ -54,7 +57,8 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   gps: IconGpsFilled,
   fist: IconFist,
   leaf: IconLeafFilled,
-  shield: IconShieldFilled,
+  shield: IconShield,
+  "shield-filled": IconShieldFilled,
   flame: IconFlameFilled,
   axe: IconAxe,
   github: IconGithub,
@@ -89,5 +93,7 @@ export const iconMap: Record<IconName, React.FC<TablerIconProps>> = {
   user: IconUser,
   edit: IconPencil,
   add: IconPlus,
-  login: IconLogin2
+  login: IconLogin2,
+  globe: IconWorldFilled,
+  "edit-filled": IconPencilFilled,
 };

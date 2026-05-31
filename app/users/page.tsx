@@ -97,7 +97,9 @@ export default function UsuariosPage() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-4xl font-bold text-primary">Usuários</h1>
 
-        <Button onClick={() => setOpenCadastrarModal(true)}><Icon name="add" /> Novo usuário</Button>
+        <Button onClick={() => setOpenCadastrarModal(true)}>
+          <Icon name="add" /> Novo usuário
+        </Button>
       </div>
 
       <section className="bg-white rounded-lg p-5 shadow-sm flex-1 min-h-0 overflow-hidden">
@@ -107,36 +109,64 @@ export default function UsuariosPage() {
           <div className="overflow-auto h-full scrollbar-mini">
             <table className="w-full table-fixed text-sm">
               <colgroup>
-                <col className="w-[25%]" />
-                <col className="w-[38%]" />
-                <col className="w-[16%]" />
                 <col className="w-[10%]" />
-                <col className="w-[11%]" />
+                <col className="w-[25%]" />
+                <col className="w-[30%]" />
+                <col className="w-[25%]" />
+                <col className="w-[10%]" />
               </colgroup>
 
               <thead className="sticky top-0 bg-white z-10">
                 <tr className="border-b border-slate-100 text-left text-slate-500">
+                  <th className="py-3 px-3 font-semibold">Ações</th>
                   <th className="py-3 px-3 font-semibold">Nome</th>
                   <th className="py-3 px-3 font-semibold">E-mail</th>
                   <th className="py-3 px-3 font-semibold">Cargo</th>
                   <th className="py-3 px-3 font-semibold">Papel</th>
-                  <th className="py-3 px-3 font-semibold text-center">Ações</th>
                 </tr>
               </thead>
 
               <tbody>
                 {usuarios.map((usuario) => (
-                  <tr
-                    key={usuario.id}
-                    className="border-b border-slate-100 hover:bg-slate-50 transition"
-                  >
+                  <tr key={usuario.id} className="border-b border-slate-100 last:border-b-0">
+                    <td className="py-3 px-3">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="soft"
+                          size="icon"
+                          className="size-9"
+                          title="Editar usuário"
+                          onClick={() => {
+                            setUsuarioSelecionado(usuario);
+                            setOpenEditarModal(true);
+                          }}
+                        >
+                          <Icon name="edit-filled" size={20} />
+                        </Button>
+
+                        <Button
+                          variant="soft"
+                          size="icon"
+                          color="danger"
+                          title="Excluir usuário"
+                          className="size-9"
+                          onClick={() => {
+                            setUsuarioSelecionado(usuario);
+                            setOpenExcluirModal(true);
+                          }}
+                        >
+                          <Icon name="trash" size={20} />
+                        </Button>
+                      </div>
+                    </td>
+
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+                        <div className="size-7 rounded-full bg-primary  text-white flex items-center justify-center font-semibold">
                           {usuario.nome?.[0]?.toUpperCase() || "U"}
                         </div>
 
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-slate-700 truncate">
                           {usuario.nome || "Sem nome"}
                         </span>
                       </div>
@@ -148,7 +178,7 @@ export default function UsuariosPage() {
 
                     <td className="py-3 px-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                        className={`inline-flex w-18 items-center justify-center rounded-sm px-2.5 py-1 text-sm font-semibold ${
                           usuario.papel === "ADMIN"
                             ? "bg-primary-50 text-primary"
                             : "bg-slate-100 text-slate-600"
@@ -157,32 +187,6 @@ export default function UsuariosPage() {
                         {usuario.papel}
                       </span>
                     </td>
-
-                    <td className="py-3 px-3">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition"
-                          title="Editar usuário"
-                          onClick={() => {
-                            setUsuarioSelecionado(usuario);
-                            setOpenEditarModal(true);
-                          }}
-                        >
-                          <Icon name="edit" size={18} />
-                        </button>
-
-                        <button
-                          className="w-9 h-9 rounded-lg border border-red-200 flex items-center justify-center text-red-500 hover:bg-red-50 transition"
-                          title="Excluir usuário"
-                          onClick={() => {
-                            setUsuarioSelecionado(usuario);
-                            setOpenExcluirModal(true);
-                          }}
-                        >
-                          <Icon name="trash" size={18} />
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -190,6 +194,7 @@ export default function UsuariosPage() {
           </div>
         )}
       </section>
+
       <ModalCadastrarUsuario
         open={openCadastrarModal}
         onOpenChange={setOpenCadastrarModal}
@@ -220,7 +225,7 @@ export default function UsuariosPage() {
 function EmptyUsuariosState() {
   return (
     <div className="flex h-full justify-center items-center">
-      <div className="flex flex-col gap-4 max-w-md w-full items-center text-center">
+      <div className="flex flex-col gap-4 w-full items-center text-center">
         <div className="w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center">
           <Icon name="user" size={40} className="text-primary" />
         </div>

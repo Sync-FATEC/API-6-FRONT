@@ -4,15 +4,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Icon from "@/components/Icon";
 import { cn } from "@/utils/className";
+import { Button } from "../Button";
 
 interface Props {
   url: string;
-  onPreview: () => void;
   onDownload: () => void;
-  loading?: boolean;
 }
 
-export default function UrlPreview({ url, onPreview, onDownload, loading }: Props) {
+export default function UrlPreview({ url, onDownload }: Props) {
   const [copiado, setCopiado] = useState(false);
 
   const handleCopy = async () => {
@@ -34,9 +33,7 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
 
   return (
     <section className="flex flex-col gap-2.5">
-      <h3 className="text-sm font-medium text-slate-500 ">
-        URL gerada
-      </h3>
+      <h3 className="text-sm font-medium text-slate-500 ">URL gerada</h3>
 
       <div className="relative rounded-md bg-slate-50 p-2">
         <textarea
@@ -53,7 +50,7 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
             "absolute top-2 right-2 flex items-center justify-center w-7 h-7 rounded-sm transition cursor-pointer",
             copiado
               ? "bg-success text-white"
-              : "bg-white text-slate-500 hover:bg-primary hover:text-white shadow-sm",
+              : "bg-white text-slate-500 hover:bg-primary hover:text-white shadow-sm"
           )}
         >
           <Icon name={copiado ? "check" : "copy"} size={14} />
@@ -61,37 +58,19 @@ export default function UrlPreview({ url, onPreview, onDownload, loading }: Prop
       </div>
 
       <div className="grid grid-cols-3 gap-2">
-        <button
-          onClick={handleCopy}
-          className="flex items-center justify-center gap-1.5 rounded-md bg-primary text-white text-xs font-semibold py-2 hover:bg-primary-600 transition cursor-pointer"
-        >
-          <Icon name="copy" size={14} />
+        <Button size="sm" onClick={handleCopy}>
+          <Icon name="copy" size={18} />
           Copiar
-        </button>
-        <button
-          onClick={onPreview}
-          disabled={loading}
-          className="flex items-center justify-center gap-1.5 rounded-md bg-primary-50 text-primary text-xs font-semibold py-2 hover:bg-primary-100 transition cursor-pointer disabled:opacity-50"
-        >
-          <Icon name="map" size={14} />
-          {loading ? "..." : "Mapa"}
-        </button>
-        <button
-          onClick={onDownload}
-          className="flex items-center justify-center gap-1.5 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold py-2 hover:bg-slate-200 transition cursor-pointer"
-        >
-          <Icon name="download" size={14} />
+        </Button>
+        <Button size="sm" variant="soft" onClick={onDownload}>
+          <Icon name="download" size={18} />
           Baixar
-        </button>
+        </Button>
+        <Button size="sm" variant="soft" onClick={handleOpen}>
+          <Icon name="external-link" size={18} />
+          Nova Aba
+        </Button>
       </div>
-
-      <button
-        onClick={handleOpen}
-        className="text-[11px] text-slate-400 hover:text-primary self-start flex items-center gap-1 transition cursor-pointer"
-      >
-        <Icon name="external-link" size={12} />
-        Abrir GeoJSON em nova aba
-      </button>
     </section>
   );
 }

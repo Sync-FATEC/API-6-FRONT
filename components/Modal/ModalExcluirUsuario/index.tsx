@@ -19,12 +19,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-export default function ModalExcluirUsuario({
-  open,
-  usuario,
-  onOpenChange,
-  onSuccess,
-}: Props) {
+export default function ModalExcluirUsuario({ open, usuario, onOpenChange, onSuccess }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleClose = (open: boolean) => {
@@ -44,9 +39,7 @@ export default function ModalExcluirUsuario({
       handleClose(false);
       onSuccess?.();
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Erro ao excluir usuário."
-      );
+      toast.error(err instanceof Error ? err.message : "Erro ao excluir usuário.");
     } finally {
       setLoading(false);
     }
@@ -68,27 +61,23 @@ export default function ModalExcluirUsuario({
             Cancelar
           </Button>
 
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Excluindo..." : "Excluir"}
+          <Button onClick={handleSubmit} isLoading={loading}>
+            Confirmar deleção
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-3 py-2">
-        <p className="text-sm text-slate-600">
-          Tem certeza que deseja excluir este usuário?
+        <p className=" text-slate-600">
+          Tem certeza que deseja excluir este usuário? Esta ação não poderá ser desfeita.
         </p>
 
         {usuario && (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="rounded-lg bg-slate-50 p-3">
             <p className="font-semibold text-slate-700">{usuario.nome}</p>
             <p className="text-sm text-slate-500">{usuario.email}</p>
           </div>
         )}
-
-        <p className="text-sm text-red-500">
-          Essa ação não poderá ser desfeita.
-        </p>
       </div>
     </Modal>
   );

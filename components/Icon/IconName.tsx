@@ -8,6 +8,7 @@ export type IconName =
   | "fist"
   | "leaf"
   | "shield"
+  | "shield-filled"
   | "flame"
   | "axe"
   | "github"
@@ -42,5 +43,7 @@ export type IconName =
   | "edit"
   | "map"
   | "add"
-  | "login";
+  | "login"
+  | "globe"
+  | "edit-filled";
 
