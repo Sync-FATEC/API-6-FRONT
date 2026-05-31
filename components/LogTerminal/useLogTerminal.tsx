@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiBaseUrl } from "@/utils/api";
 
 export function useLogStream(isRunning: boolean) {
   const [logs, setLogs] = useState<string[]>([]);
@@ -9,7 +10,7 @@ export function useLogStream(isRunning: boolean) {
       setLogs([]);
       return;
     }
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = getApiBaseUrl();
     const source = new EventSource(`${apiUrl}/etl/stream`);
 
     source.onmessage = (event) => {

@@ -1,4 +1,6 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL!.replace(/\/$/, "");
+import { getApiBaseUrl } from "@/utils/api";
+
+const getBaseUrl = () => getApiBaseUrl();
 
 export const BaseService = {
   async postWithAuth<T>(
@@ -6,7 +8,10 @@ export const BaseService = {
     token: string,
     data?: unknown
   ): Promise<T> {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    console.log("BASE URL:", getBaseUrl());
+    console.log("ENDPOINT:", endpoint);
+    console.log("URL FINAL:", `${getBaseUrl()}${endpoint}`);
+    const response = await fetch(`${getBaseUrl()}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +30,7 @@ export const BaseService = {
   },
 
   async post<T>(endpoint: string, data?: unknown): Promise<T> {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${getBaseUrl()}${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +48,7 @@ export const BaseService = {
   },
 
   async get<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${BASE_URL}${endpoint}`);
+    const response = await fetch(`${getBaseUrl()}${endpoint}`);
 
     const json = await response.json();
 
@@ -55,7 +60,7 @@ export const BaseService = {
   },
 
   async getWithAuth<T>(endpoint: string, token: string): Promise<T> {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${getBaseUrl()}${endpoint}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -71,7 +76,7 @@ export const BaseService = {
   },
 
   async getBlob(endpoint: string): Promise<Blob> {
-    const response = await fetch(`${BASE_URL}${endpoint}`);
+    const response = await fetch(`${getBaseUrl()}${endpoint}`);
 
     if (!response.ok) {
       throw new Error(`Erro ao baixar arquivo: ${response.status}`);
@@ -85,7 +90,7 @@ export const BaseService = {
     token: string,
     data?: unknown
   ): Promise<T> {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${getBaseUrl()}${endpoint}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +112,7 @@ export const BaseService = {
     endpoint: string,
     token: string
   ): Promise<T> {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${getBaseUrl()}${endpoint}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -122,5 +127,6 @@ export const BaseService = {
 
     return json as T;
   },
-};
 
+
+};

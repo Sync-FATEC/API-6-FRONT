@@ -1,9 +1,7 @@
 import { IQgisCatalog, QgisFilterValues } from "@/interfaces/services/QgisService";
 import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 import { BaseService } from "./BaseService";
-
-export const QGIS_API_BASE =
-  process.env.NEXT_PUBLIC_API_URL!.replace(/\/$/, "");
+import { getQgisApiBaseUrl } from "@/utils/api";
 
 const cleanParams = (params: QgisFilterValues): Record<string, string> => {
   const out: Record<string, string> = {};
@@ -38,14 +36,16 @@ export const QgisService = {
       ? layerPath
       : `/${layerPath}`;
 
+    const apiBase = getQgisApiBaseUrl();
+
     if (
-      QGIS_API_BASE.endsWith("/api") &&
+      apiBase.endsWith("/api") &&
       path.startsWith("/api/")
     ) {
       path = path.slice(4);
     }
 
-    const url = `${QGIS_API_BASE}${path}`;
+    const url = `${apiBase}${path}`;
 
     return query ? `${url}?${query}` : url;
   },

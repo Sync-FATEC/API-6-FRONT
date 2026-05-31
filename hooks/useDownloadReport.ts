@@ -5,9 +5,24 @@ import { toast } from "@/lib/toast";
 export function useDownloadReport() {
   return useMutation({
     mutationFn: (car: string) => QueryService.downloadPropertyReport(car),
-    onSuccess: (data, car) => {
+    onSuccess: async (data, car) => {
       try {
-        const url = window.URL.createObjectURL(new Blob([data]));
+        if (data.type !== "application/pdf") {
+          const text = await data.text();
+          let errorMessage = "Ocorreu um erro ao gerar o relatório.";
+          try {
+            const parsed = JSON.parse(text);
+            if (parsed.detail) errorMessage = parsed.detail;
+          } catch {
+            if (text.length > 0 && text.length < 300) {
+              errorMessage = text;
+            }
+          }
+          toast.error("Erro ao baixar relatório", errorMessage);
+          return;
+        }
+
+        const url = window.URL.createObjectURL(data);
 
         const link = document.createElement("a");
         link.href = url;
@@ -20,7 +35,8 @@ export function useDownloadReport() {
         window.URL.revokeObjectURL(url);
 
         toast.success("Download concluído", "O relatório ASG foi gerado e baixado com sucesso.");
-      } catch {
+      } catch (err) {
+        console.error(err);
         toast.error(
           "Erro ao processar arquivo",
           "Um problema com o seu navegador impediu o download do relatório."

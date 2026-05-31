@@ -7,6 +7,8 @@ import { Button } from "@/components/Button";
 import { IQgisUrlGrupo } from "@/interfaces/services/QueryService";
 import Tooltip from "@/components/Tooltip";
 
+import { getProjectBaseUrl } from "@/utils/api";
+
 interface Props {
   url?: string | null;
   urlsGrupos?: IQgisUrlGrupo[] | null;
@@ -16,9 +18,7 @@ const ABSOLUTE_RE = /^https?:\/\//i;
 
 const buildAbsolute = (url: string): string => {
   if (ABSOLUTE_RE.test(url)) return url;
-  const base =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ??
-    (typeof window !== "undefined" ? "http://127.0.0.1:8000" : "");
+  const base = getProjectBaseUrl();
   return `${base}${url.startsWith("/") ? url : `/${url}`}`;
 };
 

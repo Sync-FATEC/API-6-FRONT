@@ -8,7 +8,8 @@ const NO_SHELL_PATHS = ["/login", "/redefinir-senha"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideShell = NO_SHELL_PATHS.includes(pathname);
+  const cleanPathname = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  const hideShell = NO_SHELL_PATHS.includes(cleanPathname);
 
   if (hideShell) {
     return <>{children}</>;
