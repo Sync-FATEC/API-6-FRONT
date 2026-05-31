@@ -17,15 +17,16 @@ export default function QgisInstructions() {
   const [aberto, setAberto] = useState(false);
 
   return (
-    <section className="flex flex-col gap-2">
+    <section className="overflow-hidden rounded-md border border-slate-200 bg-white">
       <button
         onClick={() => setAberto((v) => !v)}
-        className="flex items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2.5 hover:border-primary-200 transition cursor-pointer"
+        className="flex w-full items-center justify-between px-3 py-2.5 hover:bg-slate-50 cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          <Icon name="info" size={14} className="text-primary" />
-          <span className="text-xs font-semibold text-slate-700">Como usar no QGIS</span>
+          <Icon name="info" size={18} className="text-primary" />
+          <span className="text-sm font-semibold text-slate-700">Como usar no QGIS</span>
         </div>
+
         <Icon
           name="chevron-down"
           size={14}
@@ -34,21 +35,20 @@ export default function QgisInstructions() {
       </button>
 
       {aberto && (
-        <ol className="flex flex-col gap-1.5 px-1 py-2 animate-pop-in-up">
-          {PASSOS.map((passo, idx) => (
-            <li key={idx} className="flex gap-2 items-start">
-              <span className="shrink-0 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary text-white font-bold text-[9px] mt-0.5">
-                {idx + 1}
-              </span>
-              <span className="text-[11px] text-slate-600 leading-snug">{passo}</span>
-            </li>
-          ))}
-          <li className="mt-1 rounded-md bg-amber-50 border border-amber-200 px-2 py-1.5">
-            <p className="text-[10px] text-amber-800">
-              <strong>EPSG:4326</strong> — combine com basemaps OSM/Satélite sem reprojetar.
-            </p>
-          </li>
-        </ol>
+        <div className="border-t border-slate-200 px-3 py-3">
+          <ol className="flex flex-col gap-3">
+            {PASSOS.map((passo, idx) => (
+              <li key={idx} className="flex gap-3 items-start">
+                <span className="shrink-0 inline-flex w-8 px-2 items-center justify-center rounded-xs bg-primary text-white font-bold text-sm ">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+                <span className="text-sm text-slate-600 leading-snug">{passo}</span>
+              </li>
+            ))}
+          </ol>
+
+
+        </div>
       )}
     </section>
   );

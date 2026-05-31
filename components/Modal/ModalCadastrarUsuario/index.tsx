@@ -6,6 +6,7 @@ import TextInput from "@/components/Inputs/Text";
 import { Button } from "@/components/Button";
 import { toast } from "@/lib/toast";
 import { AuthService } from "@/services/AuthService";
+import Select from "@/components/Inputs/Select";
 
 interface Props {
   open: boolean;
@@ -13,11 +14,7 @@ interface Props {
   onSuccess?: () => void;
 }
 
-export default function ModalCadastrarUsuario({
-  open,
-  onOpenChange,
-  onSuccess,
-}: Props) {
+export default function ModalCadastrarUsuario({ open, onOpenChange, onSuccess }: Props) {
   const [nome, setNome] = useState("");
   const [cargo, setCargo] = useState("");
   const [email, setEmail] = useState("");
@@ -64,9 +61,7 @@ export default function ModalCadastrarUsuario({
       handleClose(false);
       onSuccess?.();
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Erro ao cadastrar usuário."
-      );
+      toast.error(err instanceof Error ? err.message : "Erro ao cadastrar usuário.");
     } finally {
       setLoading(false);
     }
@@ -88,37 +83,58 @@ export default function ModalCadastrarUsuario({
             Cancelar
           </Button>
 
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Cadastrando..." : "Cadastrar"}
+          <Button onClick={handleSubmit} isLoading={loading}>
+            Cadastrar
           </Button>
         </>
       }
     >
       <div className="flex flex-col gap-4 py-2">
-        <TextInput
-          id="nome"
-          label="Nome"
-          placeholder="Digite o nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <TextInput
+            id="nome"
+            label="Nome"
+            placeholder="Digite o nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
 
-        <TextInput
-          id="cargo"
-          label="Cargo"
-          placeholder="Digite o cargo"
-          value={cargo}
-          onChange={(e) => setCargo(e.target.value)}
-        />
+          <TextInput
+            id="email"
+            label="E-mail"
+            type="email"
+            placeholder="Digite o e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <TextInput
-          id="email"
-          label="E-mail"
-          type="email"
-          placeholder="Digite o e-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <TextInput
+            id="cargo"
+            label="Cargo"
+            placeholder="Digite o cargo"
+            value={cargo}
+            onChange={(e) => setCargo(e.target.value)}
+          />
+
+          <Select
+            id="papel"
+            label="Papel"
+            value={papel}
+            onChange={(value) => setPapel(value as "ADMIN" | "USER")}
+            options={[
+              {
+                value: "USER",
+                label: "Usuário comum",
+              },
+              {
+                value: "ADMIN",
+                label: "Administrador",
+              },
+            ]}
+          />
+        </div>
 
         <TextInput
           id="senha"
@@ -128,25 +144,6 @@ export default function ModalCadastrarUsuario({
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
         />
-
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="papel"
-            className="text-sm font-medium text-slate-700"
-          >
-            Papel
-          </label>
-
-          <select
-            id="papel"
-            value={papel}
-            onChange={(e) => setPapel(e.target.value as "ADMIN" | "USER")}
-            className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-primary"
-          >
-            <option value="USER">Usuário comum</option>
-            <option value="ADMIN">Administrador</option>
-          </select>
-        </div>
       </div>
     </Modal>
   );

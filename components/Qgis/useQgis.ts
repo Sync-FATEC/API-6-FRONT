@@ -5,11 +5,7 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 
 import { QgisService } from "@/services/QgisService";
-import {
-  IQgisCatalog,
-  IQgisLayer,
-  QgisFilterValues,
-} from "@/interfaces/services/QgisService";
+import { IQgisCatalog, IQgisLayer, QgisFilterValues } from "@/interfaces/services/QgisService";
 import { IGeoJSONFeatureCollection } from "@/interfaces/geojson";
 
 const DEFAULT_VALUES_PER_LAYER: Record<string, QgisFilterValues> = {
@@ -34,12 +30,15 @@ export function useQgis() {
   const [preview, setPreview] = useState<PreviewState | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
 
-  const { data: catalogo, isLoading: catalogoLoading, error: catalogoError } =
-    useQuery<IQgisCatalog>({
-      queryKey: ["qgis-catalogo"],
-      queryFn: QgisService.getCatalogo,
-      staleTime: 5 * 60 * 1000,
-    });
+  const {
+    data: catalogo,
+    isLoading: catalogoLoading,
+    error: catalogoError,
+  } = useQuery<IQgisCatalog>({
+    queryKey: ["qgis-catalogo"],
+    queryFn: QgisService.getCatalogo,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
     if (!selecionada && catalogo?.camadas?.length) {
@@ -68,21 +67,28 @@ export function useQgis() {
 
   const handlePreview = async () => {
     if (!selecionada) return;
+
     setLoadingPreview(true);
+
     try {
       const result = await QgisService.fetchLayerGeoJSON(selecionada.url, valores);
+
       setPreview(result);
+
       const total = result.data.features?.length ?? 0;
+
       if (total === 0) {
-        toast.warning("Sem features", { description: "Nenhum resultado para esses filtros." });
-      } else {
-        toast.success(`${total} features carregadas`, {
-          description: `Tempo: ${result.tempoMs} ms`,
+        toast.warning("Sem features", {
+          description: "Nenhum resultado para esses filtros.",
         });
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro desconhecido";
-      toast.error("Falha ao carregar camada", { description: msg });
+
+      toast.error("Falha ao carregar camada", {
+        description: msg,
+      });
+
       setPreview(null);
     } finally {
       setLoadingPreview(false);

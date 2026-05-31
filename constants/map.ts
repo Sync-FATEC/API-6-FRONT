@@ -24,7 +24,7 @@ export const MAP_SOURCES: Record<string, MapSourceConfig> = {
   icmbio: {
     color: "#9d4edd", // Roxo
     label: "Unidade de Conservação",
-    icon: "shield",
+    icon: "shield-filled",
   },
   palmares: {
     color: "#7A360F", // Marrom
@@ -34,6 +34,16 @@ export const MAP_SOURCES: Record<string, MapSourceConfig> = {
   sicar: {
     color: "#16acf7", // Azul Claro
     label: "Imóvel Rural",
+    icon: "farm",
+  },
+  consulta_livre: { // Azul Escuro
+    color: "#1D2956",
+    label: "Consulta Livre",
+    icon: "globe",
+  },
+  imovel_e_ameacas: { // Magenta
+    color: "#851745",
+    label: "Imóvel e Ameaças",
     icon: "farm",
   },
   desconhecida: {

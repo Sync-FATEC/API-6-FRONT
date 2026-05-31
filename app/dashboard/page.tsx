@@ -125,6 +125,8 @@ export default function DashboardPage() {
               ))}
           </div>
 
+          <h4 className="text-2xl font-bold text-primary mt-8 -mb-2">Dados de queimadas</h4>
+
           <div className="flex bg-white items-end gap-5 rounded-lg p-6 shadow-sm justify-between">
             <div className="flex gap-4">
               <DateTimePicker

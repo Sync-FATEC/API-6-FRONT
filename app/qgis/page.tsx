@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -87,12 +88,7 @@ export default function QgisPage() {
 
               <div className="h-px bg-slate-100" />
 
-              <UrlPreview
-                url={url}
-                onPreview={handlePreview}
-                onDownload={handleDownload}
-                loading={loadingPreview}
-              />
+              <UrlPreview url={url} onDownload={handleDownload} />
 
               <div className="mt-auto pt-2">
                 <QgisInstructions />
@@ -136,9 +132,8 @@ function EmptyMapState({
   return (
     <div className="flex bg-white rounded-lg p-6 shadow-sm h-full justify-center items-center">
       <div className="flex flex-col gap-4 max-w-3xl w-full items-center text-center">
-        <div className="w-20 h-20 rounded-full bg-primary-50 flex items-center justify-center">
-          <Icon name="world" size={40} className="text-primary" />
-        </div>
+        <img src="/globe.svg" alt="Ilustração de papel" className="w-48" />
+
         <h3 className="font-semibold text-2xl text-slate-700">
           Pré-visualize a camada antes de copiar
         </h3>
@@ -147,9 +142,8 @@ function EmptyMapState({
           colar a URL no QGIS.
         </p>
         {hasCamada && (
-          <Button variant="solid" onClick={onPreview} disabled={loading}>
-            <Icon name="map" />
-            {loading ? "Carregando..." : "Pré-visualizar agora"}
+          <Button variant="solid" onClick={onPreview} isLoading={loading} className="mt-2">
+            Pré-visualizar
           </Button>
         )}
       </div>
