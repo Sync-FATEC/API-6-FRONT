@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/Button";
 import TextInput from "@/components/Inputs/Text";
@@ -13,7 +13,7 @@ interface FormErrors {
   confirmarSenha?: string;
 }
 
-export default function RedefinirSenhaPage() {
+function RedefinirSenhaContent() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -154,5 +154,13 @@ export default function RedefinirSenhaPage() {
         </>
       )}
     </LoginLayout>
+  );
+}
+
+export default function RedefinirSenhaPage() {
+  return (
+    <Suspense>
+      <RedefinirSenhaContent />
+    </Suspense>
   );
 }
