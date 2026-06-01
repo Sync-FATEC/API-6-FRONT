@@ -14,6 +14,7 @@ interface Props {
   onSend: () => void;
   onNewChat: () => void;
   onVoiceInput: (text: string) => void;
+  onToggleHistory: () => void;
 }
 
 interface SpeechRecognitionAlternative {
@@ -66,6 +67,7 @@ export default function ChatBox({
   onSend,
   onNewChat,
   onVoiceInput,
+  onToggleHistory,
 }: Props) {
   const hasText = message.trim().length > 0;
   const [isListening, setIsListening] = useState(false);
@@ -144,18 +146,26 @@ export default function ChatBox({
           className="w-full text-slate-700 bg-transparent outline-none p-3 resize-none overflow-y-hidden max-h-24 h-12 scrollbar-mini"
         />
 
-        <div className="flex justify-between items-end mt-2">
-          <Button
-            variant="ghost"
-            size="md"
-            className="text-primary"
-            onClick={() => setHelpOpen(true)}
-          >
-            <Icon name="help" size={20} />
-            Ajuda
-          </Button>
+        <div className="flex justify-between items-center mt-2">
+          
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              size="md"
+              className="text-primary"
+              onClick={() => setHelpOpen(true)}
+            >
+              <Icon name="help" size={20} />
+              Ajuda
+            </Button>
 
-          <div className="flex gap-1">
+            <Button variant="ghost" size="md" className="text-primary" onClick={onToggleHistory}>
+              <Icon name="history" size={20} />
+              Histórico
+            </Button>
+          </div>
+
+          <div className="flex items-center">
             {hasMessages && (
               <Button
                 variant="plain"
@@ -170,7 +180,7 @@ export default function ChatBox({
             <Button
               variant="plain"
               size="icon"
-              className={`text-slate-500 me-2 transition-colors ${isListening ? "text-red-500" : ""}`}
+              className={`text-slate-500 me-2 ${isListening ? "text-red-500" : ""}`}
               onClick={() => {
                 if (hasText) {
                   onSend();

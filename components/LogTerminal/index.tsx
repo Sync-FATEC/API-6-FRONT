@@ -43,13 +43,9 @@ export default function LogTerminal({ logs }: Props) {
         <ul className="space-y-1">
           {logs.map((log, index) => {
             const isError = log.includes("[ERRO]") || log.includes("[ERROR]");
-            const isInfo = log.includes("[INFO]");
 
             return (
-              <li
-                key={index}
-                className={isError ? "text-danger" : isInfo ? "text-slate-700" : "text-warning"}
-              >
+              <li key={index} className={isError ? "text-danger" : "text-slate-700"}>
                 {log}
               </li>
             );

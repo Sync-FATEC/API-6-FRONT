@@ -80,7 +80,6 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
         aria-busy={isLoading}
         {...props}
       >
-        {/* Spinner posicionado absolutamente ao centro */}
         {isLoading && (
           <span className="absolute inset-0 flex items-center justify-center">
             <LoadingSpinner />

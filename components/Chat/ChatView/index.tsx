@@ -3,13 +3,19 @@ import ChatHeader from "./Header";
 import DetailsModal from "./DetailsModal";
 import ImovelAmeacasCard from "./ImovelAmeacasCard";
 import GruposCard from "./GruposCard";
+import QgisExportLink from "./QgisExportLink";
 import { ChatMessage } from "@/interfaces/components/chat";
+import { Button } from "@/components/Button";
+import Icon from "@/components/Icon";
+import { IQueryResponse } from "@/interfaces/services/QueryService";
 
 interface Props {
   messages: ChatMessage[];
+  activeMessageId?: string | null;
+  onActivateMap?: (msgId: string, queryData: IQueryResponse) => void;
 }
 
-export default function ChatView({ messages }: Props) {
+export default function ChatView({ messages, activeMessageId, onActivateMap }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,7 +71,30 @@ export default function ChatView({ messages }: Props) {
                       />
                     )}
 
-                  {msg.status === "done" && msg.queryData && <DetailsModal data={msg.queryData} />}
+                  {msg.status === "done" && msg.queryData && (
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      <DetailsModal data={msg.queryData} />
+
+                      {(msg.queryData.total_resultados ?? 0) > 0 && (
+                        <QgisExportLink
+                          url={msg.queryData.qgis_url}
+                          urlsGrupos={msg.queryData.qgis_urls}
+                        />
+                      )}
+
+                      {msg.queryData.geojson && (
+                        <Button
+                          variant={msg.id === activeMessageId ? "solid" : "soft"}
+                          size="sm"
+                          onClick={() => onActivateMap?.(msg.id, msg.queryData!)}
+                          className={msg.id === activeMessageId ? "pointer-events-none" : undefined}
+                        >
+                          <Icon name="gps-pin" size={20} />
+                          {msg.id === activeMessageId ? "Focando" : "Focar"}
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </>
               )}
             </>

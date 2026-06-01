@@ -18,6 +18,8 @@ import { formatArea, formatDate } from "@/utils/formatters";
 import { MAP_SOURCES } from "@/constants/map";
 import { SICAR_STATUS_MAP } from "@/helpers/mapDetails";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL!.replace(/\/$/, "");
+
 export type PopupPayload = AsgRecord | GeoJSONProperties | TFlatMetadata;
 
 const InfoRow = ({
@@ -101,8 +103,74 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const d = data as any;
       title = "Área detectada";
+
+      // Monta URL do Sentinel-2:
+      // Prioridade 1: por id (mais preciso)
+      // Prioridade 2: por lat/lon/data como query params (fallback robusto)
+      let imgUrl: string | null = null;
+      if (d.id) {
+        imgUrl = `${API_BASE}/dados/queimadas/${d.id}/imagem-satelite`;
+      } else if (d.latitude && d.longitude) {
+        const dataStr = (d.data_hora ?? d.data ?? "").slice(0, 10);
+        const params = new URLSearchParams({
+          lat: String(d.latitude),
+          lon: String(d.longitude),
+          ...(dataStr ? { data: dataStr } : {}),
+        });
+        imgUrl = `${API_BASE}/dados/queimadas/0/imagem-satelite?${params.toString()}`;
+      }
+
       fields = (
         <>
+          {imgUrl && (
+            <div
+              style={{
+                margin: "-16px -16px 8px -16px",
+                overflow: "hidden",
+                borderBottom: "1px solid #e2e8f0",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imgUrl}
+                alt="Imagem Sentinel-2 da queimada"
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  maxHeight: 160,
+                  objectFit: "cover",
+                  display: "block",
+                }}
+                {...{
+                  onerror: "this.style.display='none'; if(this.nextSibling) this.nextSibling.style.display='none'; if(this.nextSibling && this.nextSibling.nextSibling) this.nextSibling.nextSibling.style.display='block';"
+                }}
+              />
+              <div
+                style={{
+                  fontSize: 10,
+                  color: "#94a3b8",
+                  textAlign: "right",
+                  padding: "2px 6px",
+                  background: "rgba(0,0,0,0.03)",
+                }}
+              >
+                Sentinel-2 · Planetary Computer
+              </div>
+              <div
+                style={{
+                  display: "none",
+                  fontSize: 13,
+                  color: "#64748b",
+                  textAlign: "center",
+                  padding: "24px 16px",
+                  fontWeight: 500,
+                  background: "#f8fafc",
+                }}
+              >
+                Não encontramos imagem para essa data
+              </div>
+            </div>
+          )}
           <InfoRow label="Bioma" value={d.bioma} />
           <InfoRow label="FRP (Potência)" value={d.frp ? `${d.frp} MW` : null} />
           <InfoRow label="Risco Fogo" value={d.risco_fogo} />

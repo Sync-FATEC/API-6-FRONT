@@ -15,7 +15,7 @@ export function CalculationBody({ ahp }: CalculationBodyProps) {
       <p className="text-base text-slate-600 leading-relaxed -mt-2">
         O <strong>{ahp.metodo}</strong> deriva os pesos dos critérios a partir de uma matriz de
         comparação par a par na <strong>{ahp.escala}</strong>. Os pesos são calculados via autovetor
-        principal e validados pela Razão de Consistência (CR &lt; 0.10). Veja abaixo os pesos:
+        principal e validados pela Razão de Consistência (CR &lt; 0.10). Veja abaixo:
       </p>
 
       <div className="bg-slate-50 rounded-xl p-4 flex flex-col gap-3">

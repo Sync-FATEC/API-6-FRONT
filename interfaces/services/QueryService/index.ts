@@ -121,6 +121,12 @@ export interface IGrupoResposta {
   total_resultados: number;
   nota_risco?: INotaRisco | null;
   fontes?: ISource[];
+  qgis_url?: string | null;
+}
+
+export interface IQgisUrlGrupo {
+  rotulo: string;
+  url: string;
 }
 
 export interface IQueryResponse {
@@ -137,11 +143,13 @@ export interface IQueryResponse {
   tempo_processamento_ms: number;
   preprocessamento?: INlpPreprocessing | null;
   nota_risco?: INotaRisco | null;
-  // Campos da consulta por código CAR (cruzamento espacial)
   imovel?: IImovelInfo | null;
   ameacas_encontradas?: IAmeacaEncontrada[] | null;
-  // Consulta multi-intenção (múltiplos municípios e/ou temas)
   grupos?: IGrupoResposta[] | null;
   eixo_agrupamento?: EixoAgrupamento | null;
   intencoes_detectadas?: IIntencaoDetectada[] | null;
+  qgis_url?: string | null;
+  qgis_urls?: IQgisUrlGrupo[] | null;
+  conversa_id?: number; 
+  mensagem_id?: number;
 }
