@@ -86,7 +86,21 @@ async function handleApiProxy(
 
     // Requisição ao backend
     const backendResponse = await fetch(backendUrl, fetchOptions);
-    const responseBody = await backendResponse.text();
+    
+    // Detecta se é conteúdo binário (imagens, PDFs, etc)
+    const contentType = backendResponse.headers.get("content-type") || "";
+    const isBinary = contentType.includes("image/") || 
+                     contentType.includes("application/pdf") ||
+                     contentType.includes("application/octet-stream");
+
+    // Para binários, usa arrayBuffer; para texto/JSON, usa text
+    let responseBody: string | ArrayBuffer;
+    if (isBinary) {
+      responseBody = await backendResponse.arrayBuffer();
+    } else {
+      responseBody = await backendResponse.text();
+    }
+
     const response = new NextResponse(responseBody, {
       status: backendResponse.status,
       statusText: backendResponse.statusText,
