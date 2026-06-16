@@ -124,15 +124,15 @@ function AmeacaRow({ ameaca }: { ameaca: IAmeacaEncontrada }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-3 p-2 rounded-md transition-colors",
+        "flex items-center gap-2.5 px-2.5 py-1.5 rounded-md transition-colors",
         grave ? "bg-red-50" : "bg-slate-50"
       )}
     >
       <div
-        className="relative shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+        className="relative shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
         style={{ backgroundColor: grave ? cor : `${cor}20` }}
       >
-        <Icon name={cfg.icon} size={18} style={{ color: grave ? "#FFFFFF" : cor }} />
+        <Icon name={cfg.icon} size={15} style={{ color: grave ? "#FFFFFF" : cor }} />
 
         {grave && (
           <span
@@ -172,34 +172,36 @@ export default function ImovelAmeacasCard({ imovel, ameacas, risco }: Props) {
   const { mutate: downloadReport, isPending } = useDownloadReport();
 
   return (
-    <div className="mt-4 mb-2 animate-pop-in-up rounded-lg overflow-hidden">
-      <header className="flex items-center gap-3 px-4 py-3 border-slate-100 bg-slate-50">
+    <div className="mt-3 mb-1 animate-pop-in-up rounded-lg overflow-hidden border border-slate-100">
+      <header className="flex items-center gap-2.5 px-3 py-2 border-b border-slate-100 bg-slate-50">
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center"
+          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
           style={{ backgroundColor: sicarCfg.color }}
         >
-          <Icon name={sicarCfg.icon} size={20} className="text-white" />
+          <Icon name={sicarCfg.icon} size={16} className="text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Imóvel Rural
+            {imovel.municipio ? ` · ${imovel.municipio}` : ""}
           </div>
-          <div className="text-xs font-medium text-slate-400 truncate" title={imovel.cod_imovel}>
+          <div className="text-[11px] font-medium text-slate-400 truncate" title={imovel.cod_imovel}>
             {imovel.cod_imovel}
           </div>
         </div>
+        {risco && risco.nivel !== "sem_dados" && riscoCfg && (
+          <span
+            className={cn(
+              "shrink-0 px-2 py-0.5 rounded-md text-[11px] font-bold",
+              riscoCfg.badge
+            )}
+          >
+            {risco.nota}/100
+          </span>
+        )}
       </header>
 
-      <section className="flex flex-col gap-2">
-        <div className="flex items-center justify-between bg-slate-50 rounded-md py-3 px-4 w-full text-xs">
-          <h5 className=" w-full font-semibold uppercase tracking-wider text-slate-400">
-            Entidades Detectadas
-          </h5>
-          <span className=" font-semibold text-slate-500">
-            {String(ameacas.length).padStart(2, "0")}
-          </span>
-        </div>
-
+      <section className="flex flex-col gap-1.5 p-2">
         {temAmeacas ? (
           ameacas.map((a, idx) => <AmeacaRow key={idx} ameaca={a} />)
         ) : (
@@ -212,24 +214,23 @@ export default function ImovelAmeacasCard({ imovel, ameacas, risco }: Props) {
         )}
 
         {risco && risco.nivel !== "sem_dados" && riscoCfg && (
-          <div className="flex flex-col gap-3 w-full mt-1">
-            <div
+          <div className="flex items-center gap-2 mt-0.5">
+            <span
               className={cn(
-                "flex flex-1 justify-between gap-2 px-3 py-2 rounded-md text-sm font-semibold",
+                "px-2 py-1 rounded-md text-xs font-semibold whitespace-nowrap",
                 riscoCfg.badge
               )}
             >
-              <span>Risco {riscoCfg.label}</span>
-              <span className="font-bold">{risco.nota}/100</span>
-            </div>
-
+              Risco {riscoCfg.label}
+            </span>
             <Button
               size="sm"
+              className="flex-1"
               onClick={() => downloadReport(imovel.cod_imovel)}
               isLoading={isPending}
             >
-              Baixar relatório completo
-              <Icon name="download" size={20} />
+              Baixar relatório
+              <Icon name="download" size={18} />
             </Button>
           </div>
         )}

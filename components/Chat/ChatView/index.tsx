@@ -3,6 +3,7 @@ import ChatHeader from "./Header";
 import DetailsModal from "./DetailsModal";
 import ImovelAmeacasCard from "./ImovelAmeacasCard";
 import GruposCard from "./GruposCard";
+import ResultadoTabela from "./ResultadoTabela";
 import QgisExportLink from "./QgisExportLink";
 import { ChatMessage } from "@/interfaces/components/chat";
 import { Button } from "@/components/Button";
@@ -68,6 +69,20 @@ export default function ChatView({ messages, activeMessageId, onActivateMap }: P
                       <GruposCard
                         grupos={msg.queryData.grupos}
                         eixo={msg.queryData.eixo_agrupamento ?? "unico"}
+                      />
+                    )}
+
+                  {msg.status === "done" &&
+                    msg.queryData?.intencao_detectada === "consulta_analitica" &&
+                    !msg.queryData?.imovel &&
+                    Array.isArray(msg.queryData?.dados) &&
+                    msg.queryData.dados.length > 0 && (
+                      <ResultadoTabela
+                        dados={msg.queryData.dados as Record<string, unknown>[]}
+                        colunas={
+                          (msg.queryData.estatisticas as Record<string, unknown>)
+                            ?.colunas as string[] | undefined
+                        }
                       />
                     )}
 

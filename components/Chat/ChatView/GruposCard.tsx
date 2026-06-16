@@ -29,29 +29,34 @@ export default function GruposCard({ grupos, eixo }: Props) {
       className="mt-3 rounded-xl border border-slate-200 bg-white overflow-hidden animate-pop-in-up w-full"
       style={{ wordBreak: "normal", overflowWrap: "anywhere" }}
     >
-      <header className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 bg-slate-50/50">
-        <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-primary/10">
-          <Icon name={header.icon} size={18} className="text-primary" />
+      <header className="flex items-center gap-2.5 px-3 py-2 border-b border-slate-100 bg-slate-50/50">
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-primary/10 shrink-0">
+          <Icon name={header.icon} size={16} className="text-primary" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
             {header.titulo}
           </div>
-          <div className="text-xs text-slate-600">
+          <div className="text-[11px] text-slate-500">
             {grupos.length} grupo{grupos.length > 1 ? "s" : ""}
           </div>
         </div>
       </header>
 
-      <div className="p-3 flex flex-col gap-2">
+      <div
+        className={cn(
+          "p-2 flex flex-col gap-1.5",
+          grupos.length > 4 && "max-h-80 overflow-y-auto scrollbar-mini"
+        )}
+      >
         {grupos.map((g, idx) => {
-                                        const sem = g.total_resultados === 0;
+          const sem = g.total_resultados === 0;
 
           return (
             <div
               key={`${g.rotulo}-${idx}`}
               className={cn(
-                "rounded-lg border border-slate-200 p-3 flex flex-col gap-1.5 w-full",
+                "rounded-lg border border-slate-200 px-2.5 py-2 flex flex-col gap-1 w-full",
                 sem && "opacity-70",
               )}
             >

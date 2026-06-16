@@ -7,7 +7,7 @@ export const QueryService = {
     token: string,
     conversaId?: number | null
   ): Promise<IQueryResponse> => {
-    return BaseService.postWithAuth<IQueryResponse>("/consulta", token, {
+    return BaseService.postWithAuth<IQueryResponse>("/v1/consulta", token, {
       pergunta,
       conversa_id: conversaId,
     });

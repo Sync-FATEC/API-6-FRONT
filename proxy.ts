@@ -13,7 +13,16 @@ import { TOKEN_KEY } from "@/constants/auth";
  * - Autenticação mantida nas rotas protegidas
  */
 
-const BACKEND_URL = "http://asg-backend-alb-85114170.us-east-1.elb.amazonaws.com";
+// Raiz do backend lida do ambiente. O `pathname` já inclui `/api/...`, então
+// removemos um eventual sufixo `/api` de NEXT_PUBLIC_API_URL para não duplicar.
+// Prioridade: BACKEND_URL (server) > NEXT_PUBLIC_API_URL > fallback de produção.
+const BACKEND_URL = (
+  process.env.BACKEND_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://asg-backend-alb-85114170.us-east-1.elb.amazonaws.com"
+)
+  .replace(/\/api\/?$/, "")
+  .replace(/\/+$/, "");
 const AUTH_ENABLED = true;
 const PUBLIC_ROUTES = ["/login", "/redefinir-senha"];
 
