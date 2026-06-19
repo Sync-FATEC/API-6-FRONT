@@ -6,7 +6,8 @@
  * e contornando problemas de pré-avaliação do Next.js no build.
  */
 export function getApiBaseUrl(): string {
-  return "/api";
+  const url = process.env.NEXT_PUBLIC_API_URL || "/api";
+  return url.replace(/\/$/, "");
 }
 
 /**
@@ -30,5 +31,8 @@ export function getProjectBaseUrl(): string {
  * de caminho completo (como no catálogo do QGIS).
  */
 export function getQgisApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
+  }
   return `${getProjectBaseUrl()}/api`;
 }

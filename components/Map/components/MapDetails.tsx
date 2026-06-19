@@ -18,7 +18,10 @@ import { formatArea, formatDate } from "@/utils/formatters";
 import { MAP_SOURCES } from "@/constants/map";
 import { SICAR_STATUS_MAP } from "@/helpers/mapDetails";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL!.replace(/\/$/, "");
+// Usa caminho relativo para permitir que o proxy.ts intercepte a requisição
+// Em DEV: next.config.ts reescreve /api/* para 127.0.0.1:8000
+// Em PROD: proxy.ts reescreve /api/* para ALB backend
+const API_BASE = "/api";
 
 export type PopupPayload = AsgRecord | GeoJSONProperties | TFlatMetadata;
 
@@ -134,16 +137,6 @@ export const PopupContent = ({ p }: { p: PopupPayload }) => {
               <img
                 src={imgUrl}
                 alt="Imagem Sentinel-2 da queimada"
-                loading="lazy"
-                style={{
-                  width: "100%",
-                  maxHeight: 160,
-                  objectFit: "cover",
-                  display: "block",
-                }}
-                {...{
-                  onerror: "this.style.display='none'; if(this.nextSibling) this.nextSibling.style.display='none'; if(this.nextSibling && this.nextSibling.nextSibling) this.nextSibling.nextSibling.style.display='block';"
-                }}
               />
               <div
                 style={{
